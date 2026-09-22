@@ -1,0 +1,100 @@
+[
+  {
+    "task": "arc_challenge",
+    "metric": "acc,none",
+    "baseline": 0.21075085324232082,
+    "yoco": 0.21075085324232082,
+    "yoco_minus_baseline_pp": 0.0
+  },
+  {
+    "task": "arc_challenge",
+    "metric": "acc_norm,none",
+    "baseline": 0.25426621160409557,
+    "yoco": 0.2551194539249147,
+    "yoco_minus_baseline_pp": 0.08532423208191253
+  },
+  {
+    "task": "arc_easy",
+    "metric": "acc,none",
+    "baseline": 0.5176767676767676,
+    "yoco": 0.5134680134680135,
+    "yoco_minus_baseline_pp": -0.42087542087541063
+  },
+  {
+    "task": "arc_easy",
+    "metric": "acc_norm,none",
+    "baseline": 0.476010101010101,
+    "yoco": 0.46085858585858586,
+    "yoco_minus_baseline_pp": -1.5151515151515138
+  },
+  {
+    "task": "boolq",
+    "metric": "acc,none",
+    "baseline": 0.6012232415902141,
+    "yoco": 0.6152905198776758,
+    "yoco_minus_baseline_pp": 1.4067278287461682
+  },
+  {
+    "task": "hellaswag",
+    "metric": "acc,none",
+    "baseline": 0.2831109340768771,
+    "yoco": 0.28560047799243177,
+    "yoco_minus_baseline_pp": 0.24895439155546706
+  },
+  {
+    "task": "hellaswag",
+    "metric": "acc_norm,none",
+    "baseline": 0.30999800836486757,
+    "yoco": 0.3132842063333997,
+    "yoco_minus_baseline_pp": 0.3286197968532134
+  },
+  {
+    "task": "openbookqa",
+    "metric": "acc,none",
+    "baseline": 0.174,
+    "yoco": 0.176,
+    "yoco_minus_baseline_pp": 0.20000000000000018
+  },
+  {
+    "task": "openbookqa",
+    "metric": "acc_norm,none",
+    "baseline": 0.294,
+    "yoco": 0.308,
+    "yoco_minus_baseline_pp": 1.4000000000000012
+  },
+  {
+    "task": "piqa",
+    "metric": "acc,none",
+    "baseline": 0.6327529923830251,
+    "yoco": 0.6338411316648531,
+    "yoco_minus_baseline_pp": 0.10881392818280489
+  },
+  {
+    "task": "piqa",
+    "metric": "acc_norm,none",
+    "baseline": 0.6251360174102285,
+    "yoco": 0.6245919477693145,
+    "yoco_minus_baseline_pp": -0.05440696409140244
+  },
+  {
+    "task": "sciq",
+    "metric": "acc,none",
+    "baseline": 0.764,
+    "yoco": 0.748,
+    "yoco_minus_baseline_pp": -1.6000000000000014
+  },
+  {
+    "task": "sciq",
+    "metric": "acc_norm,none",
+    "baseline": 0.671,
+    "yoco": 0.642,
+    "yoco_minus_baseline_pp": -2.9000000000000026
+  },
+  {
+    "task": "winogrande",
+    "metric": "acc,none",
+    "baseline": 0.4988161010260458,
+    "yoco": 0.5177584846093133,
+    "yoco_minus_baseline_pp": 1.8942383583267497
+  }
+]

@@ -1,0 +1,12 @@
+{
+  "passed": true,
+  "tests": [
+    "explicit_attention_forward_and_gradients",
+    "non_interleaved_rotary",
+    "full_model_causality",
+    "cached_decode_equivalence",
+    "activation_checkpoint_gradients",
+    "tied_embeddings",
+    "strict_checkpoint_loading"
+  ]
+}

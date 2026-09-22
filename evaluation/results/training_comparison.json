@@ -1,0 +1,16 @@
+{
+  "Transformer": {
+    "validation_loss": 3.1612818241119385,
+    "validation_perplexity": 23.600828659644726,
+    "last100_training_loss": 3.154424641132355,
+    "tokens": 10485760000,
+    "parameters": 161975040
+  },
+  "YOCO": {
+    "validation_loss": 3.163661003112793,
+    "validation_perplexity": 23.657046104758766,
+    "last100_training_loss": 3.155806772708893,
+    "tokens": 10485760000,
+    "parameters": 166708224
+  }
+}

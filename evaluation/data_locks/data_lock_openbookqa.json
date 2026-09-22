@@ -1,0 +1,6 @@
+{
+  "dataset": "allenai/openbookqa",
+  "revision": "388097ea7776314e93a529163e0fea805b8a6454",
+  "task": "openbookqa",
+  "original_dataset_path": "openbookqa"
+}

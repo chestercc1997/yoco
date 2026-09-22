@@ -1,0 +1,6 @@
+{
+  "dataset": "allenai/ai2_arc",
+  "revision": "210d026faf9955653af8916fad021475a3f00453",
+  "task": "arc_challenge",
+  "original_dataset_path": "allenai/ai2_arc"
+}

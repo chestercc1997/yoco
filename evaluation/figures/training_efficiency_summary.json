@@ -1,0 +1,49 @@
+{
+  "scope": "Formal paired 32xV100 training runs",
+  "definitions": {
+    "estimated_compute_pflop_days": "6 * parameters * tokens / (1e15 * 86400)",
+    "active_gpu_hours": "sum(rank0 per-update seconds) * 32 / 3600; excludes validation and checkpoint overhead",
+    "mean_throughput_tokens_s": "total tokens / sum(rank0 per-update seconds)",
+    "end_to_end_hours": "ISO log timestamp from formal train start to final validation; includes validation/checkpoint overhead",
+    "rolling_throughput_window_steps": 500,
+    "peak_memory_gib": "maximum rank0 logged peak_memory_bytes / 2^30"
+  },
+  "runs": {
+    "Transformer": {
+      "parameters": 161975040,
+      "total_tokens": 10485760000,
+      "active_seconds": 75505.15166625241,
+      "active_gpu_hours": 671.1569037000214,
+      "end_to_end_hours": 23.732228825,
+      "compute_pflop_days": 0.11794662468266667,
+      "mean_throughput_tokens_s": 138874.7624314314,
+      "median_step_seconds": 1.8900270543526858,
+      "peak_memory_gib": 15.159898281097412,
+      "final_validation_loss": 3.1612818241119385,
+      "final_perplexity": 23.600828659644726
+    },
+    "YOCO": {
+      "parameters": 166708224,
+      "total_tokens": 10485760000,
+      "active_seconds": 78752.74185073562,
+      "active_gpu_hours": 700.0243720065389,
+      "end_to_end_hours": 24.713989505833336,
+      "compute_pflop_days": 0.1213932240896,
+      "mean_throughput_tokens_s": 133147.87210677992,
+      "median_step_seconds": 1.9700879754964262,
+      "peak_memory_gib": 12.263253688812256,
+      "final_validation_loss": 3.163661003112793,
+      "final_perplexity": 23.657046104758766
+    }
+  },
+  "source_sha256": {
+    "/mnt/marin-checkpoints/yoco/transformer_160m_publicdata_v1/rank0.jsonl": "d7af2b6a3b028f653a084d92866f839e781b6ce8239e9aa65652daf2adef5b0e",
+    "/mnt/marin-checkpoints/yoco/yoco_gret_160m_publicdata_v1/rank0.jsonl": "99b91a6520d67e5a49aea29831c7e94b83d3dd8c44db89b75938fd61f88c0a9c"
+  },
+  "relative": {
+    "yoco_over_transformer_mean_throughput": 0.9587621953450391,
+    "yoco_over_transformer_active_gpu_hours": 1.0430115046829944,
+    "yoco_over_transformer_peak_memory": 0.8089271749338235,
+    "yoco_minus_transformer_final_validation_loss": 0.002379179000854492
+  }
+}

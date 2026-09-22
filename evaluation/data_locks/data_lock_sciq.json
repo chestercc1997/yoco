@@ -1,0 +1,6 @@
+{
+  "dataset": "allenai/sciq",
+  "revision": "2c94ad3e1aafab77146f384e23536f97a4849815",
+  "task": "sciq",
+  "original_dataset_path": "sciq"
+}

@@ -1,0 +1,6 @@
+{
+  "dataset": "allenai/winogrande",
+  "revision": "01e74176c63542e6b0bcb004dcdea22d94fb67b5",
+  "task": "winogrande",
+  "original_dataset_path": "winogrande"
+}

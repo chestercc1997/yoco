@@ -1,0 +1,105 @@
+--- upstream/yoco.py
++++ runtime/yoco.py
+@@ -5,9 +5,9 @@
+ import torch
+ import torch.nn as nn
+ import torch.nn.functional as F
+-from fairscale.nn import checkpoint_wrapper
+-
+-from fairseq.model_parallel.megatron.mpu import (
++from .backend import checkpoint_wrapper
++
++from .backend import (
+     ColumnParallelLinear,
+     copy_to_model_parallel_region,
+     VocabParallelEmbedding
+@@ -19,7 +19,7 @@
+ from .feedforward_network import FeedForwardNetwork, init_method
+ from .rms_norm import RMSNorm
+ 
+-from .kernel.rotary import apply_rotary_emb
++from .backend import apply_rotary_emb
+ from .model_parallel_init import vocab_init_method, init_method
+ 
+ 
+--- upstream/gate_retention.py
++++ runtime/gate_retention.py
+@@ -1,16 +1,16 @@
+ import torch
+ import torch.nn as nn
+ import torch.nn.functional as F
+-from fairseq.model_parallel.megatron.mpu import (
++from .backend import (
+     ColumnParallelLinear,
+     RowParallelLinear,
+ )
+ 
+ from .rms_norm import RMSNorm
+ 
+-from .kernel.gate_recurrent import chunk_gate_retention, recurrent_gate_retention
+-from .kernel.rotary import apply_rotary_emb
+-from .kernel.swiglu import swiglu
++from .backend import chunk_gate_retention, recurrent_gate_retention
++from .backend import apply_rotary_emb
++from .backend import swiglu
+ 
+ from .model_parallel_init import qkvg_init_method, out_init_method
+ 
+--- upstream/cross_attention.py
++++ runtime/cross_attention.py
+@@ -2,14 +2,14 @@
+ import torch.nn.functional as F
+ from torch import nn
+ 
+-from fairseq.model_parallel.megatron.mpu import (
++from .backend import (
+     ColumnParallelLinear,
+     RowParallelLinear,
+ )
+ 
+ from .model_parallel_init import init_method
+-from .kernel.rotary import apply_rotary_emb
+-from flash_attn import flash_attn_func
++from .backend import apply_rotary_emb
++from .backend import flash_attn_func
+ 
+ class CrossAttention(nn.Module):
+     def __init__(
+--- upstream/sliding_window_attention.py
++++ runtime/sliding_window_attention.py
+@@ -2,15 +2,15 @@
+ import torch.nn.functional as F
+ from torch import nn
+ 
+-from fairseq.model_parallel.megatron.mpu import (
++from .backend import (
+     ColumnParallelLinear,
+     RowParallelLinear,
+ )
+ 
+ from .model_parallel_init import init_method
+-from .kernel.rotary import apply_rotary_emb
++from .backend import apply_rotary_emb
+ 
+-from flash_attn import flash_attn_func
++from .backend import flash_attn_func
+ 
+ class SlidingWindowAttention(nn.Module):
+     def __init__(self, args):
+--- upstream/feedforward_network.py
++++ runtime/feedforward_network.py
+@@ -4,12 +4,12 @@
+ import torch.nn as nn
+ import torch.nn.functional as F
+ 
+-from fairseq.model_parallel.megatron.mpu import (
++from .backend import (
+     ColumnParallelLinear,
+     RowParallelLinear,
+ )
+ 
+-from .kernel.swiglu import swiglu
++from .backend import swiglu
+ from .model_parallel_init import init_method
+ 
+ class FeedForwardNetwork(nn.Module):

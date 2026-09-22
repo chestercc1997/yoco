@@ -1,0 +1,83 @@
+{
+  "model": "yoco",
+  "checkpoint": "/mnt/marin-checkpoints/yoco/yoco_gret_160m_publicdata_v1/checkpoint_00040000.pt",
+  "device": "Tesla V100-PCIE-32GB",
+  "torch": "2.7.1+cu126",
+  "dtype": "float16",
+  "world_size": 1,
+  "batch_per_gpu": 1,
+  "concurrent_requests": 1,
+  "context_length": 2048,
+  "decode_tokens": 64,
+  "host": "n1",
+  "parallelism": "independent full-model replicas (data-parallel serving)",
+  "latency_aggregation": "maximum across ranks",
+  "result": {
+    "prefill_seconds": 0.023115430027246475,
+    "decode_seconds": 0.9308213037438691,
+    "total_seconds": 0.9539367337711155,
+    "baseline_allocated_bytes_per_gpu_max": 350709760,
+    "prefill_peak_allocated_bytes_per_gpu_max": 414931968,
+    "total_peak_allocated_bytes_per_gpu_max": 414931968,
+    "cache_bytes_after_prefill_per_gpu_max": 8849408,
+    "cache_bytes_after_decode_per_gpu_max": 11208704,
+    "aggregate_prefill_tokens_per_second": 88555.56645873224,
+    "aggregate_decode_tokens_per_second": 68.75648391649904,
+    "aggregate_end_to_end_tokens_per_second": 2212.9350147307637,
+    "requests_per_second": 1.0482875484276473,
+    "cache_bytes_after_prefill_per_request": 8849408.0,
+    "cache_bytes_after_decode_per_request": 11208704.0
+  },
+  "repeats": [
+    {
+      "prefill_seconds": 0.023115430027246475,
+      "decode_seconds": 0.9308213037438691,
+      "total_seconds": 0.9539367337711155,
+      "baseline_allocated_bytes_per_gpu_max": 350709760,
+      "prefill_peak_allocated_bytes_per_gpu_max": 414931968,
+      "total_peak_allocated_bytes_per_gpu_max": 414931968,
+      "cache_bytes_after_prefill_per_gpu_max": 8849408,
+      "cache_bytes_after_decode_per_gpu_max": 11208704
+    },
+    {
+      "prefill_seconds": 0.018682902213186026,
+      "decode_seconds": 0.8659772900864482,
+      "total_seconds": 0.8846601922996342,
+      "baseline_allocated_bytes_per_gpu_max": 350709760,
+      "prefill_peak_allocated_bytes_per_gpu_max": 414931968,
+      "total_peak_allocated_bytes_per_gpu_max": 414931968,
+      "cache_bytes_after_prefill_per_gpu_max": 8849408,
+      "cache_bytes_after_decode_per_gpu_max": 11208704
+    },
+    {
+      "prefill_seconds": 0.018576704896986485,
+      "decode_seconds": 0.8576755840331316,
+      "total_seconds": 0.8762522889301181,
+      "baseline_allocated_bytes_per_gpu_max": 350709760,
+      "prefill_peak_allocated_bytes_per_gpu_max": 414931968,
+      "total_peak_allocated_bytes_per_gpu_max": 414931968,
+      "cache_bytes_after_prefill_per_gpu_max": 8849408,
+      "cache_bytes_after_decode_per_gpu_max": 11208704
+    },
+    {
+      "prefill_seconds": 0.045279042795300484,
+      "decode_seconds": 1.1659973412752151,
+      "total_seconds": 1.2112763840705156,
+      "baseline_allocated_bytes_per_gpu_max": 350709760,
+      "prefill_peak_allocated_bytes_per_gpu_max": 414931968,
+      "total_peak_allocated_bytes_per_gpu_max": 414931968,
+      "cache_bytes_after_prefill_per_gpu_max": 8849408,
+      "cache_bytes_after_decode_per_gpu_max": 11208704
+    },
+    {
+      "prefill_seconds": 0.02954241819679737,
+      "decode_seconds": 1.2594709950499237,
+      "total_seconds": 1.289013413246721,
+      "baseline_allocated_bytes_per_gpu_max": 350709760,
+      "prefill_peak_allocated_bytes_per_gpu_max": 414931968,
+      "total_peak_allocated_bytes_per_gpu_max": 414931968,
+      "cache_bytes_after_prefill_per_gpu_max": 8849408,
+      "cache_bytes_after_decode_per_gpu_max": 11208704
+    }
+  ]
+}
