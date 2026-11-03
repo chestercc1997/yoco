@@ -51,4 +51,4 @@
 - 普通联网命令遵守 network-routing 技能，优先单条命令直连，不改动 Codex 自身代理。
 
 
-用户要求完整测评后整理代码、文档并推送 GitHub main。HPC2 后台监测入口为 tools/watch_plan_ab.py，状态 runs/setup/plan-ab-publish-watcher.json；仅在作业和完整评测标记成功、回传校验通过、准备提交未被其他本地改动替换时生成结果文档并正常推送，禁止强推。
+2026-11-03 用户最新明确要求代码和文档立即推送 GitHub main，不等待排队、训练或评测。原等待全流程后发布的后台任务已停止，旧条件已被本次指令取代。作业 794750 保持原调度；README 与文档明确实验结果尚未产生。tools/watch_plan_ab.py 仅保留为可选工具，目前未运行，勿自动重启发布任务。

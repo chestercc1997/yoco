@@ -32,4 +32,4 @@ A/B 共用主体初始参数，seed=42，初始配比均为六层等权。A 不�
 首次部署 v1 在提交前发现 PIQA 数据锁与既有离线评测不一致，未提交 GPU 作业。v2 独立保存与 eval-20261102 一致的八项数据锁，其中 PIQA revision 为 b40a463b4ac9c77c6e74e23c5d873f5c2139d8fa；原 evaluation/data_locks 的历史锁保留不改。
 
 
-用户要求完整测评后整理代码、文档并推送 GitHub main。HPC2 后台监测入口为 tools/watch_plan_ab.py，状态 runs/setup/plan-ab-publish-watcher.json；仅在作业和完整评测标记成功、回传校验通过、准备提交未被其他本地改动替换时生成结果文档并正常推送，禁止强推。
+2026-11-03 用户最新明确要求代码和文档立即推送 GitHub main，不等待排队、训练或评测。原等待全流程后发布的后台任务已停止，旧条件已被本次指令取代。作业 794750 保持原调度；README 与文档明确实验结果尚未产生。tools/watch_plan_ab.py 仅保留为可选工具，目前未运行，勿自动重启发布任务。
