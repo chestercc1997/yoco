@@ -1,0 +1,113 @@
+{
+  "checkpoint_sha256": "497b42a9e7208590df34dc2933084b5ef663fdc55a40bd70703612b55591c1a7",
+  "step": 1000,
+  "router_weight_norm": 0.5098034143447876,
+  "router_bias": [
+    -0.00389402755536139,
+    -0.038705747574567795,
+    0.00888297613710165
+  ],
+  "parameter_tensors_nonfinite": [],
+  "routing_probe": {
+    "scope": "CPU FP32; first 256 tokens of validation sequence indices 0..7, 2048 positions; not full validation",
+    "mean_weights": [
+      0.056735098361968994,
+      5.7867291616275907e-05,
+      0.9432070851325989
+    ],
+    "std_weights": [
+      0.08801175653934479,
+      6.250940350582823e-05,
+      0.08807100355625153
+    ],
+    "argmax_fraction": [
+      0.0,
+      0.0,
+      1.0
+    ],
+    "mean_entropy_nats": 0.16777139902114868,
+    "uniform_entropy_nats": 1.0986122886681098,
+    "fraction_max_above_0_95": 0.69287109375,
+    "mean_source_rms": [
+      1.0269851684570312,
+      1.0710382461547852,
+      1.9771581888198853
+    ]
+  },
+  "source_differences": {
+    "model.py": "--- baseline/model.py\n+++ fusion/model.py\n@@ -3,6 +3,7 @@\n from .tokenizer import TiktokenTokenizer\n from .yoco_official import YOCO, YOCOArgs\n from .yoco_official.transformer import ModelArgs, Transformer\n+from .memory_fusion import FusionConfig, MemoryFusionYOCO\n \n \n def tokenizer() -> TiktokenTokenizer:\n@@ -22,5 +23,11 @@\n         \"share_input_output_embed\": config[\"tied_embeddings\"],\n     }\n     if architecture(config) == \"yoco\":\n+        if 'memory_fusion' in config:\n+            args = YOCOArgs(**config['model'])\n+            fusion = FusionConfig.parse(config['memory_fusion'], args)\n+            return MemoryFusionYOCO(args, fusion, **common)\n         return YOCO(YOCOArgs(**config[\"model\"]), **common)\n+    if 'memory_fusion' in config:\n+        raise ValueError('memory_fusion is only supported for YOCO')\n     return Transformer(ModelArgs(**config[\"model\"]), **common)\n",
+    "train.py": "--- baseline/train.py\n+++ fusion/train.py\n@@ -124,6 +124,8 @@\n         if not manifest.get('ready'): raise RuntimeError('Dataset manifest is not ready')\n     resolved={'config':c,'synthetic_smoke':a.smoke,'world_size':world,'data':manifest}\n     identity={'model':c['model'],'tied_embeddings':c['tied_embeddings'],'seed':c['seed'],'training':t,'data':manifest,'synthetic':a.smoke,'world_size':world}\n+    if 'memory_fusion' in c:\n+        identity['memory_fusion'] = c['memory_fusion']\n     source_root=Path(__file__).parent\n     identity['model_source_sha256']={str(p.relative_to(source_root)):sha256(p) for p in sorted(source_root.rglob('*.py'))}\n     resolved['identity']=identity\n",
+    "yoco_official/yoco.py": "--- baseline/yoco_official/yoco.py\n+++ fusion/yoco_official/yoco.py\n@@ -146,8 +146,10 @@\n         x,\n         incremental_state=None,\n         is_prefilling=False,\n-        start_pos=0\n-    ):\n+        start_pos=0,\n+        return_layers=None,\n+    ):\n+        selected = []\n         if is_prefilling and x.size(1) % self.block_size != 0 and self.args.sliding_window is None:\n             padding_len = self.block_size - x.size(1) % self.block_size\n             x = F.pad(x, (0, 0, 0, padding_len), value=0)\n@@ -171,7 +173,12 @@\n                 incremental_state=incremental_state[idx] if incremental_state is not None else None,\n                 is_prefilling=is_prefilling,)\n \n+            if return_layers is not None and idx + 1 in return_layers:\n+                selected.append(x[:, :x.size(1) - padding_len, :])\n+\n         x = x[:, :x.size(1) - padding_len, :]\n+        if return_layers is not None:\n+            return x, selected\n         return x\n \n class CrossDecoder(nn.Module):\n@@ -210,9 +217,12 @@\n         incremental_state=None,\n         start_pos=0,\n         skip_cross_decoder=False,\n+        memory=None,\n     ):\n         bsz, seqlen, embed_dim = x.size()\n-        x_norm = self.kv_layer_norm(x)\n+        if memory is not None and memory.shape != x.shape:\n+            raise ValueError('Cross-decoder memory must match hidden-state shape')\n+        x_norm = self.kv_layer_norm(x if memory is None else memory)\n         key, value = self.k_proj(x_norm), self.v_proj(x_norm)\n         key = key.view(bsz, seqlen, self.num_heads, self.head_dim)\n         value = value.view(bsz, seqlen, self.num_heads, self.head_dim)\n"
+  },
+  "data_identity_matches": true,
+  "validation": [
+    {
+      "run": "baseline_4gpu",
+      "points": [
+        {
+          "time": "2026-10-31T02:00:59.789209+00:00",
+          "event": "validation",
+          "step": 250,
+          "loss": 6.864704132080078,
+          "perplexity": 957.8623971199112
+        },
+        {
+          "time": "2026-10-31T02:04:00.698703+00:00",
+          "event": "validation",
+          "step": 500,
+          "loss": 5.839151382446289,
+          "perplexity": 343.48772723351397
+        },
+        {
+          "time": "2026-10-31T02:07:02.471021+00:00",
+          "event": "validation",
+          "step": 750,
+          "loss": 5.3793253898620605,
+          "perplexity": 216.87591936997686
+        },
+        {
+          "time": "2026-10-31T02:10:04.296522+00:00",
+          "event": "validation",
+          "step": 1000,
+          "loss": 5.068964004516602,
+          "perplexity": 159.00950884944552
+        }
+      ],
+      "overflows": 0
+    },
+    {
+      "run": "dynamic_2gpu",
+      "points": [
+        {
+          "time": "2026-11-01T07:21:44.386654+00:00",
+          "event": "validation",
+          "step": 250,
+          "loss": 7.030791759490967,
+          "perplexity": 1130.9256769391084
+        },
+        {
+          "time": "2026-11-01T07:27:40.787966+00:00",
+          "event": "validation",
+          "step": 500,
+          "loss": 6.208223342895508,
+          "perplexity": 496.817791857417
+        },
+        {
+          "time": "2026-11-01T07:36:17.750381+00:00",
+          "event": "validation",
+          "step": 750,
+          "loss": 5.902811050415039,
+          "perplexity": 366.06505020709733
+        },
+        {
+          "time": "2026-11-01T07:42:13.460102+00:00",
+          "event": "validation",
+          "step": 1000,
+          "loss": 5.730794906616211,
+          "perplexity": 308.21417251149626
+        }
+      ],
+      "overflows": 0
+    }
+  ]
+}

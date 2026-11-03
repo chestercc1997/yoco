@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 450" font-family="Noto Sans CJK SC, sans-serif" role="img" aria-label="V4.1：主路径与辅助模块的分工">
+<defs><marker id="arrow" markerWidth="9" markerHeight="9" refX="8" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8" fill="#64748b"/></marker></defs>
+<rect width="1100" height="100%" rx="18" fill="#f4f7fb"/>
+<text x="36" y="42" font-size="25" font-weight="700" fill="#132b46">V4.1：主路径与辅助模块的分工</text>
+<path d="M260,125.0 L312,125.0" stroke="#64748b" fill="none" stroke-width="2.5" marker-end="url(#arrow)"/>
+<path d="M530,125.0 L582,125.0" stroke="#64748b" fill="none" stroke-width="2.5" marker-end="url(#arrow)"/>
+<path d="M800,125.0 L852,125.0" stroke="#64748b" fill="none" stroke-width="2.5" marker-end="url(#arrow)"/>
+<rect x="35" y="85" width="225" height="80" rx="12" fill="#e4efff" stroke="#285ea9"/>
+<text x="147.5" y="119.0" text-anchor="middle" font-size="19.0" fill="#285ea9">文字 / 图片</text>
+<text x="147.5" y="145.0" text-anchor="middle" font-size="13.1" fill="#285ea9">embedding / ViT + projector</text>
+<rect x="320" y="85" width="210" height="80" rx="12" fill="#e4efff" stroke="#285ea9"/>
+<text x="425.0" y="119.0" text-anchor="middle" font-size="19.0" fill="#285ea9">causal encoder</text>
+<text x="425.0" y="145.0" text-anchor="middle" font-size="19.0" fill="#285ea9">20 层</text>
+<rect x="590" y="85" width="210" height="80" rx="12" fill="#def5eb" stroke="#247653"/>
+<text x="695.0" y="119.0" text-anchor="middle" font-size="19.0" fill="#247653">全局记忆</text>
+<text x="695.0" y="145.0" text-anchor="middle" font-size="19.0" fill="#247653">投影与共享</text>
+<rect x="860" y="85" width="205" height="80" rx="12" fill="#eee6ff" stroke="#6943a0"/>
+<text x="962.5" y="119.0" text-anchor="middle" font-size="19.0" fill="#6943a0">decoder</text>
+<text x="962.5" y="145.0" text-anchor="middle" font-size="19.0" fill="#6943a0">20 层 → logits</text>
+<rect x="35" y="240" width="225" height="110" rx="12" fill="#fff0d9" stroke="#9a6513"/>
+<text x="147.5" y="276.0" text-anchor="middle" font-size="19.0" fill="#9a6513">Engram</text>
+<text x="147.5" y="302.0" text-anchor="middle" font-size="19.0" fill="#9a6513">选定层条件查表</text>
+<text x="147.5" y="328.0" text-anchor="middle" font-size="19.0" fill="#9a6513">增强模式记忆</text>
+<rect x="320" y="240" width="210" height="110" rx="12" fill="#fff0d9" stroke="#9a6513"/>
+<text x="425.0" y="276.0" text-anchor="middle" font-size="19.0" fill="#9a6513">每层 MoE</text>
+<text x="425.0" y="302.0" text-anchor="middle" font-size="19.0" fill="#9a6513">稀疏专家前馈</text>
+<text x="425.0" y="328.0" text-anchor="middle" font-size="19.0" fill="#9a6513">独立于 KV 选择</text>
+<rect x="590" y="240" width="210" height="110" rx="12" fill="#def5eb" stroke="#247653"/>
+<text x="695.0" y="276.0" text-anchor="middle" font-size="19.0" fill="#247653">CSA2 + SWA</text>
+<text x="695.0" y="302.0" text-anchor="middle" font-size="19.0" fill="#247653">全局稀疏读取</text>
+<text x="695.0" y="328.0" text-anchor="middle" font-size="19.0" fill="#247653">局部逐层加工</text>
+<rect x="860" y="240" width="205" height="110" rx="12" fill="#eee6ff" stroke="#6943a0"/>
+<text x="962.5" y="276.0" text-anchor="middle" font-size="19.0" fill="#6943a0">DSpark</text>
+<text x="962.5" y="302.0" text-anchor="middle" font-size="19.0" fill="#6943a0">提出草稿</text>
+<text x="962.5" y="328.0" text-anchor="middle" font-size="19.0" fill="#6943a0">目标模型验证</text>
+<text x="36" y="400" font-size="17" fill="#475569">mHC 负责层间残差流混合；FP4 与缓存管理负责状态存储和迁移。</text>
+<text x="36" y="425" font-size="17" fill="#475569">下排是职责注释，不是串行执行顺序；全局记忆与 decoder 局部路径需结合阅读。</text>
+</svg>

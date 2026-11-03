@@ -1,0 +1,352 @@
+{
+  "verdict": "FASTER_CONVERGENCE_NOT_ESTABLISHED",
+  "validation_delta_dynamic_minus_baseline": {
+    "250": -0.004437446594238281,
+    "500": 0.013553619384765625,
+    "750": -0.008261680603027344,
+    "1000": 0.002033710479736328
+  },
+  "target_loss_observations": {
+    "6.5": {
+      "baseline": {
+        "first_observed_step": 500,
+        "step_bracket": [
+          250,
+          500
+        ],
+        "tokens_at_first_observation": 131072000,
+        "cumulative_training_gpu_seconds": 1662.7354094563052
+      },
+      "dynamic": {
+        "first_observed_step": 500,
+        "step_bracket": [
+          250,
+          500
+        ],
+        "tokens_at_first_observation": 131072000,
+        "cumulative_training_gpu_seconds": 1718.7521033138037
+      }
+    },
+    "6.0": {
+      "baseline": {
+        "first_observed_step": 750,
+        "step_bracket": [
+          500,
+          750
+        ],
+        "tokens_at_first_observation": 196608000,
+        "cumulative_training_gpu_seconds": 2343.678824843839
+      },
+      "dynamic": {
+        "first_observed_step": 750,
+        "step_bracket": [
+          500,
+          750
+        ],
+        "tokens_at_first_observation": 196608000,
+        "cumulative_training_gpu_seconds": 2720.5659850910306
+      }
+    },
+    "5.5": {
+      "baseline": {
+        "first_observed_step": null,
+        "step_bracket": null,
+        "tokens_at_first_observation": null,
+        "cumulative_training_gpu_seconds": null
+      },
+      "dynamic": {
+        "first_observed_step": null,
+        "step_bracket": null,
+        "tokens_at_first_observation": null,
+        "cumulative_training_gpu_seconds": null
+      }
+    }
+  },
+  "caveats": [
+    "One seed and 1000 steps; not proof of final convergence or a causal gradient mechanism.",
+    "Thresholds are bracketed by 250-step validation observations; no exact crossing time inferred.",
+    "GPU-seconds count training step timers only; exclude validation, checkpoint I/O and restarts, and are not FLOPs.",
+    "Different initial functions are intentional; backbone random initialization and training protocol are paired."
+  ],
+  "summaries": {
+    "baseline": {
+      "final_validation": 5.744994640350342,
+      "overflow_count": 0,
+      "last100_mean_training_loss": 5.786365475654602,
+      "last100_mean_step_seconds": 1.4323732134909368,
+      "gradient_clip_fraction": 0.145,
+      "gradient_flow_probe": {
+        "step": 1000,
+        "checkpoint_sha256": "6bfbced933629c24b645a8759a30524420b58995199bd2bd207a9f4640c45afd",
+        "loss": 5.93771505355835,
+        "scope": "CPU FP32, validation sequence 0, first 256 next-token targets; no optimizer update",
+        "activation_gradients": {
+          "1": {
+            "gradient_rms": 0.00013304078311193734,
+            "gradient_norm": 0.05899086967110634,
+            "state_rms": 1.0911482572555542
+          },
+          "2": {
+            "gradient_rms": 0.00012334121856838465,
+            "gradient_norm": 0.05469002574682236,
+            "state_rms": 1.0257397890090942
+          },
+          "3": {
+            "gradient_rms": 0.00011134921805933118,
+            "gradient_norm": 0.049372751265764236,
+            "state_rms": 1.028786301612854
+          },
+          "4": {
+            "gradient_rms": 9.618466719985008e-05,
+            "gradient_norm": 0.042648714035749435,
+            "state_rms": 1.0797501802444458
+          },
+          "5": {
+            "gradient_rms": 7.996968633960932e-05,
+            "gradient_norm": 0.03545891121029854,
+            "state_rms": 1.195644736289978
+          },
+          "6": {
+            "gradient_rms": 5.3995507187210023e-05,
+            "gradient_norm": 0.023941846564412117,
+            "state_rms": 1.935755729675293
+          }
+        },
+        "self_layer_parameter_gradient_norms": {
+          "1": 2.449985842718686,
+          "2": 2.8905379565235974,
+          "3": 2.5435572948138185,
+          "4": 2.585783758303499,
+          "5": 2.8929450019954737,
+          "6": 3.07688060155803
+        },
+        "interpretation": "Magnitudes alone do not establish better gradient direction, faster convergence, or a causal mechanism."
+      },
+      "routing": []
+    },
+    "dynamic": {
+      "final_validation": 5.747028350830078,
+      "overflow_count": 0,
+      "last100_mean_training_loss": 5.778255467414856,
+      "last100_mean_step_seconds": 1.4260692039504648,
+      "gradient_clip_fraction": 0.16,
+      "gradient_flow_probe": {
+        "step": 1000,
+        "checkpoint_sha256": "c4627de55d681316b498d652f79036ed39bbb0c963239aac7e7fd5800ed33be4",
+        "loss": 5.924837112426758,
+        "scope": "CPU FP32, validation sequence 0, first 256 next-token targets; no optimizer update",
+        "activation_gradients": {
+          "1": {
+            "gradient_rms": 0.00013908032269682735,
+            "gradient_norm": 0.061668846756219864,
+            "state_rms": 1.0908229351043701
+          },
+          "2": {
+            "gradient_rms": 0.00013174601190257818,
+            "gradient_norm": 0.05841677635908127,
+            "state_rms": 1.0259647369384766
+          },
+          "3": {
+            "gradient_rms": 0.00011924579303013161,
+            "gradient_norm": 0.0528741255402565,
+            "state_rms": 1.0306918621063232
+          },
+          "4": {
+            "gradient_rms": 9.61315308813937e-05,
+            "gradient_norm": 0.042625147849321365,
+            "state_rms": 1.081304907798767
+          },
+          "5": {
+            "gradient_rms": 8.108795736916363e-05,
+            "gradient_norm": 0.03595477715134621,
+            "state_rms": 1.1963948011398315
+          },
+          "6": {
+            "gradient_rms": 5.661880277330056e-05,
+            "gradient_norm": 0.025105025619268417,
+            "state_rms": 2.0049350261688232
+          }
+        },
+        "self_layer_parameter_gradient_norms": {
+          "1": 2.7546145764897982,
+          "2": 2.8211819285254185,
+          "3": 2.721278746762641,
+          "4": 3.507133822639319,
+          "5": 2.530659676972005,
+          "6": 3.3125294885611427
+        },
+        "interpretation": "Magnitudes alone do not establish better gradient direction, faster convergence, or a causal mechanism."
+      },
+      "routing": [
+        {
+          "step": 0,
+          "checkpoint_sha256": null,
+          "config": {
+            "mode": "token",
+            "source_layers": [
+              2,
+              4,
+              6
+            ],
+            "temperature": 1.0,
+            "initial_weights": [
+              0.05,
+              0.05,
+              0.9
+            ]
+          },
+          "scope": "CUDA FP16 autocast; validation sequence indices 0..7, first 256 tokens each; not full validation",
+          "mean_weights": [
+            0.04998312518000603,
+            0.04998312518000603,
+            0.9000338912010193
+          ],
+          "std_weights": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "argmax_fraction": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "mean_entropy_nats": 0.39430001378059387,
+          "uniform_entropy_nats": 1.0986122886681098,
+          "fraction_max_above_0_95": 0.0,
+          "mean_source_rms": [
+            1.012450933456421,
+            1.0245862007141113,
+            1.037811040878296
+          ]
+        },
+        {
+          "step": 500,
+          "checkpoint_sha256": "2835edb15a1822003035606b4c7c08bac70215d54a1bbd4b8d5791bf4fbbcc45",
+          "config": {
+            "mode": "token",
+            "source_layers": [
+              2,
+              4,
+              6
+            ],
+            "temperature": 1.0,
+            "initial_weights": [
+              0.05,
+              0.05,
+              0.9
+            ]
+          },
+          "scope": "CUDA FP16 autocast; validation sequence indices 0..7, first 256 tokens each; not full validation",
+          "mean_weights": [
+            0.007144628092646599,
+            0.005602737423032522,
+            0.9872525930404663
+          ],
+          "std_weights": [
+            0.0039346604607999325,
+            0.002924269065260887,
+            0.006828893441706896
+          ],
+          "argmax_fraction": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "mean_entropy_nats": 0.07542018592357635,
+          "uniform_entropy_nats": 1.0986122886681098,
+          "fraction_max_above_0_95": 0.9990234375,
+          "mean_source_rms": [
+            1.0175838470458984,
+            1.0874050855636597,
+            1.4216628074645996
+          ]
+        },
+        {
+          "step": 1000,
+          "checkpoint_sha256": "c4627de55d681316b498d652f79036ed39bbb0c963239aac7e7fd5800ed33be4",
+          "config": {
+            "mode": "token",
+            "source_layers": [
+              2,
+              4,
+              6
+            ],
+            "temperature": 1.0,
+            "initial_weights": [
+              0.05,
+              0.05,
+              0.9
+            ]
+          },
+          "scope": "CUDA FP16 autocast; validation sequence indices 0..7, first 256 tokens each; not full validation",
+          "mean_weights": [
+            1.9997696654172614e-06,
+            3.822695475719229e-07,
+            0.999997615814209
+          ],
+          "std_weights": [
+            1.675862563388364e-06,
+            2.751934573552717e-07,
+            1.947336158991675e-06
+          ],
+          "argmax_fraction": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "mean_entropy_nats": 3.3554159017512575e-05,
+          "uniform_entropy_nats": 1.0986122886681098,
+          "fraction_max_above_0_95": 1.0,
+          "mean_source_rms": [
+            1.0077794790267944,
+            1.0683314800262451,
+            2.0053439140319824
+          ]
+        },
+        {
+          "step": 250,
+          "checkpoint_sha256": "2791232bf7c47f2a65bf8f9dcc23c8af4daf4d9780fc2398fa9a834d19b96b1f",
+          "config": {
+            "mode": "token",
+            "source_layers": [
+              2,
+              4,
+              6
+            ],
+            "temperature": 1.0,
+            "initial_weights": [
+              0.05,
+              0.05,
+              0.9
+            ]
+          },
+          "scope": "CUDA FP16 autocast; validation sequence indices 0..7, first 256 tokens each; not full validation",
+          "mean_weights": [
+            0.03289315104484558,
+            0.03257495164871216,
+            0.9345318675041199
+          ],
+          "std_weights": [
+            0.005127635784447193,
+            0.0052158716134727,
+            0.010339315980672836
+          ],
+          "argmax_fraction": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "mean_entropy_nats": 0.28622347116470337,
+          "uniform_entropy_nats": 1.0986122886681098,
+          "fraction_max_above_0_95": 0.099609375,
+          "mean_source_rms": [
+            1.0276015996932983,
+            1.140318751335144,
+            1.3932740688323975
+          ]
+        }
+      ]
+    }
+  }
+}

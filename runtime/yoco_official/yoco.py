@@ -146,8 +146,10 @@ class SelfDecoder(nn.Module):
         x,
         incremental_state=None,
         is_prefilling=False,
-        start_pos=0
+        start_pos=0,
+        return_layers=None,
     ):
+        selected = []
         if is_prefilling and x.size(1) % self.block_size != 0 and self.args.sliding_window is None:
             padding_len = self.block_size - x.size(1) % self.block_size
             x = F.pad(x, (0, 0, 0, padding_len), value=0)
@@ -171,7 +173,12 @@ class SelfDecoder(nn.Module):
                 incremental_state=incremental_state[idx] if incremental_state is not None else None,
                 is_prefilling=is_prefilling,)
 
+            if return_layers is not None and idx + 1 in return_layers:
+                selected.append(x[:, :x.size(1) - padding_len, :])
+
         x = x[:, :x.size(1) - padding_len, :]
+        if return_layers is not None:
+            return x, selected
         return x
 
 class CrossDecoder(nn.Module):
@@ -210,10 +217,28 @@ class CrossDecoder(nn.Module):
         incremental_state=None,
         start_pos=0,
         skip_cross_decoder=False,
+        memory=None,
+        memory_sources=None,
+        memory_weights=None,
     ):
         bsz, seqlen, embed_dim = x.size()
-        x_norm = self.kv_layer_norm(x)
-        key, value = self.k_proj(x_norm), self.v_proj(x_norm)
+        if memory is not None and memory.shape != x.shape:
+            raise ValueError('Cross-decoder memory must match hidden-state shape')
+        if memory_sources is None:
+            x_norm = self.kv_layer_norm(x if memory is None else memory)
+            key, value = self.k_proj(x_norm), self.v_proj(x_norm)
+        else:
+            if memory is not None or memory_weights is None or memory_weights.shape != (bsz, seqlen, len(memory_sources)):
+                raise ValueError('Invalid conditional memory sources or weights')
+            key = value = None
+            for i, source in enumerate(memory_sources):
+                if source.shape != x.shape:
+                    raise ValueError('Cross-decoder memory must match hidden-state shape')
+                norm = self.kv_layer_norm(source)
+                k, v = self.k_proj(norm), self.v_proj(norm)
+                weight = memory_weights[..., i, None].to(k.dtype)
+                key = k * weight if key is None else key + k * weight
+                value = v * weight if value is None else value + v * weight
         key = key.view(bsz, seqlen, self.num_heads, self.head_dim)
         value = value.view(bsz, seqlen, self.num_heads, self.head_dim)
         rel_pos = self.build_rel_pos(x, start_pos)

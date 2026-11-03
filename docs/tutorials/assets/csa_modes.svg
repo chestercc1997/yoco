@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 390" font-family="Noto Sans CJK SC, sans-serif" role="img" aria-label="CSA2：三个模式都要重新计算本层输出">
+<defs><marker id="arrow" markerWidth="9" markerHeight="9" refX="8" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8" fill="#64748b"/></marker></defs>
+<rect width="1100" height="100%" rx="18" fill="#f4f7fb"/>
+<text x="36" y="42" font-size="25" font-weight="700" fill="#132b46">CSA2：三个模式都要重新计算本层输出</text>
+<rect x="35" y="95" width="310" height="200" rx="12" fill="#def5eb" stroke="#247653"/>
+<text x="190.0" y="163.0" text-anchor="middle" font-size="19.0" fill="#247653">Full</text>
+<text x="190.0" y="189.0" text-anchor="middle" font-size="19.0" fill="#247653">生成主 KV 与 indexer K</text>
+<text x="190.0" y="215.0" text-anchor="middle" font-size="19.0" fill="#247653">本层 indexer 选择位置</text>
+<text x="190.0" y="241.0" text-anchor="middle" font-size="19.0" fill="#247653">本层 Q + SWA → 输出</text>
+<rect x="395" y="95" width="310" height="200" rx="12" fill="#e4efff" stroke="#285ea9"/>
+<text x="550.0" y="163.0" text-anchor="middle" font-size="19.0" fill="#285ea9">Reindex</text>
+<text x="550.0" y="189.0" text-anchor="middle" font-size="19.0" fill="#285ea9">复用主 KV 与 indexer K</text>
+<text x="550.0" y="215.0" text-anchor="middle" font-size="19.0" fill="#285ea9">重新选择位置</text>
+<text x="550.0" y="241.0" text-anchor="middle" font-size="19.0" fill="#285ea9">本层 Q + SWA → 输出</text>
+<rect x="755" y="95" width="310" height="200" rx="12" fill="#eee6ff" stroke="#6943a0"/>
+<text x="910.0" y="163.0" text-anchor="middle" font-size="19.0" fill="#6943a0">Reuse</text>
+<text x="910.0" y="189.0" text-anchor="middle" font-size="19.0" fill="#6943a0">复用主 KV 与 indexer K</text>
+<text x="910.0" y="215.0" text-anchor="middle" font-size="19.0" fill="#6943a0">复用已选位置</text>
+<text x="910.0" y="241.0" text-anchor="middle" font-size="19.0" fill="#6943a0">本层 Q + SWA → 输出</text>
+<text x="36" y="340" font-size="17" fill="#475569">复用 KV：减少缓存；复用 indices：减少索引计算。</text>
+<text x="36" y="365" font-size="17" fill="#475569">图中列的是模式职责，不表示发布模型每三层固定按此顺序排列。</text>
+</svg>

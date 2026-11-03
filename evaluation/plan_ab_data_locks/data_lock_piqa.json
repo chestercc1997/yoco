@@ -1,0 +1,6 @@
+{
+  "dataset": "ybisk/piqa",
+  "revision": "b40a463b4ac9c77c6e74e23c5d873f5c2139d8fa",
+  "task": "piqa",
+  "original_dataset_path": "piqa"
+}

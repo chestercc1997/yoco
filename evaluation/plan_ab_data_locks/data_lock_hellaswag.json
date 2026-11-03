@@ -1,0 +1,6 @@
+{
+  "dataset": "Rowan/hellaswag",
+  "revision": "218ec52e09a7e7462a5400043bb9a69a41d06b76",
+  "task": "hellaswag",
+  "original_dataset_path": "hellaswag"
+}

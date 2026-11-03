@@ -6,6 +6,7 @@ import json
 import os
 from pathlib import Path
 import sys
+import subprocess
 import time
 import urllib.request
 
@@ -45,17 +46,27 @@ def tokenize_shard(task):
 
 def main():
     from huggingface_hub import hf_hub_download
-    parser=argparse.ArgumentParser();parser.add_argument('--config',type=Path,required=True);args=parser.parse_args()
+    parser=argparse.ArgumentParser();parser.add_argument('--config',type=Path,required=True)
+    parser.add_argument('--workers',type=int,default=8)
+    parser.add_argument('--offline',action='store_true',help='Use pinned inventory and require every raw file locally; never download')
+    args=parser.parse_args()
+    if args.workers < 1: parser.error('--workers must be positive')
     c=json.loads(args.config.read_text())
     if not c['data']['approved']: raise SystemExit('Data selection is pending; no training corpus downloaded.')
     candidate=json.loads((ROOT/'provenance/fineweb_candidate.json').read_text())
-    if c['data']['dataset']!=candidate['id'] or c['data']['subset']!='sample-10BT': raise SystemExit('Candidate mismatch')
+    if c['data']['dataset']!=candidate['id'] or c['data']['subset']!='sample-10BT' or c['data']['revision']!=candidate['sha']: raise SystemExit('Candidate mismatch')
     revision=candidate['sha']; repo=candidate['id']; base=ROOT/'data/fineweb_edu_10bt';base.mkdir(parents=True,exist_ok=True)
-    url=f'https://huggingface.co/api/datasets/{repo}/tree/{revision}/sample/10BT?limit=100'
-    tree=json.load(urllib.request.urlopen(url,timeout=60)); entries={x['path']:x for x in tree if x['type']=='file'}
-    inventory=[]
-    for path in candidate['files']:
-        x=entries[path];inventory.append({'path':path,'bytes':x['size'],'sha256':x['lfs']['oid']})
+    endpoint=os.environ.get('HF_ENDPOINT','https://huggingface.co').rstrip('/')
+    url=f'{endpoint}/api/datasets/{repo}/tree/{revision}/sample/10BT?limit=100'
+    if args.offline:
+        inventory=candidate['inventory']
+    else:
+        tree=json.loads(subprocess.check_output(['curl','--fail','--silent','--show-error','--location',
+            '--connect-timeout','20','--max-time','60','--retry','3',url]))
+        entries={x['path']:x for x in tree if x['type']=='file'}
+        inventory=[]
+        for path in candidate['files']:
+            x=entries[path];inventory.append({'path':path,'bytes':x['size'],'sha256':x['lfs']['oid']})
     if inventory!=candidate['inventory']:raise RuntimeError('Pinned source inventory changed')
     import shutil
     # Reserve room for downloaded parquet, uint32 tokens and safe working space.
@@ -65,6 +76,12 @@ def main():
     atomic_json(base/'raw_manifest.json',{'dataset':repo,'revision':revision,'files':inventory})
     tasks=[]
     for entry in inventory:
+        existing=base/'raw'/entry['path']
+        if existing.is_file() and existing.stat().st_size==entry['bytes'] and sha256(existing)==entry['sha256']:
+            tasks.append((str(existing),existing.stem,entry['sha256'],revision))
+            print(json.dumps({'event':'verified_existing','file':entry['path']}),flush=True)
+            continue
+        if args.offline: raise RuntimeError('Missing or corrupt pinned raw file: '+str(existing))
         for attempt in range(8):
             try:
                 raw=hf_hub_download(repo_id=repo,repo_type='dataset',revision=revision,filename=entry['path'],local_dir=str(base/'raw'))
@@ -74,7 +91,7 @@ def main():
                 if attempt==7: raise
                 time.sleep(min(60,5*2**attempt))
         tasks.append((raw,Path(entry['path']).stem,entry['sha256'],revision)); print(json.dumps({'event':'downloaded','file':entry['path']}),flush=True)
-    with concurrent.futures.ProcessPoolExecutor(max_workers=8) as pool: records=list(pool.map(tokenize_shard,tasks))
+    with concurrent.futures.ProcessPoolExecutor(max_workers=args.workers) as pool: records=list(pool.map(tokenize_shard,tasks))
     manifest={'ready':True,'dataset':repo,'subset':'sample-10BT','revision':revision,'shards':records,
               'dtype':'little_endian_uint32','tokenizer':'official YOCO cl100k_base wrapper, vocab=100288, normal IDs+4, EOS=2',
               'preprocessing':'Encode complete original text with official wrapper and append EOS; pack within each source shard. No new text filtering except empty documents.',

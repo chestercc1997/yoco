@@ -1,4 +1,4 @@
-# YOCO 160M reproduction and Transformer comparison
+# YOCO 160M: learned and conditional depth K/V aggregation
 
 This repository combines the previously separate YOCO and Transformer baseline
 trees into one reproducible project. It contains model and training code,
@@ -7,7 +7,44 @@ and figures. Checkpoints and training data are intentionally excluded.
 
 ![2K quality and inference summary](evaluation/figures/04_yoco_transformer_2k_32gpu_inference.png)
 
-## Main result
+## Current A/B experiment
+
+The current experiment compares two ways to aggregate K/V from all six
+self-decoder layers, constructing shared memory once before layers 7–12:
+
+| Model | Aggregation weights | Sources |
+| --- | --- | --- |
+| A (`learned_kv`) | Six global trainable softmax logits; shared across tokens | Layers 1–6 |
+| B (`conditional_kv`) | Per-token scores from normalized source hidden states | Layers 1–6 |
+| Original YOCO baseline | K/V from the final self-decoder output | Layer 6 |
+
+A/B start with the same backbone parameters and uniform source weights. Each
+runs for 40,000 steps on four H100 GPUs, with 262,144 tokens per update, followed
+by the same eight downstream tasks. The completed two-GPU baseline is retained
+as a historical reference; this campaign does not train it again.
+
+**Status on 2026-11-03:** implementation and recovery tests pass, and all eight
+evaluation datasets load offline. HPC3 job **794750** is queued; full A/B
+training and downstream results are pending. These checks are not performance
+results. The earlier redundant baseline job 793493 was cancelled.
+
+- [A/B design and execution](docs/PLAN_AB_4GPU.md)
+- [Design formulas](docs/plan.md)
+- [Documentation index](docs/README.md)
+- [Training and evaluation scripts](scripts/README.md)
+- [Test commands](tests/README.md)
+
+The original three-source `token` and `static` hidden-state fusion experiments
+remain available as historical implementations. They differ from the six-source
+K/V aggregation in A/B. Existing two-GPU baseline / token-v2 validation results
+are documented separately in [the training review](docs/evidence/full-v2-convergence-review.md).
+
+## Earlier YOCO / Transformer reproduction
+
+The reports below describe the earlier 32-V100 YOCO/Transformer comparison,
+not the pending A/B experiment.
+
+## Earlier reproduction result
 
 The paired 40,000-step runs have nearly identical validation loss and aggregate
 downstream accuracy. YOCO uses much less inference cache and has substantially
@@ -23,8 +60,9 @@ See [the concise report](evaluation/YOCO_BASELINE_REPORT.md) for the results and
 
 ```text
 runtime/                 unified YOCO and Transformer model/training code
-configs/                 paired 160M configurations
-tools/                   dataset preparation and verification
+configs/                 original reproduction, historical fusion, and A/B configurations
+tools/                   data preparation, deployment, verification, and summaries
+docs/                    current A/B design, historical results, and tutorials
 evaluation/              lm-eval adapter, reports, summaries, raw metrics, figures
 benchmarks/              fixed, dynamic-shape, long-context, and plotting scripts
 tests/                   architecture and recovery checks

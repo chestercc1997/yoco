@@ -1,0 +1,58 @@
+[
+  {
+    "repository": "EleutherAI/pythia",
+    "commit": "a19eecb807ec2c79a39ebf18108816e6ffffc1d5",
+    "path": "models/1B/pythia-1b-deduped.yml",
+    "local": "pythia_models_1B_pythia-1b-deduped.yml",
+    "sha256": "782b34635790430db6412a61e1178363881a4a9d2cdf9fea9bb1d96229fb51ed",
+    "url": "https://raw.githubusercontent.com/EleutherAI/pythia/a19eecb807ec2c79a39ebf18108816e6ffffc1d5/models/1B/pythia-1b-deduped.yml"
+  },
+  {
+    "repository": "EleutherAI/pythia",
+    "commit": "a19eecb807ec2c79a39ebf18108816e6ffffc1d5",
+    "path": "models/1B/pythia-1b.yml",
+    "local": "pythia_models_1B_pythia-1b.yml",
+    "sha256": "da8bf3cbde81745d853ef269f732d97d6908cc02fa9d0b72a7700e144bb94eb3",
+    "url": "https://raw.githubusercontent.com/EleutherAI/pythia/a19eecb807ec2c79a39ebf18108816e6ffffc1d5/models/1B/pythia-1b.yml"
+  },
+  {
+    "repository": "EleutherAI/pythia",
+    "commit": "a19eecb807ec2c79a39ebf18108816e6ffffc1d5",
+    "path": "models/410M/pythia-410m-deduped.yml",
+    "local": "pythia_models_410M_pythia-410m-deduped.yml",
+    "sha256": "0e521a39b3c555017853ae2bb975e6029a88f19c3ce468eb35e830f5981d7c9e",
+    "url": "https://raw.githubusercontent.com/EleutherAI/pythia/a19eecb807ec2c79a39ebf18108816e6ffffc1d5/models/410M/pythia-410m-deduped.yml"
+  },
+  {
+    "repository": "EleutherAI/pythia",
+    "commit": "a19eecb807ec2c79a39ebf18108816e6ffffc1d5",
+    "path": "models/410M/pythia-410m.yml",
+    "local": "pythia_models_410M_pythia-410m.yml",
+    "sha256": "ca164a903f2328bb77ffa4cf8e6932d44c25af0af0b12526a81b560e616ada82",
+    "url": "https://raw.githubusercontent.com/EleutherAI/pythia/a19eecb807ec2c79a39ebf18108816e6ffffc1d5/models/410M/pythia-410m.yml"
+  },
+  {
+    "repository": "huggingface/smollm",
+    "commit": "438be18dae658a638f3a6976fdf5190bb6d68619",
+    "path": "text/evaluation/smollm2/README.md",
+    "local": "smollm_text_evaluation_smollm2_README.md",
+    "sha256": "9a6fffe1d439dd7d33fea67a2caf374e986833fadc52aa9f803495e3070ba02b",
+    "url": "https://raw.githubusercontent.com/huggingface/smollm/438be18dae658a638f3a6976fdf5190bb6d68619/text/evaluation/smollm2/README.md"
+  },
+  {
+    "repository": "allenai/OLMo",
+    "commit": "090253dac6688f2532509daa7aa2eb5fae50e956",
+    "path": "configs/official-0724/OLMo-1B.yaml",
+    "local": "OLMo_configs_official-0724_OLMo-1B.yaml",
+    "sha256": "75fbf8e9730f8311628d973570f74bcffbe2711305dae919ef4a6143077fb918",
+    "url": "https://raw.githubusercontent.com/allenai/OLMo/090253dac6688f2532509daa7aa2eb5fae50e956/configs/official-0724/OLMo-1B.yaml"
+  },
+  {
+    "repository": "huggingface/smollm",
+    "commit": "438be18dae658a638f3a6976fdf5190bb6d68619",
+    "path": "text/pretraining/smollm2/config_smollm2_360M.yaml",
+    "local": "smollm_text_pretraining_smollm2_config_smollm2_360M.yaml",
+    "sha256": "d65acbbc82efa763833719b7bde102466e7ace58ffdec396e40214a2ab6840b3",
+    "url": "https://raw.githubusercontent.com/huggingface/smollm/438be18dae658a638f3a6976fdf5190bb6d68619/text/pretraining/smollm2/config_smollm2_360M.yaml"
+  }
+]

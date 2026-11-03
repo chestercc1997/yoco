@@ -2,6 +2,7 @@ __pycache__/
 *.py[cod]
 .pytest_cache/
 .venv/
+wheelhouse/
 venv/
 
 # Large or machine-local artifacts
@@ -29,3 +30,7 @@ id_ed25519*
 .idea/
 .vscode/
 .DS_Store
+
+# Local documentation backups and source conversation
+archives/
+docs/abc_talk1.md

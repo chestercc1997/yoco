@@ -1,0 +1,20 @@
+[
+  {
+    "file": "deepseek-model-1017.py",
+    "source": "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017/raw/main/inference/model.py",
+    "download_host": "hf-mirror.com",
+    "retrieved": "2026-10-30",
+    "sha256": "e5decd76fe70fd56ef2f10124d245c6f64fb6a0003cc9068a1d3182a168b8d2d",
+    "bytes": 61669,
+    "revision_note": "main snapshot; upstream commit not pinned; local bytes identified by SHA256"
+  },
+  {
+    "file": "deepseek-config-1017.json",
+    "source": "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017/raw/main/config.json",
+    "download_host": "hf-mirror.com",
+    "retrieved": "2026-10-30",
+    "sha256": "8be45ce0476004a3f529fd896115a4a2e800a129ad2d3ec05b16050f52e21879",
+    "bytes": 3311,
+    "revision_note": "main snapshot; upstream commit not pinned; local bytes identified by SHA256"
+  }
+]

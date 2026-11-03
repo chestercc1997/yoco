@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 440" font-family="Noto Sans CJK SC, sans-serif" role="img" aria-label="候选池不是最终 attention 集合">
+<defs><marker id="arrow" markerWidth="9" markerHeight="9" refX="8" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8" fill="#64748b"/></marker></defs>
+<rect width="1100" height="100%" rx="18" fill="#f4f7fb"/>
+<text x="36" y="42" font-size="25" font-weight="700" fill="#132b46">候选池不是最终 attention 集合</text>
+<path d="M305,150.0 L407,150.0" stroke="#64748b" fill="none" stroke-width="2.5" marker-end="url(#arrow)"/>
+<path d="M685,150.0 L787,150.0" stroke="#64748b" fill="none" stroke-width="2.5" marker-end="url(#arrow)"/>
+<path d="M170.0,200 L550.0,272" stroke="#64748b" fill="none" stroke-width="2.5" marker-end="url(#arrow)"/>
+<rect x="35" y="100" width="270" height="100" rx="12" fill="#e4efff" stroke="#285ea9"/>
+<text x="170.0" y="144.0" text-anchor="middle" font-size="19.0" fill="#285ea9">所有因果可见条目</text>
+<text x="170.0" y="170.0" text-anchor="middle" font-size="19.0" fill="#285ea9">第一次 indexer 扫描</text>
+<rect x="415" y="100" width="270" height="100" rx="12" fill="#def5eb" stroke="#247653"/>
+<text x="550.0" y="144.0" text-anchor="middle" font-size="19.0" fill="#247653">共享候选池</text>
+<text x="550.0" y="170.0" text-anchor="middle" font-size="19.0" fill="#247653">2048 块 × 8 = 16384</text>
+<rect x="795" y="100" width="270" height="100" rx="12" fill="#eee6ff" stroke="#6943a0"/>
+<text x="930.0" y="144.0" text-anchor="middle" font-size="19.0" fill="#6943a0">后续 Reindex</text>
+<text x="930.0" y="170.0" text-anchor="middle" font-size="19.0" fill="#6943a0">各自选择 Top-512</text>
+<rect x="415" y="280" width="270" height="90" rx="12" fill="#fff0d9" stroke="#9a6513"/>
+<text x="550.0" y="319.0" text-anchor="middle" font-size="19.0" fill="#9a6513">第一次层自己的 Top-512</text>
+<text x="550.0" y="345.0" text-anchor="middle" font-size="19.0" fill="#9a6513">直接用于本层 attention</text>
+<text x="36" y="390" font-size="17" fill="#475569">后面的搜索范围缩小，但初次全范围扫描仍存在；各层最终选择可以不同。</text>
+</svg>

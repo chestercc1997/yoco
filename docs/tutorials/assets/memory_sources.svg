@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 490" font-family="Noto Sans CJK SC, sans-serif" role="img" aria-label="全局记忆从哪里来？（抽象依赖图）">
+<defs><marker id="arrow" markerWidth="9" markerHeight="9" refX="8" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8" fill="#64748b"/></marker></defs>
+<rect width="1100" height="100%" rx="18" fill="#f4f7fb"/>
+<text x="36" y="42" font-size="25" font-weight="700" fill="#132b46">全局记忆从哪里来？（抽象依赖图）</text>
+<path d="M255,122.5 L302,122.5" stroke="#64748b" fill="none" stroke-width="2.5" marker-end="url(#arrow)"/>
+<path d="M530,122.5 L587,122.5" stroke="#64748b" fill="none" stroke-width="2.5" marker-end="url(#arrow)"/>
+<path d="M255,242.5 L302,242.5" stroke="#64748b" fill="none" stroke-width="2.5" marker-end="url(#arrow)"/>
+<path d="M530,242.5 L587,242.5" stroke="#64748b" fill="none" stroke-width="2.5" marker-end="url(#arrow)"/>
+<path d="M255,362.5 L302,362.5" stroke="#64748b" fill="none" stroke-width="2.5" marker-end="url(#arrow)"/>
+<path d="M530,362.5 L587,362.5" stroke="#64748b" fill="none" stroke-width="2.5" marker-end="url(#arrow)"/>
+<rect x="35" y="85" width="220" height="75" rx="12" fill="#e4efff" stroke="#285ea9"/>
+<text x="145.0" y="116.5" text-anchor="middle" font-size="19.0" fill="#285ea9">普通 Transformer</text>
+<text x="145.0" y="142.5" text-anchor="middle" font-size="19.0" fill="#285ea9">本层隐藏状态 H</text>
+<rect x="310" y="85" width="220" height="75" rx="12" fill="#def5eb" stroke="#247653"/>
+<text x="420.0" y="116.5" text-anchor="middle" font-size="19.0" fill="#247653">本层独立 KV</text>
+<text x="420.0" y="142.5" text-anchor="middle" font-size="19.0" fill="#247653">每层一组历史</text>
+<rect x="595" y="85" width="450" height="75" rx="12" fill="#fff0d9" stroke="#9a6513"/>
+<text x="820.0" y="116.5" text-anchor="middle" font-size="19.0" fill="#9a6513">深层历史 KV</text>
+<text x="820.0" y="142.5" text-anchor="middle" font-size="19.0" fill="#9a6513">依赖前面所有层的历史计算</text>
+<rect x="35" y="205" width="220" height="75" rx="12" fill="#e4efff" stroke="#285ea9"/>
+<text x="145.0" y="236.5" text-anchor="middle" font-size="19.0" fill="#285ea9">YOCO</text>
+<text x="145.0" y="262.5" text-anchor="middle" font-size="19.0" fill="#285ea9">self-decoder → E</text>
+<rect x="310" y="205" width="220" height="75" rx="12" fill="#def5eb" stroke="#247653"/>
+<text x="420.0" y="236.5" text-anchor="middle" font-size="19.0" fill="#247653">共享 K* / V*</text>
+<text x="420.0" y="262.5" text-anchor="middle" font-size="19.0" fill="#247653">一组全局记忆</text>
+<rect x="595" y="205" width="450" height="75" rx="12" fill="#eee6ff" stroke="#6943a0"/>
+<text x="820.0" y="236.5" text-anchor="middle" font-size="19.0" fill="#6943a0">多个 cross-decoder 层</text>
+<text x="820.0" y="262.5" text-anchor="middle" font-size="19.0" fill="#6943a0">每层独立 Q，反复读取同一记忆</text>
+<rect x="35" y="325" width="220" height="75" rx="12" fill="#e4efff" stroke="#285ea9"/>
+<text x="145.0" y="356.5" text-anchor="middle" font-size="19.0" fill="#285ea9">CED</text>
+<text x="145.0" y="382.5" text-anchor="middle" font-size="18.3" fill="#285ea9">causal encoder → E</text>
+<rect x="310" y="325" width="220" height="75" rx="12" fill="#def5eb" stroke="#247653"/>
+<text x="420.0" y="356.5" text-anchor="middle" font-size="19.0" fill="#247653">投影 / 压缩 / 分组</text>
+<text x="420.0" y="382.5" text-anchor="middle" font-size="19.0" fill="#247653">全局记忆</text>
+<rect x="595" y="325" width="450" height="75" rx="12" fill="#eee6ff" stroke="#6943a0"/>
+<text x="820.0" y="356.5" text-anchor="middle" font-size="19.0" fill="#6943a0">decoder：全局读取 + 本层 SWA</text>
+<text x="820.0" y="382.5" text-anchor="middle" font-size="19.0" fill="#6943a0">局部状态仍有逐层依赖</text>
+<text x="36" y="440" font-size="17" fill="#475569">同一组 KV ≠ 同一组 attention 权重；不同 Q 可以得到不同输出。</text>
+</svg>

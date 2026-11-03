@@ -3,6 +3,7 @@
 from .tokenizer import TiktokenTokenizer
 from .yoco_official import YOCO, YOCOArgs
 from .yoco_official.transformer import ModelArgs, Transformer
+from .memory_fusion import FusionConfig, MemoryFusionYOCO
 
 
 def tokenizer() -> TiktokenTokenizer:
@@ -22,5 +23,11 @@ def build_model(config: dict, checkpoint_activations: bool = False):
         "share_input_output_embed": config["tied_embeddings"],
     }
     if architecture(config) == "yoco":
+        if 'memory_fusion' in config:
+            args = YOCOArgs(**config['model'])
+            fusion = FusionConfig.parse(config['memory_fusion'], args)
+            return MemoryFusionYOCO(args, fusion, **common)
         return YOCO(YOCOArgs(**config["model"]), **common)
+    if 'memory_fusion' in config:
+        raise ValueError('memory_fusion is only supported for YOCO')
     return Transformer(ModelArgs(**config["model"]), **common)

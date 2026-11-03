@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 480" font-family="Noto Sans CJK SC, sans-serif" role="img" aria-label="状态的访问频率与保存期限决定放在哪里">
+<defs><marker id="arrow" markerWidth="9" markerHeight="9" refX="8" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8" fill="#64748b"/></marker></defs>
+<rect width="1100" height="100%" rx="18" fill="#f4f7fb"/>
+<text x="36" y="42" font-size="25" font-weight="700" fill="#132b46">状态的访问频率与保存期限决定放在哪里</text>
+<path d="M345,175.0 L387,175.0" stroke="#64748b" fill="none" stroke-width="2.5" marker-end="url(#arrow)"/>
+<path d="M705,175.0 L747,175.0" stroke="#64748b" fill="none" stroke-width="2.5" marker-end="url(#arrow)"/>
+<rect x="35" y="105" width="310" height="140" rx="12" fill="#e4efff" stroke="#285ea9"/>
+<text x="190.0" y="156.0" text-anchor="middle" font-size="19.0" fill="#285ea9">GPU HBM</text>
+<text x="190.0" y="182.0" text-anchor="middle" font-size="19.0" fill="#285ea9">正在计算的全局 / 局部状态</text>
+<text x="190.0" y="208.0" text-anchor="middle" font-size="19.0" fill="#285ea9">高带宽，容量有限</text>
+<rect x="395" y="105" width="310" height="140" rx="12" fill="#def5eb" stroke="#247653"/>
+<text x="550.0" y="156.0" text-anchor="middle" font-size="19.0" fill="#247653">主机内存</text>
+<text x="550.0" y="182.0" text-anchor="middle" font-size="19.0" fill="#247653">短期会话状态 / 中间层缓存</text>
+<text x="550.0" y="208.0" text-anchor="middle" font-size="19.0" fill="#247653">加载需要传输</text>
+<rect x="755" y="105" width="310" height="140" rx="12" fill="#eee6ff" stroke="#6943a0"/>
+<text x="910.0" y="156.0" text-anchor="middle" font-size="19.0" fill="#6943a0">SSD / 持久前缀</text>
+<text x="910.0" y="182.0" text-anchor="middle" font-size="19.0" fill="#6943a0">长期复用的全局记忆</text>
+<text x="910.0" y="208.0" text-anchor="middle" font-size="19.0" fill="#6943a0">命中后仍需加载</text>
+<rect x="285" y="310" width="530" height="80" rx="12" fill="#fff0d9" stroke="#9a6513"/>
+<text x="550.0" y="344.0" text-anchor="middle" font-size="19.0" fill="#9a6513">局部状态缺失 → replay 恢复</text>
+<text x="550.0" y="370.0" text-anchor="middle" font-size="19.0" fill="#9a6513">恢复成本、数值差异和质量要单独评估</text>
+<text x="36" y="430" font-size="17" fill="#475569">这是缓存层次的教学示意，不表示每个请求都必须顺序经过全部层次。</text>
+</svg>

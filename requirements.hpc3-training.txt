@@ -1,0 +1,6 @@
+torch==2.7.1
+numpy==2.1.2
+tiktoken==0.11.0
+pyarrow==20.0.0
+huggingface-hub==0.33.2
+tqdm==4.67.1

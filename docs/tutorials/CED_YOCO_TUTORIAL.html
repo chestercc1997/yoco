@@ -1,0 +1,444 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>从 Transformer 到 YOCO 与 CED：理解记忆、计算依赖和推理缓存</title><style>body{margin:0;background:#f6f8fb;color:#243448;font:17px/1.85 system-ui,"Noto Sans CJK SC",sans-serif}header{background:#132b46;color:white;padding:48px max(24px,calc((100vw - 1000px)/2))}header p{color:#cfdbed}main{max-width:1000px;margin:30px auto;padding:0 24px 80px}h1{font-size:34px;line-height:1.4}h2{margin-top:64px;border-top:1px solid #ccd7e5;padding-top:28px;color:#143f6b}h3{margin-top:36px}a{color:#1768aa}table{border-collapse:collapse;width:100%;font-size:15px;display:block;overflow:auto}th,td{border:1px solid #d1dbe7;padding:12px;min-width:110px}th{background:#e8eff8}pre{overflow:auto;background:#162a40;color:#e5effc;padding:22px;border-radius:12px;font-size:14px;line-height:1.65}code{font-family:ui-monospace,monospace}svg{width:100%;height:auto;margin:20px 0}blockquote,.lab{background:#eaf2fc;border-left:5px solid #3386bd;padding:18px 24px;margin:28px 0}.toc{background:white;border:1px solid #d4ddea;padding:25px;border-radius:12px}.toc ul{margin:4px 0}.lab input{font-size:16px;width:95px;margin:8px;padding:5px}.lab output{display:block;font-weight:bold;color:#164d77}.bar{height:26px;background:#367abb;margin:8px 0;border-radius:5px;min-width:2px}.shared{background:#2a9971}button{font-size:16px;padding:8px 18px} @media print{header{background:white;color:black;padding:0}.lab,nav{display:none}h2{break-before:auto}pre,svg{break-inside:avoid}}</style><header><div>架构学习笔记 · 2026-10-30</div><h1>从 Transformer 到 YOCO 与 CED：理解记忆、计算依赖和推理缓存</h1><p>从问题出发，沿计算依赖阅读架构。原创示意图、手算与可交互练习。</p><nav><a style="color:#cfe5ff" href="DEEPSEEK_V41_TUTORIAL.html">V4.1 全景</a> · <a style="color:#cfe5ff" href="CED_YOCO_TUTORIAL.html">CED / YOCO 专题</a></nav></header><main><div class="toc">
+<ul>
+<li><a href="#transformer-yoco-ced">从 Transformer 到 YOCO 与 CED：理解记忆、计算依赖和推理缓存</a><ul>
+<li><a href="#1">1 先理解问题：语言模型到底在预测什么</a><ul>
+<li><a href="#11-attention">1.1 Attention 是一次带内容的查询</a></li>
+<li><a href="#12-prefilldecode">1.2 Prefill、decode 和训练不是同一回事</a></li>
+</ul>
+</li>
+<li><a href="#2-transformer-kv">2 普通 Transformer 为什么会有很多份 KV</a><ul>
+<li><a href="#21">2.1 手算缓存大小</a></li>
+</ul>
+</li>
+<li><a href="#3-yoco">3 YOCO：先形成记忆，再让不同层反复读取</a><ul>
+<li><a href="#31-self-decoder">3.1 第一步：self-decoder 如何读完整个前缀</a></li>
+<li><a href="#32-e">3.2 第二步：将 E 写成全局记忆</a></li>
+<li><a href="#33-cross-decoder">3.3 第三步：cross-decoder 多次提问</a></li>
+</ul>
+</li>
+<li><a href="#4-yoco-cross-decoder-prefill">4 为什么 YOCO 可以跳过大部分 cross-decoder prefill</a></li>
+<li><a href="#5-ced-encoder">5 CED：全局记忆由 encoder 提供，局部深层状态继续存在</a><ul>
+<li><a href="#51-encoder-causal">5.1 为什么 encoder 必须 causal</a></li>
+<li><a href="#52-ced-yoco">5.2 CED 与 YOCO 的实质差别</a></li>
+</ul>
+</li>
+<li><a href="#6-swa-replay">6 SWA replay：为什么最后一个窗口不一定足够精确</a><ul>
+<li><a href="#61">6.1 为什么仍可能值得做</a></li>
+</ul>
+</li>
+<li><a href="#7-kv">7 缓存账本：不能只数全局 K/V</a></li>
+<li><a href="#8">8 最小伪代码：先做正确，再做跳过</a></li>
+<li><a href="#9">9 对照当前仓库读代码</a><ul>
+<li><a href="#91-ced">9.1 实现 CED 时先通过哪些真正有意义的检查</a></li>
+</ul>
+</li>
+<li><a href="#10">10 自测与答案</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<h1 id="transformer-yoco-ced">从 Transformer 到 YOCO 与 CED：理解记忆、计算依赖和推理缓存</h1>
+<p>这份教程面向已经听说过 Attention、但还不能从计算图解释 KV cache 的读者。目标是让你能独立画出三种架构，判断哪些计算可以跳过，算出缓存的主要组成，并把理论映射到当前仓库代码。先读第 1—5 节建立直觉，再读第 6—10 节学习实现与实验。</p>
+<p>本文的数值小模型和伪代码都是教学构造。正式结构参照 <a href="https://arxiv.org/html/2405.05254v1">YOCO 原论文</a>、<a href="https://arxiv.org/html/2609.19969v1#S2.SS2">CED 技术报告 §2.2</a>，代码解释对应本仓库 <code>25c9492</code>。V4.1 的其他模块见<a href="DEEPSEEK_V41_TUTORIAL.html">另一份教程</a>。</p>
+<h2 id="1">1 先理解问题：语言模型到底在预测什么</h2>
+<p>考虑输入「今天 天气 很」。分词后的每个 token 是一个编号，embedding 把编号变成向量。模型在“很”的位置输出一个分布，决定后面更可能是“好”还是“冷”。数学上，位置 t 的输出预测 x[t+1]，只能使用 x[1:t]。</p>
+<p>因此“当前位置可以看自己”不构成泄漏：输入中的 x[t] 已经给出，标签是下一个 token。真正的泄漏是输出位置 t 看到了输入 x[t+1]。训练时所有位置并行计算，必须用因果 mask 保证这一点。</p>
+<p>训练通常以交叉熵为目标：<code>loss = -mean_t log p(x[t+1] | x[1:t])</code>。这解释了两个事实：所有 token 的输出都有训练价值；但推理时读完 prompt，通常只需要最后位置的输出来生成第一个新 token。</p>
+<h3 id="11-attention">1.1 Attention 是一次带内容的查询</h3>
+<p>把一段历史想成带索引的笔记。Q 是当前要问的问题，K 是每条笔记的检索标签，V 是真正要取出的内容。一个简化注意力头计算：</p>
+<pre><code class="language-text">score[t,j] = dot(Q[t], K[j]) / sqrt(d_head)     j ≤ t
+weight[t,:] = softmax(score[t,:])
+output[t] = sum_j weight[t,j] * V[j]
+</code></pre>
+<p>这个比喻的边界是：Q、K、V 都是训练得到的连续向量，K 不是字符串关键词，注意力也不是数据库的精确匹配。不同层可以形成不同的问题和不同的历史表示。</p>
+<h3 id="12-prefilldecode">1.2 Prefill、decode 和训练不是同一回事</h3>
+<table>
+<thead>
+<tr>
+<th>阶段</th>
+<th>输入与并行方式</th>
+<th>需要哪些输出</th>
+<th>主要任务</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>训练</td>
+<td>整段 token，位置间受因果 mask 约束</td>
+<td>通常所有位置 logits</td>
+<td>计算 loss 和梯度</td>
+</tr>
+<tr>
+<td>Prefill</td>
+<td>一次读入 prompt，可并行处理位置</td>
+<td>通常最后位置 logits</td>
+<td>建立后续生成所需状态</td>
+</tr>
+<tr>
+<td>Decode</td>
+<td>每次追加一个已生成 token</td>
+<td>新位置 logits</td>
+<td>读取历史、更新状态、生成下一 token</td>
+</tr>
+</tbody>
+</table>
+<p>如果把生成结果“好”追加到输入，模型不是从头重算「今天 天气 很 好」的所有中间表示；它通常读取之前保存的 K/V，只计算新 token。这样的持久状态就是 KV cache。</p>
+<h2 id="2-transformer-kv">2 普通 Transformer 为什么会有很多份 KV</h2>
+<p>普通 decoder-only Transformer 的每一层都从本层输入生成自己的 Q/K/V。暂时忽略归一化、位置编码、多头变形和残差：</p>
+<pre><code class="language-text">Q_l = H_(l-1) Wq_l
+K_l = H_(l-1) Wk_l
+V_l = H_(l-1) Wv_l
+H_l = Block_l(H_(l-1))
+</code></pre>
+<p>深层历史 KV 的来源是深层历史隐藏状态。为了取得第 12 层对 prompt 的 KV，prompt 必须先经过前 11 层。这就是“依赖链”，而不是一个可以靠少保存几份数组就消掉的工程细节。</p>
+<p><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 490" font-family="Noto Sans CJK SC, sans-serif" role="img" aria-label="全局记忆从哪里来？（抽象依赖图）">
+<defs><marker id="arrow" markerWidth="9" markerHeight="9" refX="8" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8" fill="#64748b"/></marker></defs>
+<rect width="1100" height="100%" rx="18" fill="#f4f7fb"/>
+<text x="36" y="42" font-size="25" font-weight="700" fill="#132b46">全局记忆从哪里来？（抽象依赖图）</text>
+<path d="M255,122.5 L302,122.5" stroke="#64748b" fill="none" stroke-width="2.5" marker-end="url(#arrow)"/>
+<path d="M530,122.5 L587,122.5" stroke="#64748b" fill="none" stroke-width="2.5" marker-end="url(#arrow)"/>
+<path d="M255,242.5 L302,242.5" stroke="#64748b" fill="none" stroke-width="2.5" marker-end="url(#arrow)"/>
+<path d="M530,242.5 L587,242.5" stroke="#64748b" fill="none" stroke-width="2.5" marker-end="url(#arrow)"/>
+<path d="M255,362.5 L302,362.5" stroke="#64748b" fill="none" stroke-width="2.5" marker-end="url(#arrow)"/>
+<path d="M530,362.5 L587,362.5" stroke="#64748b" fill="none" stroke-width="2.5" marker-end="url(#arrow)"/>
+<rect x="35" y="85" width="220" height="75" rx="12" fill="#e4efff" stroke="#285ea9"/>
+<text x="145.0" y="116.5" text-anchor="middle" font-size="19.0" fill="#285ea9">普通 Transformer</text>
+<text x="145.0" y="142.5" text-anchor="middle" font-size="19.0" fill="#285ea9">本层隐藏状态 H</text>
+<rect x="310" y="85" width="220" height="75" rx="12" fill="#def5eb" stroke="#247653"/>
+<text x="420.0" y="116.5" text-anchor="middle" font-size="19.0" fill="#247653">本层独立 KV</text>
+<text x="420.0" y="142.5" text-anchor="middle" font-size="19.0" fill="#247653">每层一组历史</text>
+<rect x="595" y="85" width="450" height="75" rx="12" fill="#fff0d9" stroke="#9a6513"/>
+<text x="820.0" y="116.5" text-anchor="middle" font-size="19.0" fill="#9a6513">深层历史 KV</text>
+<text x="820.0" y="142.5" text-anchor="middle" font-size="19.0" fill="#9a6513">依赖前面所有层的历史计算</text>
+<rect x="35" y="205" width="220" height="75" rx="12" fill="#e4efff" stroke="#285ea9"/>
+<text x="145.0" y="236.5" text-anchor="middle" font-size="19.0" fill="#285ea9">YOCO</text>
+<text x="145.0" y="262.5" text-anchor="middle" font-size="19.0" fill="#285ea9">self-decoder → E</text>
+<rect x="310" y="205" width="220" height="75" rx="12" fill="#def5eb" stroke="#247653"/>
+<text x="420.0" y="236.5" text-anchor="middle" font-size="19.0" fill="#247653">共享 K* / V*</text>
+<text x="420.0" y="262.5" text-anchor="middle" font-size="19.0" fill="#247653">一组全局记忆</text>
+<rect x="595" y="205" width="450" height="75" rx="12" fill="#eee6ff" stroke="#6943a0"/>
+<text x="820.0" y="236.5" text-anchor="middle" font-size="19.0" fill="#6943a0">多个 cross-decoder 层</text>
+<text x="820.0" y="262.5" text-anchor="middle" font-size="19.0" fill="#6943a0">每层独立 Q，反复读取同一记忆</text>
+<rect x="35" y="325" width="220" height="75" rx="12" fill="#e4efff" stroke="#285ea9"/>
+<text x="145.0" y="356.5" text-anchor="middle" font-size="19.0" fill="#285ea9">CED</text>
+<text x="145.0" y="382.5" text-anchor="middle" font-size="18.3" fill="#285ea9">causal encoder → E</text>
+<rect x="310" y="325" width="220" height="75" rx="12" fill="#def5eb" stroke="#247653"/>
+<text x="420.0" y="356.5" text-anchor="middle" font-size="19.0" fill="#247653">投影 / 压缩 / 分组</text>
+<text x="420.0" y="382.5" text-anchor="middle" font-size="19.0" fill="#247653">全局记忆</text>
+<rect x="595" y="325" width="450" height="75" rx="12" fill="#eee6ff" stroke="#6943a0"/>
+<text x="820.0" y="356.5" text-anchor="middle" font-size="19.0" fill="#6943a0">decoder：全局读取 + 本层 SWA</text>
+<text x="820.0" y="382.5" text-anchor="middle" font-size="19.0" fill="#6943a0">局部状态仍有逐层依赖</text>
+<text x="36" y="440" font-size="17" fill="#475569">同一组 KV ≠ 同一组 attention 权重；不同 Q 可以得到不同输出。</text>
+</svg></p>
+<p><strong>读图方法：</strong> 蓝色框是隐藏状态计算，绿色框是全局记忆。普通模型每层都产生一份；YOCO 把同一份交给多个读取层；CED 允许从同一 encoder 输出产生多组投影。图中省略所有 FFN、位置编码和具体注意力头，仅比较全局记忆来源。</p>
+<h3 id="21">2.1 手算缓存大小</h3>
+<p>对于普通 GQA，若每层有 h_kv 个 KV 头、头维度 d_h、每个元素 b bytes，batch 为 B，长度为 T，层数为 L：</p>
+<pre><code class="language-text">M_standard = 2 × B × T × L × h_kv × d_h × b
+</code></pre>
+<p>系数 2 来自 K 与 V 两份数组。教学例子取 B=1、T=32768、L=32、h_kv=8、d_h=128、b=2，得到 4,294,967,296 bytes，即 <strong>4 GiB</strong>。这是 KV 的理论有效载荷，不含权重、激活、分配器空洞和工作区。</p>
+<p>GQA 减少 h_kv；量化减少 b；滑动窗口减少每层保存的位置数；跨层共享减少独立缓存组数。它们作用在不同维度，不能只看一种优化名称就推断总显存。</p>
+<h2 id="3-yoco">3 YOCO：先形成记忆，再让不同层反复读取</h2>
+<p>YOCO 的官方结构是 self-decoder 加 cross-decoder。前半部分形成因果表示，后半部分共享其产生的全局 K/V；前半部分自己仍需要有限大小的推理状态。“Only Cache Once”指全局 KV，而不是整个模型没有其他状态。<a href="https://arxiv.org/html/2405.05254v1#S2">YOCO §2</a></p>
+<h3 id="31-self-decoder">3.1 第一步：self-decoder 如何读完整个前缀</h3>
+<p>把前半部分输出记为 E。每个 E[t] 都只能依赖 x[1:t]。self-decoder 需要高效处理序列，但并不要求每层都保存所有历史 token 的完整 K/V。</p>
+<p>两种典型选择是 SWA 和 gated retention：</p>
+<ul>
+<li><strong>SWA：</strong> 每层只关注附近 W 个位置，历史缓存有固定窗口上限。一个 token 的信息仍能通过层间传播影响更远位置，但这种间接传播与一次直接读取任意远处内容不同。</li>
+<li><strong>Gated retention：</strong> 用递归状态汇总历史，状态尺寸主要由通道和头维度决定，而不是随前缀长度增长。历史被压入状态，不能把它理解成逐 token 完整存档。</li>
+</ul>
+<p>教学版 retention 可以写成 <code>S[t] = gamma[t] S[t-1] + outer(k[t], v[t])</code>，再计算 <code>o[t] = q[t] S[t]</code>。S 是矩阵，gamma 控制遗忘程度。这只是单头、略去缩放和门控细节的解释式。</p>
+<p>假设 gamma 恒为 0.9，十步前一次写入的权重衰减到 <code>0.9^10 ≈ 0.349</code>。真实模型的门控随输入变化，不是所有信息都用固定 0.9 衰减。这个例子只帮助理解“状态更新”和“显式保存历史数组”的区别。</p>
+<h3 id="32-e">3.2 第二步：将 E 写成全局记忆</h3>
+<p>教学式为 <code>K* = Norm(E) Wk</code>、<code>V* = Norm(E) Wv</code>。这些矩阵仍包含所有被保留位置的条目，所以 YOCO 的全局记忆仍随 T 增长；常数大小的是前半部分的某些局部或递归状态。</p>
+<h3 id="33-cross-decoder">3.3 第三步：cross-decoder 多次提问</h3>
+<p>后半部分第 l 层使用自己的隐藏状态生成 Q_l，但读取公共 K<em>、V</em>：</p>
+<pre><code class="language-text">Q_l[t] = Query_l(H_(l-1)[t])
+A_l[t] = Attention(Q_l[t], K*[1:t], V*[1:t])
+H_l[t] = TokenwiseFFNAndResidual(H_(l-1)[t], A_l[t])
+</code></pre>
+<p><strong>同一份材料，不同的问题。</strong> 例如第一层可以更关注主语，第二层更关注时间，第三层根据这些结果判断语气。共享 K/V 没有强制 Q 相同，也没有强制 softmax 权重或层输出相同。后半部分仍有层级计算能力。</p>
+<p>对应本仓库的直接证据是：<code>CrossDecoder</code> 只有一对 <code>k_proj/v_proj</code>，其 <code>forward</code> 在循环外产生 key/value；各 <code>CrossAttention</code> 对象各自持有 <code>q_proj/out_proj</code>。<a href="../../runtime/yoco_official/yoco.py">本地源码</a>、<a href="../../runtime/yoco_official/cross_attention.py">cross attention 源码</a>。</p>
+<h2 id="4-yoco-cross-decoder-prefill">4 为什么 YOCO 可以跳过大部分 cross-decoder prefill</h2>
+<p>这是学习两阶段架构最值得自己推导的一步。</p>
+<p>假设 prompt 有 T 个 token，下一步只需要位置 T 的 logits。位置 T 在 cross-decoder 的第 l 层需要：上一层在位置 T 的隐藏状态，以及 E 形成的历史 K<em>/V</em>。它不需要其他历史位置在 cross-decoder 第 l−1 层的输出，因为后半部分没有从这些输出再建立逐层历史 KV 的要求。</p>
+<p>由此得到一条精确计算路径：</p>
+<ol>
+<li>对全部 prompt 执行 self-decoder，得到 E[1:T] 和前半部分状态。</li>
+<li>由全部 E[1:T] 建立一次 K<em>/V</em>。</li>
+<li>只把 E[T] 送过所有 cross-decoder 层，得到首个新 token 的分布。</li>
+<li>生成 x[T+1] 后，让这个新 token 再走完整 self-decoder 与 cross-decoder，并更新缓存。</li>
+</ol>
+<p><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 540" font-family="Noto Sans CJK SC, sans-serif" role="img" aria-label="YOCO：哪些位置需要经过后半部分？">
+<defs><marker id="arrow" markerWidth="9" markerHeight="9" refX="8" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8" fill="#64748b"/></marker></defs>
+<rect width="1100" height="100%" rx="18" fill="#f4f7fb"/>
+<text x="36" y="42" font-size="25" font-weight="700" fill="#132b46">YOCO：哪些位置需要经过后半部分？</text>
+<path d="M310,137.5 L402,137.5" stroke="#64748b" fill="none" stroke-width="2.5" marker-end="url(#arrow)"/>
+<path d="M310,272.5 L402,272.5" stroke="#64748b" fill="none" stroke-width="2.5" marker-end="url(#arrow)"/>
+<path d="M310,407.5 L402,407.5" stroke="#64748b" fill="none" stroke-width="2.5" marker-end="url(#arrow)"/>
+<rect x="40" y="90" width="270" height="95" rx="12" fill="#e4efff" stroke="#285ea9"/>
+<text x="175.0" y="131.5" text-anchor="middle" font-size="19.0" fill="#285ea9">训练</text>
+<text x="175.0" y="157.5" text-anchor="middle" font-size="18.3" fill="#285ea9">全部位置经过 self-decoder</text>
+<rect x="410" y="90" width="270" height="95" rx="12" fill="#eee6ff" stroke="#6943a0"/>
+<text x="545.0" y="131.5" text-anchor="middle" font-size="17.6" fill="#6943a0">全部位置经过 cross-decoder</text>
+<text x="545.0" y="157.5" text-anchor="middle" font-size="19.0" fill="#6943a0">所有位置参与 loss</text>
+<rect x="40" y="225" width="270" height="95" rx="12" fill="#def5eb" stroke="#247653"/>
+<text x="175.0" y="266.5" text-anchor="middle" font-size="19.0" fill="#247653">Prefill</text>
+<text x="175.0" y="292.5" text-anchor="middle" font-size="19.0" fill="#247653">全部 prompt 建立共享 KV</text>
+<rect x="410" y="225" width="270" height="95" rx="12" fill="#eee6ff" stroke="#6943a0"/>
+<text x="545.0" y="266.5" text-anchor="middle" font-size="19.0" fill="#6943a0">末位置经过 cross-decoder</text>
+<text x="545.0" y="292.5" text-anchor="middle" font-size="17.6" fill="#6943a0">取得首个新 token 的 logits</text>
+<rect x="40" y="360" width="270" height="95" rx="12" fill="#e4efff" stroke="#285ea9"/>
+<text x="175.0" y="401.5" text-anchor="middle" font-size="19.0" fill="#285ea9">Decode</text>
+<text x="175.0" y="427.5" text-anchor="middle" font-size="17.1" fill="#285ea9">新 token 经过 self-decoder</text>
+<rect x="410" y="360" width="270" height="95" rx="12" fill="#eee6ff" stroke="#6943a0"/>
+<text x="545.0" y="401.5" text-anchor="middle" font-size="16.4" fill="#6943a0">新 token 经过 cross-decoder</text>
+<text x="545.0" y="427.5" text-anchor="middle" font-size="19.0" fill="#6943a0">更新缓存并预测下一 token</text>
+<rect x="790" y="210" width="260" height="125" rx="12" fill="#fff0d9" stroke="#9a6513"/>
+<text x="920.0" y="253.5" text-anchor="middle" font-size="19.0" fill="#9a6513">成立条件</text>
+<text x="920.0" y="279.5" text-anchor="middle" font-size="19.0" fill="#9a6513">后半部分历史交互</text>
+<text x="920.0" y="305.5" text-anchor="middle" font-size="19.0" fill="#9a6513">只依赖共享记忆</text>
+<text x="36" y="490" font-size="17" fill="#475569">图示为典型 YOCO 的依赖分析；CED 的逐层局部状态需额外处理。</text>
+</svg></p>
+<p>这一推导假设 cross-decoder 的跨 token 交互只来自共享全局记忆，FFN 和归一化按 token 执行，且位置索引、mask 和缓存内容正确。它说明为什么训练仍需要所有位置：训练要用所有位置的 logits 计算 loss。</p>
+<p><strong>实现细节：</strong> 本仓库 <code>skip_cross_decoder=True</code> 会返回一个占位零张量，表示“只建立缓存”。它本身不是“首 token 的有效 logits”。如果使用这种 API，必须另外正确处理末位置查询，并防止末 token 被重复写入缓存。读到一个叫 skip 的参数，不能自动认定整个推理入口已经满足上面的四步。</p>
+<h2 id="5-ced-encoder">5 CED：全局记忆由 encoder 提供，局部深层状态继续存在</h2>
+<p>CED 的关键改变是 decoder 的全局 KV 来自 encoder 的最终表示；decoder 的局部 SWA 状态仍从各层自身隐藏状态生成。官方形式还区分 KV 内容投影与压缩权重投影，并允许层相关投影。与 CSA2 配合后，某些层共享这些全局条目。<a href="https://arxiv.org/html/2609.19969v1#S2.SS2">CED §2.2</a></p>
+<p>为避免与论文里的压缩权重 Z 混淆，本文始终把 encoder 输出叫 <strong>E</strong>。抽象记号如下：</p>
+<pre><code class="language-text">E = CausalEncoder(tokens)
+GlobalMemory_g = Compress_g(E; parameters_g)
+
+对 decoder 层 l：
+    Q_global_l = Query_l(H_(l-1))
+    K_local_l, V_local_l = LocalKV_l(H_(l-1))
+    GlobalRead_l = Attend(Q_global_l, GlobalMemory_group(l))
+    LocalRead_l = CausalWindowRead(..., K_local_l, V_local_l)
+    H_l = DecoderBlock_l(...)
+</code></pre>
+<p>这里的 GlobalRead/LocalRead 是解释依赖关系的拆分，不能据此认定官方一定用“两次独立 softmax 后相加”。具体实现可能把选中的全局条目和局部条目放进共同注意力计算。</p>
+<h3 id="51-encoder-causal">5.1 为什么 encoder 必须 causal</h3>
+<p>假如训练时 E[t] 已经编码了未来的 x[t+1]，即使 decoder 的注意力只读取 E[1:t]，未来答案仍然通过 E 泄漏。因此前后两部分的因果性都要保证。</p>
+<p>传统翻译式 encoder-decoder 可以让 encoder 双向读取已经完整给定的源句；同一序列的 next-token 预训练中，encoder 读到的是待预测序列本身，条件不同。一个“causal encoder”是计算职责命名，不是 BERT 式双向 encoder。</p>
+<h3 id="52-ced-yoco">5.2 CED 与 YOCO 的实质差别</h3>
+<table>
+<thead>
+<tr>
+<th>问题</th>
+<th>YOCO 的典型结构</th>
+<th>V4.1 CED 的关键设计</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>全局记忆从哪里来</td>
+<td>self-decoder 输出</td>
+<td>causal encoder 输出</td>
+</tr>
+<tr>
+<td>decoder 是否只有一组全局 KV</td>
+<td>典型为一组跨层共享</td>
+<td>取决于投影和 CSA2 共享组</td>
+</tr>
+<tr>
+<td>后半部分是否还产生本层局部状态</td>
+<td>典型 cross-decoder 不需要自己的 SWA 缓存</td>
+<td>每层保留 SWA 路径</td>
+</tr>
+<tr>
+<td>历史后半层能否完全不执行</td>
+<td>对首 token 推理可按依赖关系精确跳过大部分位置</td>
+<td>局部状态还需要准备或恢复</td>
+</tr>
+<tr>
+<td>decode 是否只执行半个网络</td>
+<td>否</td>
+<td>否</td>
+</tr>
+<tr>
+<td>是否自动实现固定大小总缓存</td>
+<td>否</td>
+<td>否</td>
+</tr>
+</tbody>
+</table>
+<p>CED 增强了 decoder 对近期信息的逐层加工能力，同时让 prefill 的跳过问题更复杂。这是一种架构取舍，不能只用“YOCO 的新名字”来概括。</p>
+<h2 id="6-swa-replay">6 SWA replay：为什么最后一个窗口不一定足够精确</h2>
+<p>先暂时只看局部路径，窗口 W 包含当前位置。第一层位置 t 的最大历史范围是 <code>[t-W+1, t]</code>；第二层读取这些位置的第一层表示，因此能间接依赖 <code>[t-2(W-1), t]</code>。堆叠 D 层后，理论范围扩展到：</p>
+<pre><code class="language-text">[t-D(W-1), t]     共 1+D(W-1) 个位置
+</code></pre>
+<p>这是纯局部依赖的教学推导；加入全局分支后，总感受野不能再用这一个区间概括。它仍足以说明：只截出最后 W 个输入位置重新计算，会切断片段左边界处的局部上下文。</p>
+<p><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 450" font-family="Noto Sans CJK SC, sans-serif" role="img" aria-label="局部路径的依赖范围会随深度扩展">
+<defs><marker id="arrow" markerWidth="9" markerHeight="9" refX="8" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8" fill="#64748b"/></marker></defs>
+<rect width="1100" height="100%" rx="18" fill="#f4f7fb"/>
+<text x="36" y="42" font-size="25" font-weight="700" fill="#132b46">局部路径的依赖范围会随深度扩展</text>
+<path d="M305,135.0 L407,135.0" stroke="#64748b" fill="none" stroke-width="2.5" marker-end="url(#arrow)"/>
+<path d="M685,135.0 L787,135.0" stroke="#64748b" fill="none" stroke-width="2.5" marker-end="url(#arrow)"/>
+<path d="M485,315.0 L607,315.0" stroke="#64748b" fill="none" stroke-width="2.5" marker-end="url(#arrow)"/>
+<rect x="35" y="90" width="270" height="90" rx="12" fill="#e4efff" stroke="#285ea9"/>
+<text x="170.0" y="129.0" text-anchor="middle" font-size="19.0" fill="#285ea9">第 1 层：W = 4</text>
+<text x="170.0" y="155.0" text-anchor="middle" font-size="19.0" fill="#285ea9">位置 10 可依赖 7—10</text>
+<rect x="415" y="90" width="270" height="90" rx="12" fill="#e4efff" stroke="#285ea9"/>
+<text x="550.0" y="129.0" text-anchor="middle" font-size="19.0" fill="#285ea9">第 2 层</text>
+<text x="550.0" y="155.0" text-anchor="middle" font-size="19.0" fill="#285ea9">位置 10 可间接依赖 4—10</text>
+<rect x="795" y="90" width="270" height="90" rx="12" fill="#e4efff" stroke="#285ea9"/>
+<text x="930.0" y="129.0" text-anchor="middle" font-size="19.0" fill="#285ea9">第 3 层</text>
+<text x="930.0" y="155.0" text-anchor="middle" font-size="19.0" fill="#285ea9">位置 10 可间接依赖 1—10</text>
+<rect x="125" y="265" width="360" height="100" rx="12" fill="#fff0d9" stroke="#9a6513"/>
+<text x="305.0" y="309.0" text-anchor="middle" font-size="19.0" fill="#9a6513">只重放最后 4 个位置</text>
+<text x="305.0" y="335.0" text-anchor="middle" font-size="19.0" fill="#9a6513">保留输入 7—10</text>
+<rect x="615" y="265" width="360" height="100" rx="12" fill="#eee6ff" stroke="#6943a0"/>
+<text x="795.0" y="309.0" text-anchor="middle" font-size="19.0" fill="#6943a0">左边界的历史被截断</text>
+<text x="795.0" y="335.0" text-anchor="middle" font-size="19.0" fill="#6943a0">恢复状态可能近似而非精确</text>
+<text x="36" y="400" font-size="17" fill="#475569">纯 SWA 教学示例：理论跨度 1 + D(W−1)；不表示加入全局分支后的总感受野。</text>
+</svg></p>
+<p>例子取 W=4、D=3。位置 10 的局部依赖可能经三层延伸到位置 1。如果只重放 7—10，重放片段内位置 7 的中间表示已经缺少更早的局部上下文，最终位置 10 也可能受到影响。</p>
+<p>因此要区分两个命题：</p>
+<ul>
+<li>“恢复的缓存数值和完整 prefill 一致”，这是数值等价性命题。</li>
+<li>“恢复后任务质量变化很小”，这是实证质量命题。</li>
+</ul>
+<p>V4.1 的 bounded replay 接受近似状态，并分别处理 encoder 的局部状态缺失与 decoder 的局部状态准备。<a href="https://arxiv.org/html/2609.19969v1#S3.SS2.SSS2">报告 §3.2.2</a>。研究实现应先做完整 prefill 基线，再独立评估 replay 引入的差异。</p>
+<h3 id="61">6.1 为什么仍可能值得做</h3>
+<p>假设 encoder 和 decoder 各 D 层，prompt 长 T，replay 长 R。把每个 token-layer 的成本粗略看作相同，完整路径约 <code>2DT</code>，缩短 decoder 路径后约 <code>DT + DR</code>，计算比为：</p>
+<pre><code class="language-text">ratio ≈ (T+R)/(2T) = 1/2 + R/(2T)
+</code></pre>
+<p>取 T=32768、R=128，比例约 0.502，即按这个理想化模型接近一半。当 T=256、R=128，比例变成 0.75。短输入时固定 replay 成本更明显。</p>
+<p>这不是端到端加速预测。真实系统还要计算 KV 投影、索引、MoE、通信、量化和 kernel 启动；不同层成本也不相同。</p>
+<h2 id="7-kv">7 缓存账本：不能只数全局 K/V</h2>
+<p>把缓存拆成以下几类再相加：</p>
+<table>
+<thead>
+<tr>
+<th>类别</th>
+<th>随长度怎样变化</th>
+<th>容易漏掉什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>全局主 KV</td>
+<td>通常随保留条目数增长</td>
+<td>压缩比例、独立组数、量化尺度</td>
+</tr>
+<tr>
+<td>稀疏 indexer K</td>
+<td>通常随全局条目数增长</td>
+<td>不是 main KV 的免费附件</td>
+</tr>
+<tr>
+<td>每层 SWA KV</td>
+<td>窗口饱和后有界</td>
+<td>每层都可能有一份</td>
+</tr>
+<tr>
+<td>retention 递归状态</td>
+<td>固定模型维度下有界</td>
+<td>状态可能用较高精度</td>
+</tr>
+<tr>
+<td>当前 query 的候选池/Top-K</td>
+<td>通常短期使用</td>
+<td>与长期缓存生命周期不同</td>
+</tr>
+<tr>
+<td>压缩尾块状态</td>
+<td>与压缩块大小有关</td>
+<td>不完整块仍要正确维护</td>
+</tr>
+</tbody>
+</table>
+<p>对于保持普通双数组布局的共享 KV 教学模型，若 G 个全局组：<code>M_global ≈ 2BTG h_kv d_h b</code>。若 L_s 个 SWA 层，每层保留 W 个条目，局部项近似 <code>2B min(T,W)L_s h_local d_local b_local</code>。</p>
+<p>使用前面的 32 层、32K 长度例子：单组全局 KV 是 128 MiB；16 个局部层、窗口 128、其他头维度相同，局部缓存是 8 MiB，合计约 136 MiB。这是一个<strong>自定义共享 KV + SWA 布局</strong>的算例，既不是本仓库 gRet 的精确内存，也不是 V4.1 的 latent KV 布局。</p>
+<p>对压缩 latent cache，应重新按“实际条目数 × 实际存储通道 × 每通道位宽 + 元数据”计算，不能把普通 GQA 的公式直接套上。</p>
+<h2 id="8">8 最小伪代码：先做正确，再做跳过</h2>
+<pre><code class="language-python"># 教学 CED；每个 block 内部仍需正确处理因果性、位置和残差。
+def full_training_forward(tokens):
+    E = encoder(tokens, causal=True)
+    global_groups = [build_memory(E, p) for p in memory_projections]
+    H = E
+    for layer in decoder_layers:
+        H = layer.full_sequence(
+            H, memory=global_groups[layer.group], causal=True
+        )
+    return lm_head(H)  # 所有位置 logits 用于 next-token loss
+
+# 单步 decode：新 token 经过两部分，不能跳过 encoder。
+def decode_one(token, state):
+    e = encoder.step(token, state.encoder)
+    for group in global_groups:
+        group.append_or_update_compressed_block(e)
+    h = e
+    for layer in decoder_layers:
+        h = layer.step(h, global_groups[layer.group], state.local[layer.id])
+    return lm_head(h), state
+</code></pre>
+<p>重要实现原则：共享的 memory 不是 <code>detach()</code> 的代名词。训练中多个读取层对它的梯度应汇总回正确的生成位置。激活重计算时也不能错误复用另一个 microbatch 的共享对象。</p>
+<p>本伪代码没有实现完整 CSA2、融合注意力、mHC 或 MoE。它的用途是确定数据依赖和测试边界，而不是直接作为可运行的 DeepSeek 实现。</p>
+<h2 id="9">9 对照当前仓库读代码</h2>
+<table>
+<thead>
+<tr>
+<th>阅读顺序</th>
+<th>文件或对象</th>
+<th>带着什么问题读</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><a href="../../runtime/model.py">runtime/model.py</a></td>
+<td>如何选择 YOCO/Transformer，如何启用重计算</td>
+</tr>
+<tr>
+<td>2</td>
+<td><a href="../../runtime/yoco_official/yoco.py">YOCOArgs / DecoderLayer</a></td>
+<td>sliding_window 的有无如何选择 SWA/gRet</td>
+</tr>
+<tr>
+<td>3</td>
+<td>同文件 SelfDecoder</td>
+<td>哪些层生成 E，递归状态如何分层保存</td>
+</tr>
+<tr>
+<td>4</td>
+<td>同文件 CrossDecoder</td>
+<td>K/V 是否在层循环外产生，缓存是否只写一次</td>
+</tr>
+<tr>
+<td>5</td>
+<td><a href="../../runtime/yoco_official/cross_attention.py">cross_attention.py</a></td>
+<td>每层独立 Q 如何读取共享 key/value</td>
+</tr>
+<tr>
+<td>6</td>
+<td><a href="../../runtime/yoco_official/backend.py">backend.py</a></td>
+<td>因果 mask、chunk recurrence 和累积精度如何实现</td>
+</tr>
+<tr>
+<td>7</td>
+<td><a href="../../runtime/train.py">train.py</a></td>
+<td>全序列训练、梯度累积和验证采样是否符合实验定义</td>
+</tr>
+</tbody>
+</table>
+<p>当前 160M 配置没有设置 <code>sliding_window</code>，走的是 YOCO-gRet；不是已经实现的 V4.1 CED。模型含 12 层、宽度 768，前后各 6 层，词表 100288，cross 部分 12 个 KV 头、头维度 64。参数量约 166.7M。该配置中的共享全局 K/V 在 batch=1、长度 2048、FP16 下有效载荷约为 6 MiB，另外还要计入 gRet 状态和实际分配策略。<a href="../../configs/yoco_160m_4gpu.json">本地配置</a></p>
+<h3 id="91-ced">9.1 实现 CED 时先通过哪些真正有意义的检查</h3>
+<ol>
+<li><strong>因果性：</strong> 改动未来 token，前缀 logits 应保持一致。前半部分、中间投影、压缩和后半部分都要检查。</li>
+<li><strong>训练与增量推理一致：</strong> 关闭随机性，用完整序列与逐 token 运行比较对应 logits，容许预先规定的浮点误差。</li>
+<li><strong>共享一致性：</strong> 共享引用和显式复制的无优化实现应产生相同数值；修改共享组的映射应有可解释影响。</li>
+<li><strong>边界条件：</strong> 长度 1、窗口边界、压缩块边界、最后不完整块、分块 prefill 均要覆盖。</li>
+<li><strong>replay 单独评估：</strong> 完整 prefill 为参照，记录最大 logits 差、loss 差和任务差，而不是只检查程序能跑。</li>
+<li><strong>资源真实计量：</strong> 汇总所有缓存对象的实际 dtype、shape、存储是否共享，随后报告 GPU 实测峰值。</li>
+</ol>
+<h2 id="10">10 自测与答案</h2>
+<p><strong>问题一：把每层的 Wk/Wv 设成相同权重，是否就实现了共享 KV？</strong></p>
+<p>答案：不一定。即使 W 相同，输入 H_(l−1) 不同，生成的 KV 仍然不同。参数共享与激活缓存共享是两件事。</p>
+<p><strong>问题二：为什么所有 decoder 层都读取相同 E，却仍需要很多层？</strong></p>
+<p>答案：查询由逐层更新的隐藏状态产生；每层可以基于上一次读取结果提出新问题，FFN 和残差进一步变换表示。</p>
+<p><strong>问题三：只保存一个窗口，是否意味着模型只能利用这个窗口？</strong></p>
+<p>答案：不能这样判断。YOCO/CED 还可能有全局记忆，retention 也可以携带更早信息。要看全部信息路径。</p>
+<p><strong>问题四：缓存量减半是否意味着延迟也减半？</strong></p>
+<p>答案：只有相应内存读写确实是瓶颈时才可能接近。额外压缩、索引、通信或低效 kernel 都会改变结果。</p>
+<p><strong>问题五：为什么静态 CED 必须作为动态 CED 的直接对照？</strong></p>
+<p>答案：否则无法判断收益来自“采用 CED 结构”还是“在 CED 上添加动态机制”。组件、数据、预算、学习率搜索和实现优化程度应尽量对齐。</p>
+<p>完成本教程后，请自己画出“当前位置的一条 Q 路径”和“历史位置的一条 KV 路径”。如果能说明这两条路径分别依赖哪些层、什么时候写缓存、哪些状态在未来仍会读取，就真正掌握了两阶段架构的核心。</p><section class="lab"><h2>动手调整：缓存与 prefill 的教学算例</h2><p>普通双数组 GQA 模型；独立全局组用相同头维度。结果只计有效 KV 载荷，不含局部状态、索引器、权重和元数据，不能直接当作 V4.1 显存。</p><label>长度 T <input id="t" type="number" value="32768" min="1" max="1048576"></label><label>层数 L <input id="l" type="number" value="32" min="1" max="128"></label><label>共享组 G <input id="g" type="number" value="1" min="1" max="128"></label><p>固定 B=1、KV heads=8、head dim=128、2 bytes/元素。</p><output id="memory"></output><div id="standard" class="bar"></div><div id="shared" class="bar shared"></div><label>Replay 长度 R <input id="r" type="number" value="128" min="1" max="1048576"></label><output id="cost"></output><p>假设前后两部分层数相等、每 token-layer 成本相同，且 R≤T；只是计算量近似，没有通信和硬件计时。</p></section></main><script>function update(){let T=Number(document.getElementById('t').value),L=Number(document.getElementById('l').value),G=Number(document.getElementById('g').value),R=Number(document.getElementById('r').value);if(![T,L,G,R].every(x=>Number.isInteger(x)&&x>0)){document.getElementById('memory').textContent='请输入正整数';return}let m=2*T*8*128*2/1048576;document.getElementById('memory').textContent=`逐层 KV：${(m*L).toFixed(2)} MiB；共享全局 KV：${(m*G).toFixed(2)} MiB`;let z=Math.max(L,G);document.getElementById('standard').style.width=(100*L/z)+'%';document.getElementById('shared').style.width=(100*G/z)+'%';document.getElementById('cost').textContent=R>T?'R 大于 T：此简化算例不适用':`简化 prefill 计算比：(T+R)/(2T) = ${((T+R)/(2*T)).toFixed(4)}`;}document.querySelectorAll('.lab input').forEach(x=>x.addEventListener('input',update));update();</script></html>

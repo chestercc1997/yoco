@@ -1,0 +1,6 @@
+{
+  "dataset": "aps/super_glue",
+  "revision": "3de24cf8022e94f4ee4b9d55a6f539891524d646",
+  "task": "boolq",
+  "original_dataset_path": "super_glue"
+}

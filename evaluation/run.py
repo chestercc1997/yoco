@@ -3,6 +3,7 @@
 import argparse
 import importlib.metadata
 import json
+import os
 from pathlib import Path
 import sys
 
@@ -10,6 +11,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
 from evaluation.adapter import ReproductionLM
+from evaluation.locked_task import apply_lock
 from runtime.model import architecture
 from runtime.train import atomic_json, sha256
 
@@ -22,6 +24,7 @@ def main():
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--limit", type=int)
     parser.add_argument("--device", default="cuda:0")
+    parser.add_argument("--locks-dir", type=Path, default=ROOT / "evaluation/data_locks")
     args = parser.parse_args()
 
     from huggingface_hub import HfApi
@@ -34,7 +37,7 @@ def main():
     manager = TaskManager()
     yaml_path = manager.task_index[args.task]["yaml_path"]
     task_config = load_yaml_config(yaml_path)
-    lock_path = ROOT / "evaluation/data_locks" / f"data_lock_{args.task}.json"
+    lock_path = args.locks_dir / f"data_lock_{args.task}.json"
     if lock_path.exists():
         lock = json.loads(lock_path.read_text())
     else:
@@ -42,8 +45,7 @@ def main():
         lock = {"dataset": info.id, "revision": info.sha, "task": args.task,
                 "original_dataset_path": task_config["dataset_path"]}
         atomic_json(lock_path, lock)
-    task_config["dataset_path"] = lock["dataset"]
-    task_config["dataset_kwargs"] = {**task_config.get("dataset_kwargs", {}), "revision": lock["revision"], "trust_remote_code": True}
+    apply_lock(task_config, lock, os.environ.get("HF_HOME", str(Path.home() / ".cache/huggingface")))
     config = json.loads(args.config.read_text())
     provenance = {
         "architecture": architecture(config), "checkpoint_sha256": sha256(args.checkpoint),

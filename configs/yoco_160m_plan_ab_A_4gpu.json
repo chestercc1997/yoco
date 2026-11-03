@@ -1,0 +1,63 @@
+{
+  "experiment": "yoco_160m_plan_ab_A_4gpu",
+  "architecture": "yoco",
+  "seed": 42,
+  "model": {
+    "dim": 768,
+    "n_layers": 12,
+    "hidden_dim": 2304,
+    "n_self_heads": 3,
+    "n_attn_heads": 12,
+    "n_attn_kv_heads": 12,
+    "vocab_size": 100288,
+    "max_seq_len": 2048,
+    "model_parallel_size": 1,
+    "rope_theta": 10000.0,
+    "norm_eps": 1e-05
+  },
+  "tied_embeddings": true,
+  "training": {
+    "max_updates": 40000,
+    "sequence_length": 2048,
+    "world_size": 4,
+    "microbatch": 4,
+    "gradient_accumulation": 8,
+    "global_batch_tokens": 262144,
+    "optimizer": "AdamW",
+    "betas": [
+      0.9,
+      0.98
+    ],
+    "eps": 1e-08,
+    "lr": 0.00015,
+    "warmup_updates": 375,
+    "end_lr": 0.0,
+    "weight_decay": 0.05,
+    "grad_clip": 1.0,
+    "precision": "fp16_mixed_fp32_params",
+    "checkpoint_every": 250,
+    "validation_every": 250,
+    "validation_batches": 128,
+    "max_consecutive_overflows": 20
+  },
+  "data": {
+    "approved": true,
+    "dataset": "HuggingFaceFW/fineweb-edu",
+    "subset": "sample-10BT",
+    "manifest": "data/fineweb_edu_10bt/manifest.json",
+    "revision": "87f09149ef4734204d70ed1d046ddc9ca3f2b8f9"
+  },
+  "status": "PLAN_AB_FULL_4GPU",
+  "memory_fusion": {
+    "mode": "learned_kv",
+    "source_layers": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "temperature": 1.0
+  }
+}

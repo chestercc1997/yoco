@@ -124,6 +124,8 @@ def main():
         if not manifest.get('ready'): raise RuntimeError('Dataset manifest is not ready')
     resolved={'config':c,'synthetic_smoke':a.smoke,'world_size':world,'data':manifest}
     identity={'model':c['model'],'tied_embeddings':c['tied_embeddings'],'seed':c['seed'],'training':t,'data':manifest,'synthetic':a.smoke,'world_size':world}
+    if 'memory_fusion' in c:
+        identity['memory_fusion'] = c['memory_fusion']
     source_root=Path(__file__).parent
     identity['model_source_sha256']={str(p.relative_to(source_root)):sha256(p) for p in sorted(source_root.rglob('*.py'))}
     resolved['identity']=identity
