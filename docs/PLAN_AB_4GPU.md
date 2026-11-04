@@ -1,5 +1,7 @@
 # 160M A/B 四卡完整训练与测试
 
+> 历史四卡执行计划。2026-11-04 已完成并发布的是另一次 8×A800 A/B 运行，见[三组结果与 compute 报告](../evaluation/ab_baseline_20261104/README.md)。下文排队状态为当时快照，不代表当前调度器状态。
+
 2026-11-03 用户要求取消重复 baseline 训练，仅运行以下两种新方法。原作业 793493 于北京时间 10:35 取消，停在 baseline 第 11004 步；原快照、日志、checkpoint 保留。
 
 | 组别 | 记忆构造 | 新增参数 |
@@ -15,9 +17,9 @@ A/B 共用主体初始参数，seed=42，初始配比均为六层等权。A 不�
 
 训练后，两组分别在一张卡执行 ARC Easy、ARC Challenge、BoolQ、HellaSwag、OpenBookQA、PIQA、WinoGrande、SciQ 的完整评测。数据锁使用快照内 evaluation/plan_ab_data_locks，离线缓存复用 eval-20261102。评测路径按 A/B 命名，不写入旧 baseline/dynamic 结果。
 
-独立 HPC3 快照：`/data/share/jzhou945/cchen099/yoco/experiments/plan-ab-full-4gpu-20261103-v2`。
+独立 HPC3 快照：`experiments/plan-ab-full-4gpu-20261103-v2`。
 
-训练目录：`/data/share/jzhou945/cchen099/yoco/runs/yoco-160m-plan-ab-4gpu-20261103-v2-{A,B}`。
+训练目录：`runs/yoco-160m-plan-ab-4gpu-20261103-v2-{A,B}`。
 
 最终标记：快照内 `runs/eval-plan-ab/PIPELINE_SUCCESS`；只有两组训练和 16 项完整下游评测成功并通过汇总检查后写入。训练完成不等于全流程完成。
 

@@ -18,15 +18,24 @@ self-decoder layers, constructing shared memory once before layers 7–12:
 | B (`conditional_kv`) | Per-token scores from normalized source hidden states | Layers 1–6 |
 | Original YOCO baseline | K/V from the final self-decoder output | Layer 6 |
 
-A/B start with the same backbone parameters and uniform source weights. Each
-runs for 40,000 steps on four H100 GPUs, with 262,144 tokens per update, followed
-by the same eight downstream tasks. The completed two-GPU baseline is retained
-as a historical reference; this campaign does not train it again.
+**Completed results (2026-11-04):** the reported A/B runs each completed
+40,000 updates on **8×A800**, consuming 10,485,760,000 tokens, followed by all
+eight full zero-shot downstream tasks. This is the completed eight-GPU run,
+separate from the older four-H100 execution plan.
 
-**Status on 2026-11-03:** implementation and recovery tests pass, and all eight
-evaluation datasets load offline. HPC3 job **794750** is queued; full A/B
-training and downstream results are pending. These checks are not performance
-results. The earlier redundant baseline job 793493 was cancelled.
+| Metric | Historical YOCO baseline | A | B |
+| --- | ---: | ---: | ---: |
+| Final validation loss | 3.163661 | 3.160054 | 3.159059 |
+| Eight-task macro average (%) | 46.7113 | 46.9417 | 45.9075 |
+| Trunk 6ND (PFLOP-days) | 0.065308109 | 0.065308114 | 0.065308673 |
+
+The reference above is the existing **32×V100 YOCO baseline**, not the two-GPU
+baseline or the Transformer. Its original data/evaluation provenance has not
+been fully reverified, so baseline comparisons are descriptive. A is slightly
+better on both loss and downstream; B has lower loss but worse downstream.
+6ND is an accounting proxy; repeated K/V projections add compute despite the
+small parameter increase. See the [complete three-way report, figures, CSVs,
+and compute definitions](evaluation/ab_baseline_20261104/README.md).
 
 - [A/B design and execution](docs/PLAN_AB_4GPU.md)
 - [Design formulas](docs/plan.md)
@@ -42,7 +51,7 @@ are documented separately in [the training review](docs/evidence/full-v2-converg
 ## Earlier YOCO / Transformer reproduction
 
 The reports below describe the earlier 32-V100 YOCO/Transformer comparison,
-not the pending A/B experiment.
+separate from the completed A/B experiment above.
 
 ## Earlier reproduction result
 
