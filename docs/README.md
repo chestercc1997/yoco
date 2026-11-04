@@ -4,6 +4,7 @@
 
 - [A/B 训练与测试说明](PLAN_AB_4GPU.md)：A 是全局可学习六来源 K/V 权重；B 是按 hidden states 生成条件权重。
 - [公式与范围](plan.md)：两种方法均融合前六层候选 K/V，供后六层共享。
+- [一页 A/B 设计说明](plan_feishu_concise.pdf)：共同流程、全局权重与逐 token 权重的核心公式；[生成脚本](../tools/render_plan_feishu_concise.py)。
 - **2026-11-04：8×A100 baseline 与 8×A800 A/B 的完整三组对比已更新，三组均完成训练和八项下游。** [三组完整结果、loss/6ND 曲线与脱敏数据](../evaluation/ab_baseline_20261104/README.md)。四卡计划为另一执行记录，不混作本次完成证据。
 
 ## 历史两卡实验与背景
