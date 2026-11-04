@@ -37,6 +37,10 @@ better on both loss and downstream; B has lower loss but worse downstream.
 small parameter increase. See the [complete three-way report, figures, CSVs,
 and compute definitions](evaluation/ab_baseline_20261104/README.md).
 
+[四张专题对比图 / Comparison figures](evaluation/ab_baseline_20261104/figures/README.md) · PNG / PDF / SVG
+
+![Baseline A B quality comparison](evaluation/ab_baseline_20261104/figures/01_quality_summary.png)
+
 - [A/B design and execution](docs/PLAN_AB_4GPU.md)
 - [Design formulas](docs/plan.md)
 - [Documentation index](docs/README.md)
