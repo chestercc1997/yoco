@@ -13,6 +13,15 @@ with (ROOT/'validation_curves.csv').open() as f: curves=list(csv.DictReader(f))
 colors={'baseline':'#616b75','A':'#147d92','B':'#cf623b'}
 labels={'baseline':'Baseline: 8×A100','A':'A: learned KV','B':'B: conditional KV'}
 plt.rcParams.update({'font.size':10,'axes.spines.top':False,'axes.spines.right':False,'figure.dpi':160})
+
+
+def save_formats(fig, name):
+ for ext in ('png','pdf','svg'):
+  path=ROOT/f'{name}.{ext}'
+  fig.savefig(path)
+  if ext=='svg':path.write_text('\n'.join(line.rstrip() for line in path.read_text().splitlines())+'\n')
+
+
 fig,axes=plt.subplots(2,2,figsize=(12,8),constrained_layout=True)
 for arm in colors:
  r=[x for x in curves if x['arm']==arm];y=[float(x['validation_loss']) for x in r]
@@ -26,7 +35,7 @@ axes[0,1].set_xlabel('Trunk 6ND (PFLOP-days)');axes[0,1].set_title('Excludes tie
 axes[1,0].set_xlabel('Output-inclusive 6ND (PFLOP-days)');axes[1,0].set_title('Counts shared output matrix once')
 axes[1,1].set_xlabel('6ND + repeated KV projection proxy (PFLOP-days)');axes[1,1].set_title('Partial operation correction; not device FLOPs')
 fig.suptitle('160M YOCO: 8×A100 baseline / A / B, 40,000 updates, single seed')
-for ext in ['png','pdf','svg']:fig.savefig(ROOT/('loss_compute.'+ext))
+save_formats(fig,'loss_compute')
 plt.close(fig)
 fig,ax=plt.subplots(figsize=(12,4.6),constrained_layout=True);rows=s['downstream'];x=np.arange(len(rows)+1)
 for i,arm in enumerate(colors):
@@ -34,7 +43,7 @@ for i,arm in enumerate(colors):
  ax.bar(x+(i-1)*.24,y,.24,color=colors[arm],label=labels[arm])
 ax.set_xticks(x,[r['task'].replace('_','\n') for r in rows]+['macro\naverage']);ax.set_ylabel('Accuracy (%)');ax.set_ylim(0,76);ax.legend(ncol=3);ax.grid(axis='y',alpha=.2)
 ax.set_title('Zero-shot full downstream evaluation; acc_norm except BoolQ / WinoGrande')
-for ext in ['png','pdf','svg']:fig.savefig(ROOT/('downstream.'+ext))
+save_formats(fig,'downstream')
 plt.close(fig)
 fig,axes=plt.subplots(2,2,figsize=(12,8),constrained_layout=True)
 with (ROOT/'training_curves.csv').open() as f:tr=list(csv.DictReader(f))
@@ -60,6 +69,6 @@ for ax in axes.flat:ax.grid(alpha=.2)
 for ax in [axes[0,0],axes[0,1],axes[1,0]]:ax.set_xlabel('Training tokens (billions)')
 for ax in axes[0]:ax.set_ylabel('Training loss (trailing 100 updates)')
 fig.suptitle('All three 40,000-update curves: baseline 8×A100; A/B 8×A800')
-for ext in ['png','pdf','svg']:fig.savefig(ROOT/('training_loss.'+ext))
+save_formats(fig,'training_loss')
 plt.close(fig)
 print('Generated three figures in PNG / PDF / SVG')
