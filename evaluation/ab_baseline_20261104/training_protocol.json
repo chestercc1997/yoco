@@ -19,9 +19,9 @@
     "training": {
       "max_updates": 40000,
       "sequence_length": 2048,
-      "world_size": 32,
+      "world_size": 8,
       "microbatch": 4,
-      "gradient_accumulation": 1,
+      "gradient_accumulation": 4,
       "global_batch_tokens": 262144,
       "optimizer": "AdamW",
       "betas": [
@@ -37,7 +37,7 @@
       "precision": "fp16_mixed_fp32_params",
       "checkpoint_every": 250,
       "validation_every": 250,
-      "validation_batches": 16,
+      "validation_batches": 64,
       "max_consecutive_overflows": 20
     }
   },

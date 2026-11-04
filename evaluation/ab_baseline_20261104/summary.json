@@ -1,27 +1,27 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "training": {
     "baseline": {
-      "validation_loss": 3.163661003112793,
-      "validation_perplexity": 23.657046104758766,
-      "last100_training_loss": 3.155806772708893,
+      "validation_loss": 3.4089059829711914,
+      "validation_perplexity": 30.232151672026937,
+      "last100_training_loss": 3.404486198425293,
       "tokens": 10485760000,
       "parameters": 166708224,
       "final_step": 40000,
-      "world_size": 32,
-      "hardware": "32 x V100",
-      "active_seconds": 78752.74185073562,
-      "active_gpu_hours": 700.0243720065389,
-      "end_to_end_hours": 24.713989505833336,
-      "overflow_events": null,
-      "peak_rank0_memory_gib": 12.263253688812256,
+      "world_size": 8,
+      "hardware": "8 x A100 80GB PCIe",
+      "active_seconds": 29121.136781508685,
+      "active_gpu_hours": 64.71363729224153,
+      "end_to_end_hours": 8.700689449166667,
+      "overflow_events": 20,
+      "peak_rank0_memory_gib": 12.901231288909912,
       "shared_embedding_output_parameters": 77021184,
       "trunk_parameters": 89687040,
       "compute_trunk_6nd_pflop_days": 0.06530810948266667,
       "compute_output_inclusive_6nd_pflop_days": 0.1213932240896,
       "extra_repeated_kv_projection_pflop_days": 0.0,
       "output_inclusive_plus_repeated_kv_proxy_pflop_days": 0.1213932240896,
-      "mean_active_tokens_per_second": 133147.87210677992
+      "mean_active_tokens_per_second": 360073.85558719805
     },
     "A": {
       "validation_loss": 3.1600544452667236,
@@ -73,13 +73,13 @@
       "task": "arc_easy",
       "metric": "acc_norm,none",
       "examples": 2376,
-      "baseline": 0.46085858585858586,
-      "baseline_stderr": 0.01022829820076604,
+      "baseline": 0.4297138047138047,
+      "baseline_stderr": 0.010157908005763489,
       "A": 0.4583333333333333,
-      "A_delta_pp": -0.25252525252525415,
+      "A_delta_pp": 2.86195286195286,
       "A_stderr": 0.010224097209176468,
       "B": 0.4537037037037037,
-      "B_delta_pp": -0.7154882154882136,
+      "B_delta_pp": 2.3989898989899006,
       "B_stderr": 0.010215708295494234,
       "B_minus_A_pp": -0.46296296296295947
     },
@@ -87,13 +87,13 @@
       "task": "arc_challenge",
       "metric": "acc_norm,none",
       "examples": 1172,
-      "baseline": 0.2551194539249147,
-      "baseline_stderr": 0.012739038695202038,
+      "baseline": 0.25170648464163825,
+      "baseline_stderr": 0.012682496334042911,
       "A": 0.2568259385665529,
-      "A_delta_pp": 0.1706484641638195,
+      "A_delta_pp": 0.5119453924914641,
       "A_stderr": 0.012766923794116735,
       "B": 0.24488054607508533,
-      "B_delta_pp": -1.0238907849829366,
+      "B_delta_pp": -0.6825938566552919,
       "B_stderr": 0.012566273985131313,
       "B_minus_A_pp": -1.194539249146756
     },
@@ -101,13 +101,13 @@
       "task": "hellaswag",
       "metric": "acc_norm,none",
       "examples": 10042,
-      "baseline": 0.3132842063333997,
-      "baseline_stderr": 0.004628809258483689,
+      "baseline": 0.29286994622585144,
+      "baseline_stderr": 0.004541492151639358,
       "A": 0.31248755228042224,
-      "A_delta_pp": -0.07966540529774635,
+      "A_delta_pp": 1.9617606054570802,
       "A_stderr": 0.004625600916775252,
       "B": 0.31248755228042224,
-      "B_delta_pp": -0.07966540529774635,
+      "B_delta_pp": 1.9617606054570802,
       "B_stderr": 0.004625600916775252,
       "B_minus_A_pp": 0.0
     },
@@ -115,13 +115,13 @@
       "task": "piqa",
       "metric": "acc_norm,none",
       "examples": 1838,
-      "baseline": 0.6245919477693145,
-      "baseline_stderr": 0.011297839589776652,
+      "baseline": 0.5935799782372143,
+      "baseline_stderr": 0.01145968265012375,
       "A": 0.6109902067464635,
-      "A_delta_pp": -1.3601741022850944,
+      "A_delta_pp": 1.7410228509249226,
       "A_stderr": 0.0113747749744473,
       "B": 0.6251360174102285,
-      "B_delta_pp": 0.05440696409140244,
+      "B_delta_pp": 3.1556039173014194,
       "B_stderr": 0.01129456580561892,
       "B_minus_A_pp": 1.4145810663764968
     },
@@ -129,13 +129,13 @@
       "task": "winogrande",
       "metric": "acc,none",
       "examples": 1267,
-      "baseline": 0.5177584846093133,
-      "baseline_stderr": 0.014043619596174988,
+      "baseline": 0.5217048145224941,
+      "baseline_stderr": 0.014039239216484667,
       "A": 0.5224940805051302,
-      "A_delta_pp": 0.47355958958169575,
+      "A_delta_pp": 0.07892659826361781,
       "A_stderr": 0.014038257824059859,
       "B": 0.5074980268350434,
-      "B_delta_pp": -1.026045777426987,
+      "B_delta_pp": -1.420678768745065,
       "B_stderr": 0.014050905521228646,
       "B_minus_A_pp": -1.4996053670086829
     },
@@ -143,13 +143,13 @@
       "task": "boolq",
       "metric": "acc,none",
       "examples": 3270,
-      "baseline": 0.6152905198776758,
-      "baseline_stderr": 0.008509403073229666,
+      "baseline": 0.4984709480122324,
+      "baseline_stderr": 0.00874501408442582,
       "A": 0.6162079510703364,
-      "A_delta_pp": 0.09174311926606338,
+      "A_delta_pp": 11.773700305810403,
       "A_stderr": 0.008505584729104822,
       "B": 0.6048929663608563,
-      "B_delta_pp": -1.039755351681948,
+      "B_delta_pp": 10.64220183486239,
       "B_stderr": 0.008550454248281122,
       "B_minus_A_pp": -1.1314984709480114
     },
@@ -157,13 +157,13 @@
       "task": "openbookqa",
       "metric": "acc_norm,none",
       "examples": 500,
-      "baseline": 0.308,
-      "baseline_stderr": 0.020667032987466052,
+      "baseline": 0.284,
+      "baseline_stderr": 0.020186703693570774,
       "A": 0.318,
-      "A_delta_pp": 1.0000000000000009,
+      "A_delta_pp": 3.400000000000003,
       "A_stderr": 0.020847571620814014,
       "B": 0.3,
-      "B_delta_pp": -0.8000000000000007,
+      "B_delta_pp": 1.6000000000000014,
       "B_stderr": 0.020514426225627987,
       "B_minus_A_pp": -1.8000000000000016
     },
@@ -171,19 +171,19 @@
       "task": "sciq",
       "metric": "acc_norm,none",
       "examples": 1000,
-      "baseline": 0.642,
-      "baseline_stderr": 0.015167928865407633,
+      "baseline": 0.621,
+      "baseline_stderr": 0.015349091002225332,
       "A": 0.66,
-      "A_delta_pp": 1.8000000000000016,
+      "A_delta_pp": 3.9000000000000035,
       "A_stderr": 0.014987482264363972,
       "B": 0.624,
-      "B_delta_pp": -1.8000000000000016,
+      "B_delta_pp": 0.30000000000000027,
       "B_stderr": 0.0153251055088981,
       "B_minus_A_pp": -3.600000000000003
     }
   ],
   "macro": {
-    "baseline": 0.4671128997966505,
+    "baseline": 0.4366307470441544,
     "A": 0.46941738281277984,
     "B": 0.45907485158316746
   },
@@ -299,13 +299,15 @@
       "step": 40000,
       "sha256": "b33d82869fb983e6910818e42e0e52cba537566de3bb303af387e50408f551b6",
       "fingerprint": "9f0f7b3d4836310ae902c28d1b6a8b53665d4e9abbcf50d51fe9d063d6f42cb5"
+    },
+    "baseline": {
+      "file": "checkpoint_00040000.pt",
+      "step": 40000,
+      "sha256": "57f87a18c05b9bdf55df21d941bf17b9716fbcc263c8609295e979fbb8aed2af",
+      "fingerprint": "f3d44940476de7b1976cbe1daa8d5018e0974631325e6b0c4a3744ff5d3e2aaf"
     }
   },
   "source_sha256": {
-    "baseline_training_summary": "640e120d1a97f536f7b24f7dcd23c7bc617ef5d8e55a98831c995026be572383",
-    "baseline_downstream": "edb5b483ad0220e3de88724e5597d2c342d5fe2545572425476c319b48bf6d9f",
-    "baseline_validation_curve": "23d434ebaf88e55ef084ac30b7214ea27dffbb71e0ef849e052d0e2a9adbec3e",
-    "baseline_timing": "41e15f46e23f0cfb59b291aedf9d364fbf71ddbef0b76aacf1214623f393a30c",
     "A_rank0.jsonl": "8851dbb561fb81e45e8d3a93c3c54e5bdb0001346a2013f2f0cecf008e1504b0",
     "A_resolved_config.json": "1846a16ff2a4068f07eeb0e628bcca3d990119c0f902408a5061e4bdcb4b812b",
     "A_stage_complete.json": "5d661f43954f0138d9aab3e0860b6ea3e9305c33f8080c9156c3494fa80312d8",
@@ -347,7 +349,184 @@
     "A_sciq_results.json": "7951593592efa12c47e62e9dbd5f9fa448ce14b625225a7d62de32f591a6509f",
     "A_sciq_provenance.json": "addb1f7829ee00f960fa351f8a5a166ce0b99baacdb011eab602b24725177509",
     "B_sciq_results.json": "62b62f7daea274a3e585c14787a72c794ce6fdb30db6be68f48b76c99e6f1dc7",
-    "B_sciq_provenance.json": "780e07b382f726eb8d5169aa530c63c693f2d5d2f5d11d60b0ab07463067df2e"
+    "B_sciq_provenance.json": "780e07b382f726eb8d5169aa530c63c693f2d5d2f5d11d60b0ab07463067df2e",
+    "baseline_pilot_rank0": "3974b080fa41b271c2ee642e24215c1782407fa329e99b033aa99b4260808ffd",
+    "baseline_full_rank0": "4ff25510969806eeea24ec1978f78a45d7774dff6a0d90a0b672db218f5efde4",
+    "baseline_resolved_config": "99db0bf75e2e38ae46a12f23a0ac7e6329445d7d325f04b5b9b5cf1c34d57e20",
+    "baseline_stage_complete": "5d661f43954f0138d9aab3e0860b6ea3e9305c33f8080c9156c3494fa80312d8",
+    "baseline_checkpoint_metadata": "9bd20fcbe6d4bf614fdffffb4c6455ea77604bd92913602b2a51d87802160131",
+    "baseline_pipeline_summary": "aad8f6a8889cbe326ee7fd448c1fbc802dbdf45eaec6332ca391330f33368abb",
+    "baseline_arc_easy_results.json": "d52e7bd1aa328db8944e2654a7e2aeda30cdb79ac66318139d58ac551c8cd58f",
+    "baseline_arc_easy_provenance.json": "e604e2b7d656ceb6dd1bbca19fb14edf58d42519767341a9faa92a849698d077",
+    "baseline_arc_challenge_results.json": "f8c572f3ef1ad7a67f16c1e7528c02bdc7ca344ac992f2146cb2529213870583",
+    "baseline_arc_challenge_provenance.json": "3a0b694c1b70919c0de07ab0dbe8a411ff38c0c9a588750d9354e363aa275c09",
+    "baseline_hellaswag_results.json": "2ca8fb79efb955a62c47475762ff125c8f72c1ca829f22a115ef98250a4a6368",
+    "baseline_hellaswag_provenance.json": "6211f77491fa02936a88c25de1d62a65e0c884a34e395094a532ffda20bc01ce",
+    "baseline_piqa_results.json": "67dae5ddb2e5fd4c8f209660ab4ba675e0a82b28da93bf6895b341f76fda7c8b",
+    "baseline_piqa_provenance.json": "6ef547e1435d1c6f39ccf6d11f140022e54aa755df7098155cc9949b35140ce9",
+    "baseline_winogrande_results.json": "a2f3bd15799f071e7945fb6061c6e732c8f34adcf92c041f005b2a531c518030",
+    "baseline_winogrande_provenance.json": "6da64a12c90eb0372e03245f7948670ac32af119bff8cdb6661ecc0879eae17e",
+    "baseline_boolq_results.json": "e2938ee2f9c394220fe371f636e949853f334bc4ed8e614ab85ea45537024dda",
+    "baseline_boolq_provenance.json": "7bbc3b0331ebf9c3abc8843185aeec4e27384d649f8317a44a6589495e533a97",
+    "baseline_openbookqa_results.json": "163670d32e52d615d1f7b0af535d942f83634f0accbf0016dba9dcedc52bcacd",
+    "baseline_openbookqa_provenance.json": "fc3f22fdd5c4986b4e33008fe350f79af7421ba9a78e905ef7e40b3706bf7e35",
+    "baseline_sciq_results.json": "60028a0e8cfb1dde7b155ad3a7c1c3befa3d026221e8a00f9a13b84ad411580d",
+    "baseline_sciq_provenance.json": "c10a5b923b72037e7c54ca5af2ecbf54c3a96757ecdf8e6c3af2ba6a9a7571cc"
   },
-  "boundary": "A/B complete and paired sample identities verified. Baseline is an archived 32-V100 reference; original token shard identities, task YAML and checkpoint payload not freshly verified. A/B checkpoint metadata bindings verified, payloads not downloaded or rehashed. 6ND is a proxy, not measured device FLOPs."
+  "boundary": "Baseline is the completed 8-A100 rerun with checkpoint payload rehashed and all 8 full evaluations verified. A/B are the published 8-A800 runs. Full-size reconstruction confirms the same backbone and initial common tensors; only the fusion modules add parameters. Model/training configs and all task YAMLs, seeds and few-shot counts match. Remote A/B step-zero payloads, sample hashes and token-shard hashes are not supplied. A/B public evidence and paired bootstrap are unchanged; baseline differences are descriptive. 6ND is a compute proxy, not measured device FLOPs.",
+  "baseline_replacement": {
+    "kind": "verified_local_eight_gpu_training",
+    "source_run": "yoco-160m-baseline-8gpu-full-20261104T0114Z",
+    "source_pilot": "yoco-160m-baseline-8gpu-pilot-20261104T0109Z",
+    "resumed_at_step": 100,
+    "original_schedule_preserved": true,
+    "superseded_baseline": {
+      "hardware": "32 x V100",
+      "validation_loss": 3.163661003112793,
+      "macro_accuracy": 0.4671128997966505
+    },
+    "timing_note": "Baseline wall time includes pilot/resume pauses; successful-update active time excludes those pauses and overflow retries."
+  },
+  "baseline_evaluation_protocol": {
+    "arc_easy": {
+      "dataset_lock": {
+        "dataset": "allenai/ai2_arc",
+        "revision": "210d026faf9955653af8916fad021475a3f00453",
+        "task": "arc_easy",
+        "original_dataset_path": "allenai/ai2_arc"
+      },
+      "task_yaml_sha256": "96da1d9efe1df88659481cedc13985cb347dc068554a2eae561303fa39bfab3f",
+      "seed": 42,
+      "num_fewshot": 0
+    },
+    "arc_challenge": {
+      "dataset_lock": {
+        "dataset": "allenai/ai2_arc",
+        "revision": "210d026faf9955653af8916fad021475a3f00453",
+        "task": "arc_challenge",
+        "original_dataset_path": "allenai/ai2_arc"
+      },
+      "task_yaml_sha256": "682621c26ae24b1065a2d732460a55a8ef2b9f2544574431666c9309a9efd7bd",
+      "seed": 42,
+      "num_fewshot": 0
+    },
+    "hellaswag": {
+      "dataset_lock": {
+        "dataset": "Rowan/hellaswag",
+        "revision": "218ec52e09a7e7462a5400043bb9a69a41d06b76",
+        "task": "hellaswag",
+        "original_dataset_path": "hellaswag"
+      },
+      "task_yaml_sha256": "cabb0340cad5fb66c2d62f6cfab16b85df18070e606300f20e4f579e49fdc5e3",
+      "seed": 42,
+      "num_fewshot": 0
+    },
+    "piqa": {
+      "dataset_lock": {
+        "dataset": "ybisk/piqa",
+        "revision": "b40a463b4ac9c77c6e74e23c5d873f5c2139d8fa",
+        "task": "piqa",
+        "original_dataset_path": "piqa"
+      },
+      "task_yaml_sha256": "89cc1c7288667e52f4651768d5d986f46c1c38f940f496b6a3e9793d4ff63242",
+      "seed": 42,
+      "num_fewshot": 0
+    },
+    "winogrande": {
+      "dataset_lock": {
+        "dataset": "allenai/winogrande",
+        "revision": "01e74176c63542e6b0bcb004dcdea22d94fb67b5",
+        "task": "winogrande",
+        "original_dataset_path": "winogrande"
+      },
+      "task_yaml_sha256": "68f42f3ac6358978973b4d891d889c544110b22d200fba6d0e52a588b2af4070",
+      "seed": 42,
+      "num_fewshot": 0
+    },
+    "boolq": {
+      "dataset_lock": {
+        "dataset": "aps/super_glue",
+        "revision": "3de24cf8022e94f4ee4b9d55a6f539891524d646",
+        "task": "boolq",
+        "original_dataset_path": "super_glue"
+      },
+      "task_yaml_sha256": "b6a50f0806b7a363ce6c0545d214d721742315567599ae213116a695ac333af9",
+      "seed": 42,
+      "num_fewshot": 0
+    },
+    "openbookqa": {
+      "dataset_lock": {
+        "dataset": "allenai/openbookqa",
+        "revision": "388097ea7776314e93a529163e0fea805b8a6454",
+        "task": "openbookqa",
+        "original_dataset_path": "openbookqa"
+      },
+      "task_yaml_sha256": "6224b08e7b0f2f54c54d292994f67521213f49b50289be8f22321aa675b8c898",
+      "seed": 42,
+      "num_fewshot": 0
+    },
+    "sciq": {
+      "dataset_lock": {
+        "dataset": "allenai/sciq",
+        "revision": "2c94ad3e1aafab77146f384e23536f97a4849815",
+        "task": "sciq",
+        "original_dataset_path": "sciq"
+      },
+      "task_yaml_sha256": "2dd8bdee8714c0fa767433d6d4fafa3f82b0fb7d12c3a6741868a3d9bcca0399",
+      "seed": 42,
+      "num_fewshot": 0
+    }
+  },
+  "comparability_audit": {
+    "passed": true,
+    "configuration_fields_matched": [
+      "architecture",
+      "model",
+      "training",
+      "seed",
+      "tied_embeddings"
+    ],
+    "parameters": {
+      "baseline": 166708224,
+      "A": 166708230,
+      "B": 166708998
+    },
+    "extra_parameters": {
+      "A": 6,
+      "B": 774
+    },
+    "matching_common_state_tensors": {
+      "A": 114,
+      "B": 114
+    },
+    "baseline_runtime_matches_repository": true,
+    "seed": 42,
+    "uniform_initial_weights": [
+      0.16666666666666666,
+      0.16666666666666666,
+      0.16666666666666666,
+      0.16666666666666666,
+      0.16666666666666666,
+      0.16666666666666666
+    ],
+    "ab_initial_outputs_identical": true,
+    "last_source_limit_matches_baseline": true,
+    "scope": "Full-size models reconstructed locally from published run configs; all common tensors match exactly. Remote A/B step-zero payloads were not supplied.",
+    "checks_not_performed": [
+      "Remote A/B step-zero payload equality",
+      "Remote A/B token-shard SHA256 equality"
+    ],
+    "training_and_model_configs_matched": true,
+    "evaluation_task_yaml_seed_fewshot_matched_all_8": true,
+    "full_baseline_checkpoint_payload_verified": true,
+    "evaluation_counts_and_document_ids_matched_all_8": true,
+    "ab_dataset_document_prompt_target_hashes_available_in_public_export": false,
+    "baseline_validation_points": 160,
+    "baseline_training_updates": 40000,
+    "note": "Document-id sets match A/B public scores. Remote A/B sample hashes and token manifests are not present in this checkout; no baseline paired significance is claimed."
+  },
+  "retained_public_AB_sha256": {
+    "ab_training_curves.csv": "cfca6281ecc92b14a20cb6dd108ea3120eb198720a52e41857dc20a344d2fd2d",
+    "ab_paired_scores.csv": "07f28cbd3614f155f7c48afc845251389d6056ab4269ee1502202f190582bfd7"
+  }
 }

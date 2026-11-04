@@ -44,7 +44,7 @@
     "approved": true,
     "dataset": "HuggingFaceFW/fineweb-edu",
     "subset": "sample-10BT",
-    "manifest": "/hpc2hdd/home/jzhou945/cchen099/yoco/data/fineweb_edu_10bt/manifest.json",
+    "manifest": "data/fineweb_edu_10bt/manifest.json",
     "revision": "87f09149ef4734204d70ed1d046ddc9ca3f2b8f9"
   },
   "status": "DATA_READY_RUNTIME_VALIDATION_REQUIRED"

@@ -5,8 +5,6 @@ trees into one reproducible project. It contains model and training code,
 evaluation and inference benchmarks, pinned dataset metadata, measured tables,
 and figures. Checkpoints and training data are intentionally excluded.
 
-![2K quality and inference summary](evaluation/figures/04_yoco_transformer_2k_32gpu_inference.png)
-
 ## Current A/B experiment
 
 The current experiment compares two ways to aggregate K/V from all six
@@ -18,26 +16,26 @@ self-decoder layers, constructing shared memory once before layers 7–12:
 | B (`conditional_kv`) | Per-token scores from normalized source hidden states | Layers 1–6 |
 | Original YOCO baseline | K/V from the final self-decoder output | Layer 6 |
 
-**Completed results (2026-11-04):** the reported A/B runs each completed
-40,000 updates on **8×A800**, consuming 10,485,760,000 tokens, followed by all
-eight full zero-shot downstream tasks. This is the completed eight-GPU run,
-separate from the older four-H100 execution plan.
+**Completed three-way comparison (2026-11-04):** the original YOCO baseline
+completed 40,000 updates on **8×A100**; A/B retain the published **8×A800** runs.
+All three consumed 10,485,760,000 tokens and completed all eight full zero-shot tasks.
 
-| Metric | Historical YOCO baseline | A | B |
+| Metric | New YOCO baseline · 8×A100 | A | B |
 | --- | ---: | ---: | ---: |
-| Final validation loss | 3.163661 | 3.160054 | 3.159059 |
-| Eight-task macro average (%) | 46.7113 | 46.9417 | 45.9075 |
+| Final validation loss | 3.408906 | 3.160054 | 3.159059 |
+| Eight-task macro average (%) | 43.6631 | 46.9417 | 45.9075 |
 | Trunk 6ND (PFLOP-days) | 0.065308109 | 0.065308114 | 0.065308673 |
 
-The reference above is the existing **32×V100 YOCO baseline**, not the two-GPU
-baseline or the Transformer. Its original data/evaluation provenance has not
-been fully reverified, so baseline comparisons are descriptive. A is slightly
-better on both loss and downstream; B has lower loss but worse downstream.
-6ND is an accounting proxy; repeated K/V projections add compute despite the
-small parameter increase. See the [complete three-way report, figures, CSVs,
-and compute definitions](evaluation/ab_baseline_20261104/README.md).
+The baseline above is the newly completed eight-A100 run. Full-size model checks
+confirm the same common backbone tensors at initialization; A adds 6 parameters,
+B adds 774. Published model/training settings and all task YAMLs, seeds and zero-shot
+counts match. Remote A/B step-zero payloads and token-shard hashes are not available
+for a fresh check, so baseline differences remain descriptive. A has the highest
+downstream macro; B has the lowest final validation loss. The new baseline has
+late-training loss rebounds, shown in the un-smoothed curves. 6ND remains a compute
+proxy. See the [complete report, backbone audit, seven figures and CSVs](evaluation/ab_baseline_20261104/README.md).
 
-[四张专题对比图 / Comparison figures](evaluation/ab_baseline_20261104/figures/README.md) · PNG / PDF / SVG
+[七张三组对比图 / Comparison figures](evaluation/ab_baseline_20261104/figures/README.md) · PNG / PDF / SVG
 
 ![Baseline A B quality comparison](evaluation/ab_baseline_20261104/figures/01_quality_summary.png)
 
@@ -58,6 +56,8 @@ The reports below describe the earlier 32-V100 YOCO/Transformer comparison,
 separate from the completed A/B experiment above.
 
 ## Earlier reproduction result
+
+![2K quality and inference summary](evaluation/figures/04_yoco_transformer_2k_32gpu_inference.png)
 
 The paired 40,000-step runs have nearly identical validation loss and aggregate
 downstream accuracy. YOCO uses much less inference cache and has substantially

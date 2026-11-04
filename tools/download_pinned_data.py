@@ -5,6 +5,7 @@ import hashlib
 import json
 import os
 from pathlib import Path
+import shutil
 import subprocess
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -22,9 +23,15 @@ def main():
     p = argparse.ArgumentParser()
     p.add_argument('--endpoint', default=os.environ.get('HF_ENDPOINT', 'https://huggingface.co'))
     p.add_argument('--workers', type=int, default=2)
+    p.add_argument('--connections', type=int, default=1,
+                   help='Connections per file (2-16 requires aria2c); content hashes remain mandatory')
     a = p.parse_args()
     if a.workers < 1:
         p.error('--workers must be positive')
+    if not 1 <= a.connections <= 16:
+        p.error('--connections must be between 1 and 16')
+    if a.connections > 1 and not shutil.which('aria2c'):
+        p.error('Multiple connections require aria2c; use --connections 1 for curl')
     lock = json.loads((ROOT/'provenance/fineweb_candidate.json').read_text())
     endpoint = a.endpoint.rstrip('/')
     tree_url = f"{endpoint}/api/datasets/{lock['id']}/tree/{lock['sha']}/sample/10BT?limit=100"
@@ -51,11 +58,20 @@ def main():
         url = f"{endpoint}/datasets/{lock['id']}/resolve/{lock['sha']}/{entry['path']}?download=true"
         print(json.dumps({'event': 'downloading', 'file': entry['path']}), flush=True)
         with (logdir/(out.name+'.log')).open('a') as log:
-            subprocess.run(['curl', '--fail', '--location', '--connect-timeout', '20',
-                            '--retry', '8', '--retry-delay', '5', '--retry-all-errors',
-                            '--speed-limit', '1024', '--speed-time', '120',
-                            '--continue-at', '-', '--output', str(partial), url],
-                           stdout=log, stderr=log, check=True)
+            if a.connections > 1:
+                command = ['aria2c', '--continue=true', '--auto-file-renaming=false',
+                           '--file-allocation=none', '--allow-overwrite=true',
+                           '--max-connection-per-server='+str(a.connections), '--split='+str(a.connections),
+                           '--min-split-size=8M', '--connect-timeout=20', '--timeout=120',
+                           '--max-tries=8', '--retry-wait=5', '--summary-interval=30',
+                           '--console-log-level=warn', '--dir='+str(partial.parent),
+                           '--out='+partial.name, url]
+            else:
+                command = ['curl', '--fail', '--location', '--connect-timeout', '20',
+                           '--retry', '8', '--retry-delay', '5', '--retry-all-errors',
+                           '--speed-limit', '1024', '--speed-time', '120',
+                           '--continue-at', '-', '--output', str(partial), url]
+            subprocess.run(command, stdout=log, stderr=log, check=True)
         if partial.stat().st_size != entry['bytes'] or digest(partial) != entry['sha256']:
             raise RuntimeError(f'Download failed size/SHA256 verification: {partial}')
         partial.replace(out)

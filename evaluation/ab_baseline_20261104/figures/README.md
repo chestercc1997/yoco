@@ -1,45 +1,57 @@
-# Baseline / A / B 对比图
+# 新 Baseline / A / B：七张对比图
 
-三组均为 YOCO 160M、40,000 步、10.486B 训练 tokens。Baseline 为历史 32×V100 结果，A/B 为 8×A800 完成结果；具体协议与证据边界见[完整报告](../README.md)。统一用灰色表示 baseline、青色表示 A、橙色表示 B。
+Baseline 使用本次完成的 **8×A100** 运行，A/B 使用已发布的 **8×A800** 运行；三组同一 YOCO 基座、相同训练超参数、40000 步、10.486B tokens、八项完整评测。基座和初始公共参数的完整模型核查见[报告](../README.md)与[核查 JSON](../comparability_audit.json)。灰色为 baseline，青色为 A，橙色为 B。
 
 ## 1. 最终质量总览
 
-并列比较最终验证 loss、最后 100 步平均训练 loss、八任务下游宏平均。使用点图展示小差异，避免截断柱状图放大视觉差距。A 的 loss 和下游均略优；B 的 loss 最低，下游却最低。
+比较最终验证 loss、最后 100 步平均训练 loss、八任务宏平均。当前 A 下游最高，B 的验证 loss 最低；图中 baseline 已替换为本机新运行。
 
-![最终质量总览](01_quality_summary.png)
+![最终质量](01_quality_summary.png)
 
 [PDF](01_quality_summary.pdf) · [SVG](01_quality_summary.svg)
 
 ## 2. 八任务得分与相对 baseline 的差值
 
-左边是三组绝对 accuracy，右边是 A/B 相对 baseline 的百分点差值，正数表示更高。宏平均对八任务等权，不能与按样本数加权混用。历史 baseline 差值是描述性比较，不是配对显著性结论。
+左图三组得分，右图 A/B 相对新 baseline 的百分点差值。坐标已按新差值重算；每组 21465 题，无 limit，宏平均为八任务等权。Baseline 差值属于描述性比较。
 
-![八任务与差值](02_downstream_comparison.png)
+![八任务](02_downstream_comparison.png)
 
 [PDF](02_downstream_comparison.pdf) · [SVG](02_downstream_comparison.svg)
 
-## 3. 相同 tokens 下的验证收敛
+## 3. 相同 token 预算的验证收敛
 
-左边放大最后约 3.5B tokens，右边直接画 A/B 减去 baseline 的验证 loss。曲线未平滑，直接使用每 250 步一次的原始验证点；负值表示 loss 更低。右图从 1B tokens 开始，完整训练曲线见[原始全程图](../loss_compute.png)。
+每组 160 个未平滑验证点。左图放大 7–10.486B tokens，右图为 A/B 减去新 baseline。完整保留 baseline 的回升，未裁掉灰色曲线；三组均使用最终第 40000 步结果。
 
-![收敛与loss差值](03_validation_convergence.png)
+![验证收敛](03_validation_convergence.png)
 
 [PDF](03_validation_convergence.pdf) · [SVG](03_validation_convergence.svg)
 
-## 4. Compute–loss 与同 loss 的计算量
+## 4. Compute–loss 与同 loss 的计算代理
 
-左边使用计入共享输出头的 `6ND`；中间额外计入 A/B 重复执行 K/V 投影的估算；右边比较首次实测达到同一验证 loss 时的计算代理相对差值。
+左图 output-inclusive 6ND，中图加上 A/B 额外五次 K/V 投影的局部代理，右图按首次观测达到阈值比较。Baseline 未达到 loss=3.2 时明确标注未达到，不显示为零。该代理不是实测硬件 FLOPs；详细首次/持续命中步数见[阈值 CSV](../loss_thresholds.csv)。
 
-![计算量口径对比](04_compute_tradeoff.png)
+![计算量](04_compute_tradeoff.png)
 
-[PDF](04_compute_tradeoff.pdf) · [SVG](04_compute_tradeoff.svg) · [右图数值 CSV](compute_at_loss.csv)
+[PDF](04_compute_tradeoff.pdf) · [SVG](04_compute_tradeoff.svg) · [右图 CSV](compute_at_loss.csv)
 
-只计参数量会漏掉共享投影的重复执行。加上这部分后，在 loss=3.2 时 A/B 的代理计算量分别比 baseline 高约 1.80% / 0.93%；在 baseline 最终 loss=3.163661 时低约 1.64% / 2.29%。这一局部修正仍未完整计入 attention/retention、路由、归一化、激活重计算等运算，因此不能据此认定真实 FLOPs 或训练效率收益。阈值分辨率为 250 步；三组协议限制同完整报告。
+## 5. 全程验证与四种横轴
 
-所有图都由已发布数值生成，无新训练或评测。复算命令：
+![全程验证](../loss_compute.png)
 
-```bash
-python3 tools/plot_ab_comparisons.py
-```
+[PDF](../loss_compute.pdf) · [SVG](../loss_compute.svg)
 
-PNG 适合浏览，PDF/SVG 为矢量格式，适合论文或幻灯片。根目录的 [MANIFEST.sha256](../MANIFEST.sha256) 包含本目录文件。
+## 6. 八任务分组柱状图
+
+![八任务柱状图](../downstream.png)
+
+[PDF](../downstream.pdf) · [SVG](../downstream.svg)
+
+## 7. 三组完整训练 loss
+
+现在包含 baseline 的全部 40000 步。展示全程、后期放大、相对 baseline 差值和最后 100 步均值；轨迹使用 trailing-100 平均，最终均值直接复算。
+
+![完整训练](../training_loss.png)
+
+[PDF](../training_loss.pdf) · [SVG](../training_loss.svg)
+
+复画使用 `python tools/plot_ab_baseline.py` 与 `python tools/plot_ab_comparisons.py`；这只读取公开数值，不启动训练或评测。[目录 manifest](../MANIFEST.sha256) 覆盖本目录。按本次核查范围，不以软件版本差异作为比较的判定项。

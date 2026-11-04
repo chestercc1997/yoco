@@ -1,0 +1,48 @@
+{
+  "passed": true,
+  "configuration_fields_matched": [
+    "architecture",
+    "model",
+    "training",
+    "seed",
+    "tied_embeddings"
+  ],
+  "parameters": {
+    "baseline": 166708224,
+    "A": 166708230,
+    "B": 166708998
+  },
+  "extra_parameters": {
+    "A": 6,
+    "B": 774
+  },
+  "matching_common_state_tensors": {
+    "A": 114,
+    "B": 114
+  },
+  "baseline_runtime_matches_repository": true,
+  "seed": 42,
+  "uniform_initial_weights": [
+    0.16666666666666666,
+    0.16666666666666666,
+    0.16666666666666666,
+    0.16666666666666666,
+    0.16666666666666666,
+    0.16666666666666666
+  ],
+  "ab_initial_outputs_identical": true,
+  "last_source_limit_matches_baseline": true,
+  "scope": "Full-size models reconstructed locally from published run configs; all common tensors match exactly. Remote A/B step-zero payloads were not supplied.",
+  "checks_not_performed": [
+    "Remote A/B step-zero payload equality",
+    "Remote A/B token-shard SHA256 equality"
+  ],
+  "training_and_model_configs_matched": true,
+  "evaluation_task_yaml_seed_fewshot_matched_all_8": true,
+  "full_baseline_checkpoint_payload_verified": true,
+  "evaluation_counts_and_document_ids_matched_all_8": true,
+  "ab_dataset_document_prompt_target_hashes_available_in_public_export": false,
+  "baseline_validation_points": 160,
+  "baseline_training_updates": 40000,
+  "note": "Document-id sets match A/B public scores. Remote A/B sample hashes and token manifests are not present in this checkout; no baseline paired significance is claimed."
+}

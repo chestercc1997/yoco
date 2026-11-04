@@ -1,5 +1,14 @@
 # 用户执行约束（2026-10-29）
 
+## 2026-11-04 本机 A100 八卡 baseline 完整训练授权（当前）
+
+- 用户明确要求用本机 8 张 A100 完整训练 baseline 160M，而非仅运行 100 步测试。本条授权本机原始 YOCO baseline 的 40000 步训练及同设置八项下游评测，取代历史 HPC3“不重训 baseline”对本轮任务的限制。
+- 从已通过真实数据八卡测试的第 100 步 checkpoint 接续，保留 optimizer、scaler、RNG、40000 步 schedule。global batch=262144 tokens、sequence length=2048、microbatch=4、accumulation=4，验证仍为 2048 条序列。
+- 本轮只运行 baseline，不启动 A/B。代码与评测锁保存为 run 内独立快照，保留原 pilot 证据。
+- 当前本机作业从 `runs/setup/baseline-full-8gpu-active.json` 读取；先核对该文件、对应状态、heartbeat 和 tmux，禁止重复启动。最终训练加评测完成以 run 内 `PIPELINE_SUCCESS` 为准。
+- 本机 8×A100 baseline 已完成 40000 步与八项完整评测，最终验证 loss=3.408905983，八项宏平均=43.6630747%。本轮任务已完成，不重复启动训练。
+- 用户要求将 `evaluation/ab_baseline_20261104` 三组报告中的历史 baseline 换成本机新 baseline。七张 PNG/PDF/SVG 图、120000 个训练点及基座核查已更新；A/B 发布数据保持原样。基座核查以完整模型重建和配置为准，不将未取得的远端 step-zero 权重宣称已直接核对。按用户要求，软件版本差异不作为本轮核查判定项。
+
 ## 2026-11-03 A/B 四卡完整训练授权（最新）
 
 - 用户要求取消重复 baseline 作业 793493，只训练 A/B；旧作业已取消，日志和 checkpoint 保留。旧两卡 baseline 788651 已完成 40000 步，不重训。

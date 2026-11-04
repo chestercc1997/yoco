@@ -11,7 +11,7 @@ ROOT=Path(__file__).resolve().parents[1]/'evaluation/ab_baseline_20261104'
 s=json.loads((ROOT/'summary.json').read_text())
 with (ROOT/'validation_curves.csv').open() as f: curves=list(csv.DictReader(f))
 colors={'baseline':'#616b75','A':'#147d92','B':'#cf623b'}
-labels={'baseline':'YOCO baseline (historical)','A':'A: learned KV','B':'B: conditional KV'}
+labels={'baseline':'Baseline: 8×A100','A':'A: learned KV','B':'B: conditional KV'}
 plt.rcParams.update({'font.size':10,'axes.spines.top':False,'axes.spines.right':False,'figure.dpi':160})
 fig,axes=plt.subplots(2,2,figsize=(12,8),constrained_layout=True)
 for arm in colors:
@@ -20,12 +20,13 @@ for arm in colors:
   x=np.array([float(v[key]) for v in r]);x=x/1e9 if key=='tokens' else x
   ax.plot(x,y,label=labels[arm],color=colors[arm],lw=1.4);ax.grid(alpha=.2);ax.set_ylabel('Validation cross-entropy')
 axes[0,0].set_xlabel('Training tokens (billions)');axes[0,0].set_title('Full training trajectory');axes[0,0].legend()
-for ax in [axes[0,1],axes[1,0],axes[1,1]]:ax.set_ylim(3.15,3.40)
+late=[float(x['validation_loss']) for x in curves if float(x['tokens'])>=7e9]
+for ax in [axes[0,1],axes[1,0],axes[1,1]]:ax.set_ylim(min(late)-.025,max(late)+.035)
 axes[0,1].set_xlabel('Trunk 6ND (PFLOP-days)');axes[0,1].set_title('Excludes tied embedding / output matrix')
 axes[1,0].set_xlabel('Output-inclusive 6ND (PFLOP-days)');axes[1,0].set_title('Counts shared output matrix once')
 axes[1,1].set_xlabel('6ND + repeated KV projection proxy (PFLOP-days)');axes[1,1].set_title('Partial operation correction; not device FLOPs')
-fig.suptitle('160M YOCO: baseline / A / B, 40,000 updates, single seed')
-for ext in ['png','pdf']:fig.savefig(ROOT/('loss_compute.'+ext))
+fig.suptitle('160M YOCO: 8×A100 baseline / A / B, 40,000 updates, single seed')
+for ext in ['png','pdf','svg']:fig.savefig(ROOT/('loss_compute.'+ext))
 plt.close(fig)
 fig,ax=plt.subplots(figsize=(12,4.6),constrained_layout=True);rows=s['downstream'];x=np.arange(len(rows)+1)
 for i,arm in enumerate(colors):
@@ -33,18 +34,32 @@ for i,arm in enumerate(colors):
  ax.bar(x+(i-1)*.24,y,.24,color=colors[arm],label=labels[arm])
 ax.set_xticks(x,[r['task'].replace('_','\n') for r in rows]+['macro\naverage']);ax.set_ylabel('Accuracy (%)');ax.set_ylim(0,76);ax.legend(ncol=3);ax.grid(axis='y',alpha=.2)
 ax.set_title('Zero-shot full downstream evaluation; acc_norm except BoolQ / WinoGrande')
-for ext in ['png','pdf']:fig.savefig(ROOT/('downstream.'+ext))
+for ext in ['png','pdf','svg']:fig.savefig(ROOT/('downstream.'+ext))
 plt.close(fig)
-fig,axes=plt.subplots(1,2,figsize=(11,4.2),constrained_layout=True)
-with (ROOT/'ab_training_curves.csv').open() as f:tr=list(csv.DictReader(f))
-for arm in ['A','B']:
+fig,axes=plt.subplots(2,2,figsize=(12,8),constrained_layout=True)
+with (ROOT/'training_curves.csv').open() as f:tr=list(csv.DictReader(f))
+smoothed={}
+for arm in colors:
  r=[v for v in tr if v['arm']==arm];y=np.array([float(v['loss']) for v in r]);x=np.array([int(v['step']) for v in r])*262144/1e9
- axes[0].plot(x[99:],np.convolve(y,np.ones(100)/100,mode='valid'),color=colors[arm],label=labels[arm],lw=1)
-axes[0].set_ylim(3.1,4.2);axes[0].set_xlabel('Training tokens (billions)');axes[0].set_ylabel('Training loss (trailing 100 updates)');axes[0].legend();axes[0].grid(alpha=.2)
+ smoothed[arm]=np.convolve(y,np.ones(100)/100,mode='valid')
+ for ax in axes[0]:ax.plot(x[99:],smoothed[arm],color=colors[arm],label=labels[arm],lw=1)
+axes[0,0].set_title('Complete training trajectory');axes[0,0].legend()
+axes[0,1].set_title('Late-training detail');axes[0,1].set_xlim(7,10.6)
+late=[y[x[99:]>=7] for y in smoothed.values()]
+axes[0,1].set_ylim(min(v.min() for v in late)-.025,max(v.max() for v in late)+.035)
+for arm in ['A','B']:
+ axes[1,0].plot(x[99:],smoothed[arm]-smoothed['baseline'],color=colors[arm],label=labels[arm],lw=1)
+axes[1,0].axhline(0,color=colors['baseline'],ls='--',lw=1);axes[1,0].set_xlim(1,10.6)
+axes[1,0].set_title('Difference from the new baseline');axes[1,0].set_ylabel('Training loss difference')
 for i,arm in enumerate(colors):
- val=s['training'][arm]['last100_training_loss'];axes[1].bar(i,val,color=colors[arm]);axes[1].text(i,val+.00015,f'{val:.6f}',ha='center')
-axes[1].set_xticks(range(3),['baseline','A','B']);axes[1].set_ylim(3.145,3.159);axes[1].set_ylabel('Final 100-update mean training loss');axes[1].grid(axis='y',alpha=.2)
-fig.suptitle('Training loss: historical baseline has final summary only in this export')
-for ext in ['png','pdf']:fig.savefig(ROOT/('training_loss.'+ext))
+ val=s['training'][arm]['last100_training_loss'];axes[1,1].scatter(val,i,s=85,color=colors[arm]);axes[1,1].annotate(f'{val:.6f}',(val,i),xytext=(0,10),textcoords='offset points',ha='center')
+vals=[s['training'][a]['last100_training_loss'] for a in colors];span=max(vals)-min(vals)
+axes[1,1].set_xlim(min(vals)-span*.25,max(vals)+span*.35);axes[1,1].set_ylim(2.5,-.7)
+axes[1,1].set_yticks(range(3),['baseline','A','B']);axes[1,1].set_xlabel('Cross-entropy');axes[1,1].set_title('Final 100-update mean training loss')
+for ax in axes.flat:ax.grid(alpha=.2)
+for ax in [axes[0,0],axes[0,1],axes[1,0]]:ax.set_xlabel('Training tokens (billions)')
+for ax in axes[0]:ax.set_ylabel('Training loss (trailing 100 updates)')
+fig.suptitle('All three 40,000-update curves: baseline 8×A100; A/B 8×A800')
+for ext in ['png','pdf','svg']:fig.savefig(ROOT/('training_loss.'+ext))
 plt.close(fig)
-print('Generated six figure files')
+print('Generated three figures in PNG / PDF / SVG')
