@@ -1,5 +1,16 @@
 # 用户执行约束（2026-10-29）
 
+## 2026-11-05 进一步加速与方法 A 400M 完整训练授权（最新）
+
+- 用户要求继续测试不改变训练 setting 的加速，并明确要求加速通过精度检查后，正式训练 **400M 方法 A**。仅训练 A；同规格 baseline 用于结构与共同初始化核对，不额外启动 baseline/B 完整作业。
+- 沿用已完成 baseline 的数据、FP16 mixed/FP32 parameters、seed、microbatch=4、accumulation=4、8 ranks、global batch=262144、40000 步 schedule、验证 2048 序列，以及每 5000 步保存并全部保留。不得改为 BF16/全 FP32、增加 microbatch、缩短 token 预算或减少验证来宣称加速。
+- 仓库原无 400M 配置，现将相同 YOCO 主干扩展为 24 层、dim=1024、FFN=2816、self heads=4、attention heads=16，baseline 参数=400590848，A 参数=400590860。方法 A 对前 12 层候选 K/V 使用 12 个全局 softmax 权重，初始等权。
+- `tools/preflight_400m_A.py` 已验证 222 个公共 state tensors 与同规格 baseline 初始化逐项一致、退化到末来源时输出一致，并保存受检 A 初始化。400M 从该新初始化训练，不将 160M 权重当作可直接恢复的 400M checkpoint。
+- 当前短程性能测试为 tmux `yoco-speed-audit`，目录 `runs/diagnostics/further-speed-20261105`；先查状态，禁止重复启动。进一步加速候选需做同批 loss/梯度检查，并在 400M A 上验证显存、吞吐及断点恢复后，才能进入正式训练。
+- **正式训练已启动**：`runs/setup/400m-A-active.json` 指向 `runs/yoco-400m-A-8gpu-full-20261105T0310Z`，tmux 为 `yoco-400m-A-8gpu`，控制器 `tools/run_400m_A.py`。先读取实际状态与 heartbeat，禁止重复启动或另训 baseline/B。已通过八卡真实数据 `0→2→4` 恢复与连续/重复对照，从受检第 4 步续训至 40000 步，随后自动执行八项完整下游。
+- 400M A 整体编译的同批梯度差异约 2.47%，未采用；当前采用 `compile_scope=layers`、`emulate_precision_casts=true`、`compile_loss=false`，保留共享 K/V 构造及跨层梯度汇总原路径。40 步对照 loss 最大差异 1.335e-5、梯度相对 L2 差异 1.527e-4；每步约 0.91 秒（原执行约 1.76 秒）。这不是最终收敛/精度结论，继续检查完整曲线。
+- 用户已表达对本任务操作的全面授权，复用已批准工具规则，不重复询问同类 GPU/文件/联网操作；平台强制沙箱策略仍须遵守，不自行绕过。
+
 ## 2026-11-04 用户纠正：保持 A/B baseline 配置与精度（最新）
 
 - 用户明确拒绝擅自修改训练精度：baseline 必须与 A/B 发布配置一致，使用 `fp16_mixed_fp32_params`；不再继续全 FP32 训练。旧 FP32 作业已按本次要求停止，保留其记录。

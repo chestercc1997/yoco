@@ -2,6 +2,8 @@
 
 本次 YOCO 160M baseline 在 8×A100 80GB PCIe 上完成 40000 步，正式续训约 **3 小时 58 分**，加上八项并行下游评测共 **4 小时 8 分**。训练仍使用与 A/B 发布设置相同的 **FP16 混合精度和 FP32 参数**；加速来自执行优化。最终验证 loss 为 **3.177219**，八项宏平均为 **45.6268%**。
 
+本文的整体编译配置对应已完成的 **160M baseline**。新的 **400M 方法 A** 已单独做数值核对并选择分层编译，配置见 [400M A 训练记录](PLAN_A_400M_8GPU.md)；不要将 160M 的编译结果直接当作更大模型的数值验证。
+
 配置见 [yoco_160m_baseline_8gpu_matched.json](../configs/yoco_160m_baseline_8gpu_matched.json)，逐项测量与恢复检查见[加速证据 JSON](evidence/baseline-execution-acceleration.json)，完整结果见[三组对比报告](../evaluation/ab_baseline_20261104/README.md)。
 
 ## 加速来自哪里

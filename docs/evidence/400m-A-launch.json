@@ -1,0 +1,24 @@
+{
+  "recorded_at": "2026-11-05T03:55:08.700805+00:00",
+  "state": "training",
+  "source_run": "yoco-400m-A-8gpu-full-20261105T0310Z",
+  "method": "A",
+  "parameters": 400590860,
+  "world_size": 8,
+  "target_step": 40000,
+  "latest_step_at_export": 594,
+  "latest_loss_at_export": 4.953364372253418,
+  "median_recent_seconds": 0.9372160234488547,
+  "precision": "fp16_mixed_fp32_params",
+  "checkpoint_every": 5000,
+  "keep_all_checkpoints": true,
+  "note": "Publication-time snapshot, not live status. Complete scores do not exist yet.",
+  "overflow_retries_at_export": 0,
+  "latest_validation_at_export": {
+    "time": "2026-11-05T03:53:39.467342+00:00",
+    "event": "validation",
+    "step": 500,
+    "loss": 5.213631629943848,
+    "perplexity": 183.76019691052326
+  }
+}

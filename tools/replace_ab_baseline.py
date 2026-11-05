@@ -41,7 +41,7 @@ def csvwrite(path, data):
         writer.writerows(data)
 
 
-def audit_backbone(configs, resolved):
+def audit_backbone(configs, resolved, frozen_runtime):
     import gc
     import torch
     from runtime.model import build_model
@@ -57,7 +57,10 @@ def audit_backbone(configs, resolved):
     assert configs['B']['memory_fusion']['mode'] == 'conditional_kv'
     source_match = all(sha(ROOT/'runtime'/name) == value
                        for name, value in resolved['identity']['model_source_sha256'].items())
-    assert source_match
+    assert all(sha(frozen_runtime/name)==value for name,value in resolved['identity']['model_source_sha256'].items())
+    backbone_match=all(sha(ROOT/'runtime'/name)==value
+                       for name,value in resolved['identity']['model_source_sha256'].items() if name!='train.py')
+    assert backbone_match,'Current backbone differs from the trained snapshot; use that immutable release to reconstruct it'
     torch.manual_seed(base['seed'])
     model = build_model(base).eval()
     common = {key: value.detach().clone() for key, value in model.state_dict().items()}
@@ -95,6 +98,7 @@ def audit_backbone(configs, resolved):
                 baseline_execution=base.get('execution',{}),
                 extra_parameters={'A': 6, 'B': 774}, matching_common_state_tensors=counts,
                 baseline_runtime_matches_repository=source_match, seed=base['seed'],
+                baseline_runtime_snapshot_verified=True,backbone_sources_match_repository=backbone_match,
                 uniform_initial_weights=[1/6]*6, ab_initial_outputs_identical=True,
                 last_source_limit_matches_baseline=True,
                 scope='Full-size models reconstructed locally from published run configs; all common tensors match exactly. Remote A/B step-zero payloads were not supplied.',
@@ -119,7 +123,7 @@ def main():
     fingerprint = hashlib.sha256(json.dumps(resolved['identity'], sort_keys=True).encode()).hexdigest()
     assert meta['step'] == 40000 and meta['fingerprint'] == fingerprint
     assert sha(run/meta['file']) == meta['sha256']
-    audit = audit_backbone(configs, resolved)
+    audit = audit_backbone(configs, resolved, run/'release/runtime')
     print('Full-size common-backbone, initialization and last-source checks passed', flush=True)
     logpaths = [('baseline_pilot_rank0', pilot/'rank0.jsonl'), ('baseline_full_rank0', run/'rank0.jsonl')]
     logs = [[json.loads(line) for line in path.read_text().splitlines()] for _, path in logpaths]

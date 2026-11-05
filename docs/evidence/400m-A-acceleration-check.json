@@ -1,0 +1,271 @@
+{
+  "reference_case": "eager",
+  "reference_seconds": 1.4005716091487557,
+  "records": [
+    {
+      "case": "eager",
+      "training_setting_unchanged": true,
+      "process_clean_exit": true,
+      "step": 40,
+      "execution": {
+        "checkpoint_activations": false,
+        "fused_adamw": true,
+        "compile": false,
+        "allow_tf32": true,
+        "compile_loss": false,
+        "probe_settings": {
+          "arguments": [],
+          "environment": {}
+        }
+      },
+      "precision": "fp16_mixed_fp32_params",
+      "measured_updates": 35,
+      "median_seconds": 1.4005716091487557,
+      "global_batch_tokens": 262144,
+      "peak_memory_bytes": 35391768064,
+      "no_checkpoints_written": true,
+      "not_a_formal_run": true,
+      "completed": true,
+      "p25_seconds": 1.3960013501346111,
+      "p75_seconds": 1.4046075958758593,
+      "maximum_loss_difference": 0.0,
+      "first_loss_difference": 0.0,
+      "gradient_relative_l2": 0.0,
+      "gradient_cosine": 0.9999999999999997,
+      "numerical_checks_passed": true,
+      "speedup": 1.0,
+      "accepted": false
+    },
+    {
+      "case": "faithful_compiled",
+      "training_setting_unchanged": true,
+      "process_clean_exit": true,
+      "step": 40,
+      "execution": {
+        "checkpoint_activations": false,
+        "fused_adamw": true,
+        "compile": true,
+        "allow_tf32": true,
+        "compile_loss": true,
+        "probe_settings": {
+          "arguments": [
+            "--emulate-precision-casts"
+          ],
+          "environment": {}
+        },
+        "emulate_precision_casts": true
+      },
+      "precision": "fp16_mixed_fp32_params",
+      "measured_updates": 35,
+      "median_seconds": 0.8070070638787001,
+      "global_batch_tokens": 262144,
+      "peak_memory_bytes": 24167081984,
+      "no_checkpoints_written": true,
+      "not_a_formal_run": true,
+      "completed": true,
+      "p25_seconds": 0.8006356700789183,
+      "p75_seconds": 0.8118207459338009,
+      "maximum_loss_difference": 0.041103363037109375,
+      "first_loss_difference": 1.71661376953125e-05,
+      "gradient_relative_l2": 0.024731663380936495,
+      "gradient_cosine": 0.9996941724078967,
+      "numerical_checks_passed": false,
+      "speedup": 1.73551344447621,
+      "accepted": false
+    },
+    {
+      "case": "faithful_model_only",
+      "training_setting_unchanged": true,
+      "process_clean_exit": true,
+      "step": 40,
+      "execution": {
+        "checkpoint_activations": false,
+        "fused_adamw": true,
+        "compile": true,
+        "allow_tf32": true,
+        "compile_loss": false,
+        "probe_settings": {
+          "arguments": [
+            "--emulate-precision-casts"
+          ],
+          "environment": {}
+        },
+        "emulate_precision_casts": true
+      },
+      "precision": "fp16_mixed_fp32_params",
+      "measured_updates": 35,
+      "median_seconds": 0.8565154848620296,
+      "global_batch_tokens": 262144,
+      "peak_memory_bytes": 30296189952,
+      "no_checkpoints_written": true,
+      "not_a_formal_run": true,
+      "completed": true,
+      "p25_seconds": 0.8497789241373539,
+      "p75_seconds": 0.8605174759868532,
+      "maximum_loss_difference": 0.041054725646972656,
+      "first_loss_difference": 2.09808349609375e-05,
+      "gradient_relative_l2": 0.024731676632553098,
+      "gradient_cosine": 0.999694172065226,
+      "numerical_checks_passed": false,
+      "speedup": 1.635197067539724,
+      "accepted": false
+    },
+    {
+      "case": "ffn",
+      "training_setting_unchanged": true,
+      "process_clean_exit": true,
+      "step": 40,
+      "execution": {
+        "checkpoint_activations": false,
+        "fused_adamw": true,
+        "compile": true,
+        "allow_tf32": true,
+        "compile_loss": false,
+        "probe_settings": {
+          "arguments": [
+            "--emulate-precision-casts",
+            "--compile-scope",
+            "ffn"
+          ],
+          "environment": {}
+        },
+        "emulate_precision_casts": true,
+        "compile_scope": "ffn"
+      },
+      "precision": "fp16_mixed_fp32_params",
+      "measured_updates": 35,
+      "median_seconds": 1.3665028950199485,
+      "global_batch_tokens": 262144,
+      "peak_memory_bytes": 33877644800,
+      "no_checkpoints_written": true,
+      "not_a_formal_run": true,
+      "completed": true,
+      "p25_seconds": 1.3608361119404435,
+      "p75_seconds": 1.3700826549902558,
+      "maximum_loss_difference": 1.52587890625e-05,
+      "first_loss_difference": 7.62939453125e-06,
+      "gradient_relative_l2": 0.00014233159795778907,
+      "gradient_cosine": 0.9999999898708583,
+      "numerical_checks_passed": true,
+      "speedup": 1.024931315003405,
+      "accepted": false
+    },
+    {
+      "case": "legacy_400m",
+      "training_setting_unchanged": true,
+      "process_clean_exit": true,
+      "step": 40,
+      "execution": {
+        "checkpoint_activations": true,
+        "fused_adamw": false,
+        "compile": false,
+        "allow_tf32": true,
+        "compile_loss": false,
+        "probe_settings": {
+          "arguments": [],
+          "environment": {}
+        }
+      },
+      "precision": "fp16_mixed_fp32_params",
+      "measured_updates": 35,
+      "median_seconds": 1.7566776231396943,
+      "global_batch_tokens": 262144,
+      "peak_memory_bytes": 20396917248,
+      "no_checkpoints_written": true,
+      "not_a_formal_run": true,
+      "completed": true,
+      "p25_seconds": 1.7341426350176334,
+      "p75_seconds": 1.7732448929455131,
+      "maximum_loss_difference": 2.6702880859375e-05,
+      "first_loss_difference": 0.0,
+      "gradient_relative_l2": 6.095041417719718e-05,
+      "gradient_cosine": 0.9999999981425247,
+      "numerical_checks_passed": true,
+      "speedup": 0.7972843683438777,
+      "accepted": false
+    },
+    {
+      "case": "reference",
+      "training_setting_unchanged": true,
+      "process_clean_exit": true,
+      "step": 40,
+      "execution": {
+        "checkpoint_activations": false,
+        "fused_adamw": true,
+        "compile": true,
+        "allow_tf32": true,
+        "compile_loss": true,
+        "probe_settings": {
+          "arguments": [],
+          "environment": {}
+        }
+      },
+      "precision": "fp16_mixed_fp32_params",
+      "measured_updates": 35,
+      "median_seconds": 0.8076976269949228,
+      "global_batch_tokens": 262144,
+      "peak_memory_bytes": 24020654592,
+      "no_checkpoints_written": true,
+      "not_a_formal_run": true,
+      "completed": true,
+      "p25_seconds": 0.8039513181429356,
+      "p75_seconds": 0.81105653103441,
+      "maximum_loss_difference": 0.04151725769042969,
+      "first_loss_difference": 1.9073486328125e-06,
+      "gradient_relative_l2": 0.02473219897368946,
+      "gradient_cosine": 0.9996941591628175,
+      "numerical_checks_passed": false,
+      "speedup": 1.7340296199205743,
+      "accepted": false
+    },
+    {
+      "case": "regional",
+      "training_setting_unchanged": true,
+      "process_clean_exit": true,
+      "step": 40,
+      "execution": {
+        "checkpoint_activations": false,
+        "fused_adamw": true,
+        "compile": true,
+        "allow_tf32": true,
+        "compile_loss": false,
+        "probe_settings": {
+          "arguments": [
+            "--emulate-precision-casts",
+            "--compile-scope",
+            "layers"
+          ],
+          "environment": {}
+        },
+        "emulate_precision_casts": true,
+        "compile_scope": "layers"
+      },
+      "precision": "fp16_mixed_fp32_params",
+      "measured_updates": 35,
+      "median_seconds": 0.9108298828359693,
+      "global_batch_tokens": 262144,
+      "peak_memory_bytes": 30503676928,
+      "no_checkpoints_written": true,
+      "not_a_formal_run": true,
+      "completed": true,
+      "p25_seconds": 0.9074648378882557,
+      "p75_seconds": 0.9139891571830958,
+      "maximum_loss_difference": 1.33514404296875e-05,
+      "first_loss_difference": 1.1444091796875e-05,
+      "gradient_relative_l2": 0.0001527342546939619,
+      "gradient_cosine": 0.9999999883361247,
+      "numerical_checks_passed": true,
+      "speedup": 1.5376873722982403,
+      "accepted": true
+    }
+  ],
+  "selected": "regional",
+  "criteria": {
+    "minimum_speedup": 1.05,
+    "maximum_gradient_relative_l2": 0.005,
+    "minimum_gradient_cosine": 0.99999,
+    "maximum_first_loss_difference": 0.0001,
+    "maximum_trajectory_loss_difference": 0.002
+  },
+  "scope": "Short tests preserve the model, recipe, dtype and data order; passing numerical tolerances is not proof of bitwise identity or final convergence."
+}

@@ -217,8 +217,23 @@ def main():
         for group in optimizer.param_groups: group['fused']=True; group['foreach']=False
         for parameter,state in optimizer.state.items():
             if 'step' in state: state['step']=state['step'].to(parameter.device)
-    compiled=torch.compile(model,dynamic=False) if execution.get('compile',False) else model
-    loss_function=torch.compile(cross_entropy,dynamic=False) if execution.get('compile_loss',False) else cross_entropy
+    compile_options={'dynamic':False}
+    if execution.get('emulate_precision_casts',False):
+        # Keep eager FP16 downcast/upcast boundaries when fusing operators.
+        compile_options['options']={'emulate_precision_casts':True}
+    scope=execution.get('compile_scope','model')
+    if scope not in {'model','layers','ffn'}:raise ValueError('Unknown compilation scope')
+    if execution.get('compile',False) and scope!='model':
+        # Leave shared K/V construction and cross-layer gradient accumulation
+        # in the original autograd graph; do not change state_dict names.
+        for decoder in (model.self_decoder,model.cross_decoder):
+            for layer in decoder.layers:
+                target=layer if scope=='layers' else layer.ffn
+                target.forward=torch.compile(target.forward,**compile_options)
+        compiled=model
+    else:
+        compiled=torch.compile(model,**compile_options) if execution.get('compile',False) else model
+    loss_function=torch.compile(cross_entropy,**compile_options) if execution.get('compile_loss',False) else cross_entropy
     train_model=DDP(compiled,device_ids=[local],broadcast_buffers=False,gradient_as_bucket_view=True) if world>1 else compiled
     log(run,rank,'started',step=step,world_size=world,parameters=sum(x.numel() for x in model.parameters()),synthetic=a.smoke,resumed=bool(checkpoint_path),precision=precision,execution=execution,checkpoint_every=t['checkpoint_every'],keep_last_checkpoints=keep_last)
     length=t['sequence_length']; micro=t['microbatch']; accum=t['gradient_accumulation']

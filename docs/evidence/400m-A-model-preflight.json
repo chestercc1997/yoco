@@ -1,0 +1,59 @@
+{
+  "passed": true,
+  "baseline_parameters": 400590848,
+  "A_parameters": 400590860,
+  "extra_parameters": 12,
+  "common_state_tensors_verified": 222,
+  "common_weights_bitwise_equal": true,
+  "last_source_limit_matches_baseline": true,
+  "initial_weights": [
+    0.08333333333333333,
+    0.08333333333333333,
+    0.08333333333333333,
+    0.08333333333333333,
+    0.08333333333333333,
+    0.08333333333333333,
+    0.08333333333333333,
+    0.08333333333333333,
+    0.08333333333333333,
+    0.08333333333333333,
+    0.08333333333333333,
+    0.08333333333333333
+  ],
+  "training_and_data_match_completed_160m_recipe": true,
+  "precision": "fp16_mixed_fp32_params",
+  "model": {
+    "dim": 1024,
+    "n_layers": 24,
+    "hidden_dim": 2816,
+    "n_self_heads": 4,
+    "n_attn_heads": 16,
+    "n_attn_kv_heads": 16,
+    "vocab_size": 100288,
+    "max_seq_len": 2048,
+    "model_parallel_size": 1,
+    "rope_theta": 10000.0,
+    "norm_eps": 1e-05
+  },
+  "memory_fusion": {
+    "mode": "learned_kv",
+    "source_layers": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12
+    ],
+    "temperature": 1.0
+  },
+  "initialization": "runs/setup/yoco-400m-A-initialization.pt",
+  "initialization_sha256": "2cdfc71b1cac69cbcd74199d4fc522db9b084a4e6a001ce367533b1c00e8b4e3",
+  "note": "400M is a new 400.59M-parameter YOCO configuration derived from the same backbone family, not an official released 400M checkpoint."
+}

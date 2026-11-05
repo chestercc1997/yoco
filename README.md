@@ -5,7 +5,16 @@ trees into one reproducible project. It contains model and training code,
 evaluation and inference benchmarks, pinned dataset metadata, measured tables,
 and figures. Checkpoints and training data are intentionally excluded.
 
-## Current A/B experiment
+## Current 400M A training
+
+Method A is now training at **400.59M parameters on 8×A100**, with the same data,
+FP16 mixed precision with FP32 parameters, global batch and 40,000-update schedule. The model has
+24 layers and 12 global K/V mixture weights. Regional layer compilation passed
+same-batch gradient and checkpoint-resume checks; the full-model compilation
+candidate was rejected for its larger gradient differences. Final scores are pending.
+See the [400M A configuration, numerical checks and run record](docs/PLAN_A_400M_8GPU.md).
+
+## Completed 160M A/B experiment
 
 The current experiment compares two ways to aggregate K/V from all six
 self-decoder layers, constructing shared memory once before layers 7–12:
