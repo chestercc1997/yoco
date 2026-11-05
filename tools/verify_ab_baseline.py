@@ -33,7 +33,18 @@ assert audit['extra_parameters'] == {'A': 6, 'B': 774}
 configs = json.loads((root/'training_protocol.json').read_text())
 for arm in 'AB':
     for key in ('architecture', 'model', 'training', 'seed', 'tied_embeddings'):
-        assert configs['baseline'][key] == configs[arm][key], (arm, key)
+        left,right=configs['baseline'][key],configs[arm][key]
+        if key=='training':
+            policy={'checkpoint_every','keep_last_checkpoints'}
+            left={k:v for k,v in left.items() if k not in policy}
+            right={k:v for k,v in right.items() if k not in policy}
+        assert left == right, (arm, key)
+assert configs['baseline']['training']['precision']=='fp16_mixed_fp32_params'
+assert configs['baseline']['training']['checkpoint_every']==5000
+assert configs['baseline']['training']['keep_last_checkpoints'] is None
+inventory=json.loads((root/'baseline_checkpoint_inventory.json').read_text())
+assert [r['step'] for r in inventory]==list(range(5000,40001,5000))
+assert inventory[-1]['sha256']==s['checkpoint_metadata']['baseline']['sha256']
 assert 'memory_fusion' not in configs['baseline']
 curves = rows('validation_curves.csv')
 train = rows('training_curves.csv')

@@ -1,6 +1,8 @@
 """Render the current baseline/A/B report from the verified numerical tables."""
 import csv
+import hashlib
 import json
+import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -9,6 +11,11 @@ S = json.loads((OUT/'summary.json').read_text())
 T = S['training']
 ARMS = ('baseline', 'A', 'B')
 AUDIT = S['comparability_audit']
+SMOOTH = json.loads((ROOT/'docs/evidence/baseline-training-loss-smoothness.json').read_text())
+assert SMOOTH['source_sha256'] == hashlib.sha256((OUT/'training_curves.csv').read_bytes()).hexdigest()
+fluctuation_std = '/'.join(f"{SMOOTH['series'][a]['residual_std']:.5f}" for a in ARMS)
+fluctuation_max = '/'.join(f"{SMOOTH['series'][a]['maximum_positive_residual']:.5f}" for a in ARMS)
+fluctuation_peaks = '/'.join(str(SMOOTH['series'][a]['peak_step']) for a in ARMS)
 with (OUT/'loss_thresholds.csv').open() as handle:
     THRESHOLDS = list(csv.DictReader(handle))
 with (OUT/'validation_curves.csv').open() as handle:
@@ -51,7 +58,9 @@ delta_b = 100*(S['macro']['B']-S['macro']['baseline'])
 ci = S['AB_paired_bootstrap']['ci95_pp']
 report = f'''# YOCO 160M：新 Baseline、A、B 三组对比
 
-更新日期：2026-11-04。Baseline 已替换为本机 **8×A100 80GB PCIe** 完成的原始 YOCO；A/B 保留最新 GitHub 发布的 **8×A800** 运行。三组均完成 **40,000 步、10,485,760,000 个训练 tokens** 和八项完整零样本评测，每组 21,465 道题。
+> 2026-11-05 更新：baseline 已替换为本次完成的加速 FP16 重跑，最终验证 loss 为 {T['baseline']['validation_loss']:.6f}，八项宏平均为 {100*S['macro']['baseline']:.4f}%。旧 A100 baseline 的 loss=3.408906、宏平均=43.6631% 保留在[历史记录](../../docs/evidence/baseline-superseded-20261104.json)；本次没有出现旧运行持续的 loss 大幅回升。加速设置和复用命令见[训练加速文档](../../docs/BASELINE_A100_ACCELERATION.md)。
+
+更新日期：2026-11-05。Baseline 已替换为本机 **8×A100 80GB PCIe** 完成的原始 YOCO；A/B 保留最新 GitHub 发布的 **8×A800** 运行。三组均完成 **40,000 步、10,485,760,000 个训练 tokens** 和八项完整零样本评测，每组 21,465 道题。
 
 **本次固定 checkpoint 的结果：A 的下游宏平均最高，B 的最终验证 loss 最低。相对新 baseline，A/B 的宏平均分别高 {delta_a:.2f} / {delta_b:.2f} 个百分点。** 本报告中的 baseline、差值、曲线和阈值计算均来自新运行；旧 32×V100 结果仍保留在 Git 历史和原 YOCO/Transformer 报告中。
 
@@ -65,7 +74,7 @@ report = f'''# YOCO 160M：新 Baseline、A、B 三组对比
 | A · 8×A800 | 六个全局 softmax logits 融合候选 K/V | {T['A']['parameters']:,} | 6 |
 | B · 8×A800 | 按 hidden states 生成每 token 权重 | {T['B']['parameters']:,} | 774 |
 
-已直接比较发布的运行配置：`architecture`、`model`、`training`、`seed`、`tied_embeddings` 全部相同。三组均为 seed=42、microbatch=4、accumulation=4、8 ranks、长度 2048、每步 262144 tokens、验证 2048 条序列；AdamW，betas=0.9/0.98，LR=1.5e-4，375 步 warmup、40000 步线性衰减，weight decay=0.05，FP16 mixed / FP32 parameters。
+已直接比较发布的运行配置：`architecture`、`model`、`seed`、`tied_embeddings` 和核心训练超参数相同。Baseline 按用户要求每 5000 步保存并全部保留，A/B 的发布配置每 250 步保存；该保存策略例外已写入核查 JSON。Baseline 另开启模型与 loss 编译、融合 AdamW、TF32，并关闭 activation recomputation；这些执行选项独立记录在 `training_protocol.json` 的 `execution` 中。三组均为 seed=42、microbatch=4、accumulation=4、8 ranks、长度 2048、每步 262144 tokens、验证 2048 条序列；AdamW，betas=0.9/0.98，LR=1.5e-4，375 步 warmup、40000 步线性衰减，weight decay=0.05，FP16 mixed / FP32 parameters。
 
 **实际重建完整 160M 模型的核查通过：**同 seed 下，A/B 的全部 {AUDIT['matching_common_state_tensors']['A']} 个公共 state tensors 与 baseline 逐项完全一致；仅多出融合模块参数。A/B 初始六层等权且输出相同；将权重退化为仅选 H6 后，两者都复现 baseline 输出。详见[机器可读核查](comparability_audit.json)。这验证当前实现与发布配置的共同基座；远端 A/B 当时的 step-zero 权重未包含在公开材料中，未宣称直接比对其 payload。
 
@@ -91,7 +100,9 @@ BoolQ、WinoGrande 使用 acc，其余六项使用 acc_norm。宏平均对八任
 
 ![三组验证曲线](figures/03_validation_convergence.png)
 
-新 baseline 的最低已观测验证 loss 为 **{float(best['validation_loss']):.6f}（第 {int(best['step']):,} 步）**，之后存在回升，最终为 {T['baseline']['validation_loss']:.6f}。因此图中保留全部真实波动，统一使用第 40000 步模型比较，不把最好点替换为最终点；最终分数差异不能单独证明改动的普遍收益。曲线坐标已随新 baseline 调整，避免沿用旧范围隐藏灰色曲线。
+新 baseline 的最低已观测验证 loss 为 **{float(best['validation_loss']):.6f}（第 {int(best['step']):,} 步）**，最终为 {T['baseline']['validation_loss']:.6f}。从运行最优值的最大回升为 {T['baseline']['maximum_validation_regression']:.6f}，未再出现旧运行的大幅持续退化。图中保留全部真实波动，统一使用第 40000 步模型比较，不把最好点替换为最终点；最终分数差异不能单独证明改动的普遍收益。曲线坐标已随新 baseline 调整，避免沿用旧范围隐藏灰色曲线。
+
+另用未平滑的逐步 training loss 核查了局部波动，见[原始曲线诊断图](../../docs/evidence/baseline-training-loss-smoothness.png)和[数值统计](../../docs/evidence/baseline-training-loss-smoothness.json)。第 1001–40000 步减去局部 251 步中位数后，baseline/A/B 的波动标准差分别约为 {fluctuation_std}，最大正偏离分别为 {fluctuation_max}，最大点所在步数分别为 {fluctuation_peaks}。Training loss 的波动接近，不等于没有梯度尖峰或 scaler 溢出重试。
 
 ## 4. 计算量与同 loss 阈值
 
@@ -99,13 +110,13 @@ BoolQ、WinoGrande 使用 acc，其余六项使用 acc_norm。宏平均对八任
 
 {compute}
 
-A/B 对六个来源分别执行共享 K/V 投影。相对 baseline 多五次投影的局部代理为 `6×5×2×768²×D`，在当前 D 下约 0.004294967 PFLOP-days；这仍未包含完整的 retention/attention、归一化、路由、激活重计算和通信成本。**6ND 与局部修正均不是实测设备 FLOPs；A100/A800 的活跃时间不能直接作为架构加速结论。** Baseline 的 wall time 含 pilot 和续训之间的暂停；活跃 GPU-hours 仅累加成功 update 的秒数，不含暂停、溢出重试、验证和存盘。
+A/B 对六个来源分别执行共享 K/V 投影。相对 baseline 多五次投影的局部代理为 `6×5×2×768²×D`，在当前 D 下约 0.004294967 PFLOP-days；这仍未包含完整的 retention/attention、归一化、路由、激活重计算和通信成本。**6ND 与局部修正均不是实测设备 FLOPs；A100/A800 的活跃时间不能直接作为架构加速结论。** Baseline 正式续训到最终 checkpoint 用时 {T['baseline']['end_to_end_hours']:.3f} 小时，含八项下游共 {T['baseline']['training_and_evaluation_hours']:.3f} 小时；这两个 wall time 不计早先 pilot 与重跑之间的空闲间隔。活跃 GPU-hours 字段累加 pilot 和正式训练成功 update 的计时（含首步编译），不含溢出重试、验证、存盘或空闲等待。Baseline 与 A/B 执行优化和硬件不同，不能将这里的耗时差异归因于架构。
 
 ![不同计算量口径](loss_compute.png)
 
 {threshold_table}
 
-“持续”表示从该观测点起，之后所有已观测验证点均不高于阈值；阈值分辨率为 250 步。Baseline 有回升，首次命中与持续达到必须区分。它未达到 3.2，图表明确标为 **未达到**，不以零计算量填充缺失值。
+“持续”表示从该观测点起，之后所有已观测验证点均不高于阈值；阈值分辨率为 250 步。本次 baseline 已达到 3.2；首次命中与持续达到分别计算，不用平滑后的曲线判定。未达到的阈值仍明确标注，不以零计算量填充缺失值。
 
 ![计算量与阈值对比](figures/04_compute_tradeoff.png)
 
@@ -123,6 +134,7 @@ python tools/replace_ab_baseline.py \\
   --baseline-pilot runs/{S['baseline_replacement']['source_pilot']}
 python tools/plot_ab_baseline.py
 python tools/plot_ab_comparisons.py
+python tools/check_baseline_loss_smoothness.py
 python tools/render_ab_comparison_report.py
 python tools/verify_ab_baseline.py --refresh-manifest
 ```
@@ -153,7 +165,7 @@ Baseline 使用本次完成的 **8×A100** 运行，A/B 使用已发布的 **8×
 
 ## 3. 相同 token 预算的验证收敛
 
-每组 160 个未平滑验证点。左图放大 7–10.486B tokens，右图为 A/B 减去新 baseline。完整保留 baseline 的回升，未裁掉灰色曲线；三组均使用最终第 40000 步结果。
+每组 160 个未平滑验证点。左图放大 7–10.486B tokens，右图为 A/B 减去新 baseline。完整保留三组的原始验证波动，未裁掉灰色曲线；三组均使用最终第 40000 步结果。
 
 ![验证收敛](03_validation_convergence.png)
 
@@ -161,7 +173,7 @@ Baseline 使用本次完成的 **8×A100** 运行，A/B 使用已发布的 **8×
 
 ## 4. Compute–loss 与同 loss 的计算代理
 
-左图 output-inclusive 6ND，中图加上 A/B 额外五次 K/V 投影的局部代理，右图按首次观测达到阈值比较。Baseline 未达到 loss=3.2 时明确标注未达到，不显示为零。该代理不是实测硬件 FLOPs；详细首次/持续命中步数见[阈值 CSV](../loss_thresholds.csv)。
+左图 output-inclusive 6ND，中图加上 A/B 额外五次 K/V 投影的局部代理，右图按首次观测达到阈值比较。本次 baseline 已达到 loss=3.2；缺失阈值仍明确标注，不显示为零。该代理不是实测硬件 FLOPs；详细首次/持续命中步数见[阈值 CSV](../loss_thresholds.csv)。
 
 ![计算量](04_compute_tradeoff.png)
 
@@ -192,9 +204,9 @@ Baseline 使用本次完成的 **8×A100** 运行，A/B 使用已发布的 **8×
 (OUT/'figures/README.md').write_text(figures)
 
 readme = (ROOT/'README.md').read_text()
-start = readme.index('**Completed three-way comparison (2026-11-04):**' if '**Completed three-way comparison (2026-11-04):**' in readme else '**Completed results (2026-11-04):**')
+start = re.search(r'\*\*Completed (?:three-way comparison|results) \(\d{4}-\d{2}-\d{2}\):\*\*',readme).start()
 end = readme.index('[七张三组对比图' if '[七张三组对比图' in readme else '[四张专题对比图', start)
-replacement = f'''**Completed three-way comparison (2026-11-04):** the original YOCO baseline
+replacement = f'''**Completed three-way comparison (2026-11-05):** the original YOCO baseline
 completed 40,000 updates on **8×A100**; A/B retain the published **8×A800** runs.
 All three consumed 10,485,760,000 tokens and completed all eight full zero-shot tasks.
 
@@ -206,12 +218,15 @@ All three consumed 10,485,760,000 tokens and completed all eight full zero-shot 
 
 The baseline above is the newly completed eight-A100 run. Full-size model checks
 confirm the same common backbone tensors at initialization; A adds 6 parameters,
-B adds 774. Published model/training settings and all task YAMLs, seeds and zero-shot
-counts match. Remote A/B step-zero payloads and token-shard hashes are not available
+B adds 774. Model/training hyperparameters and all task YAMLs, seeds and zero-shot
+counts match. Baseline saves every 5,000 steps and retains all eight checkpoints;
+its compiler/fused-optimizer execution options are documented separately. Remote A/B step-zero payloads and token-shard hashes are not available
 for a fresh check, so baseline differences remain descriptive. A has the highest
-downstream macro; B has the lowest final validation loss. The new baseline has
-late-training loss rebounds, shown in the un-smoothed curves. 6ND remains a compute
-proxy. See the [complete report, backbone audit, seven figures and CSVs](evaluation/ab_baseline_20261104/README.md).
+downstream macro; B has the lowest final validation loss. The accelerated FP16 baseline trained in {T['baseline']['end_to_end_hours']:.2f} hours
+and completed training plus evaluation in {T['baseline']['training_and_evaluation_hours']:.2f} hours.
+Its validation curve has no sustained regression like the superseded run.
+See [reusable acceleration settings and commands](docs/BASELINE_A100_ACCELERATION.md).
+6ND remains a compute proxy; timings across different execution options do not isolate architecture effects. See the [complete report, backbone audit, seven figures and CSVs](evaluation/ab_baseline_20261104/README.md).
 
 '''
 readme = readme[:start]+replacement+readme[end:]
@@ -223,6 +238,9 @@ readme = readme.replace('## Earlier reproduction result\n\n', '## Earlier reprod
 index = ROOT/'docs/README.md'
 text = index.read_text()
 old = '- **2026-11-04：8×A800 A/B 两组训练和全部下游已完成。**'
-text = text.replace(old, '- **2026-11-04：8×A100 baseline 与 8×A800 A/B 的完整三组对比已更新，三组均完成训练和八项下游。**')
+text = text.replace(old, '- **2026-11-05：baseline 已更新为本次加速 FP16 运行，三组数据、七张对比图和八项下游已同步；新增可复用的训练加速文档。**')
+text = text.replace('- **2026-11-04：8×A100 baseline 与 8×A800 A/B 的完整三组对比已更新，三组均完成训练和八项下游。**', '- **2026-11-05：baseline 已更新为本次加速 FP16 运行，三组数据、七张对比图和八项下游已同步。**')
+link = '- [A100 八卡训练加速与复用](BASELINE_A100_ACCELERATION.md)：执行设置、启动与续训命令、速度测量和原始 loss 核查。'
+if link not in text: text = text.replace('## A/B 结果与历史执行计划\n', '## A/B 结果与历史执行计划\n\n'+link+'\n')
 index.write_text(text)
 print('Rendered the three-way report, seven-figure index and repository overview')

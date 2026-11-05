@@ -48,7 +48,10 @@ def audit_backbone(configs, resolved):
     torch.set_num_threads(4)
     base = resolved['config']
     keys = ('architecture', 'model', 'training', 'seed', 'tied_embeddings')
-    assert all(base[key] == configs[arm][key] for arm in 'AB' for key in keys)
+    assert all(base[key] == configs[arm][key] for arm in 'AB' for key in keys if key != 'training')
+    policy = {'checkpoint_every', 'keep_last_checkpoints'}
+    training = lambda c: {k:v for k,v in c['training'].items() if k not in policy}
+    assert all(training(base) == training(configs[arm]) for arm in 'AB')
     assert 'memory_fusion' not in base
     assert configs['A']['memory_fusion']['mode'] == 'learned_kv'
     assert configs['B']['memory_fusion']['mode'] == 'conditional_kv'
@@ -88,6 +91,8 @@ def audit_backbone(configs, resolved):
         gc.collect()
     torch.testing.assert_close(outputs[0], outputs[1], rtol=0, atol=0)
     return dict(passed=True, configuration_fields_matched=list(keys), parameters=params,
+                checkpoint_policy_exceptions={k:base['training'].get(k) for k in sorted(policy)},
+                baseline_execution=base.get('execution',{}),
                 extra_parameters={'A': 6, 'B': 774}, matching_common_state_tensors=counts,
                 baseline_runtime_matches_repository=source_match, seed=base['seed'],
                 uniform_initial_weights=[1/6]*6, ab_initial_outputs_identical=True,
@@ -127,12 +132,17 @@ def main():
     start = next(row for row in logs[0] if row['event'] == 'started')
     assert start['parameters'] == audit['parameters']['baseline'] and start['world_size'] == 8
     active = sum(row['seconds'] for row in train)
-    endhours = (datetime.fromisoformat(valid[-1]['time'])-datetime.fromisoformat(start['time'])).total_seconds()/3600
+    formal_start = next(row for row in logs[1] if row['event'] == 'started')
+    checkpoint_end = next(row for row in reversed(logs[1]) if row['event'] == 'checkpoint')
+    pipeline = read(run/'summary.json')
+    begin = datetime.fromisoformat(formal_start['time'])
+    endhours = (datetime.fromisoformat(checkpoint_end['time'])-begin).total_seconds()/3600
     t = dict(validation_loss=valid[-1]['loss'], validation_perplexity=valid[-1]['perplexity'],
              last100_training_loss=statistics.mean(row['loss'] for row in train[-100:]),
              tokens=train[-1]['tokens'], parameters=start['parameters'], final_step=40000,
              world_size=8, hardware='8 x A100 80GB PCIe', active_seconds=active,
              active_gpu_hours=active*8/3600, end_to_end_hours=endhours,
+             training_and_evaluation_hours=(datetime.fromisoformat(pipeline['completed_at'])-begin).total_seconds()/3600,
              overflow_events=sum(row['event'] == 'overflow' for phase in logs for row in phase),
              peak_rank0_memory_gib=max(row['peak_memory_bytes'] for row in train)/2**30)
     emb = resolved['config']['model']['dim']*resolved['config']['model']['vocab_size']
@@ -142,13 +152,28 @@ def main():
     t['extra_repeated_kv_projection_pflop_days'] = 0.0
     t['output_inclusive_plus_repeated_kv_proxy_pflop_days'] = t['compute_output_inclusive_6nd_pflop_days']
     t['mean_active_tokens_per_second'] = t['tokens']/active
+    t['execution'] = resolved['config'].get('execution',{})
+    t['checkpoint_every'] = resolved['config']['training']['checkpoint_every']
+    t['keep_last_checkpoints'] = resolved['config']['training'].get('keep_last_checkpoints',3)
+    t['best_validation_loss'] = min(row['loss'] for row in valid)
+    running_best = float('inf'); regression = 0.
+    for row in valid:
+        running_best=min(running_best,row['loss']); regression=max(regression,row['loss']-running_best)
+    t['maximum_validation_regression'] = regression
     old_baseline = summary.get('baseline_replacement', {}).get('superseded_baseline',
         dict(hardware=summary['training']['baseline']['hardware'], validation_loss=summary['training']['baseline']['validation_loss'], macro_accuracy=summary['macro']['baseline']))
+    history = summary.get('baseline_history',[])
+    previous_run = summary.get('baseline_replacement',{}).get('source_run')
+    if previous_run and previous_run != run.name and not any(item.get('source_run')==previous_run for item in history):
+        history.append(dict(source_run=previous_run,training=summary['training']['baseline'],
+                            macro_accuracy=summary['macro']['baseline'],checkpoint=summary['checkpoint_metadata']['baseline']))
+    summary['baseline_history'] = history
     summary['training']['baseline'] = t
     summary['checkpoint_metadata']['baseline'] = meta
     summary['baseline_replacement'] = dict(kind='verified_local_eight_gpu_training', source_run=run.name,
         source_pilot=pilot.name, resumed_at_step=100, original_schedule_preserved=True,
-        superseded_baseline=old_baseline, timing_note='Baseline wall time includes pilot/resume pauses; successful-update active time excludes those pauses and overflow retries.')
+        superseded_baseline=old_baseline, execution=resolved['config'].get('execution',{}),
+        timing_note='Wall time covers the resumed formal run through its final checkpoint; pipeline time adds all eight evaluations. Successful-update seconds also include the original pilot, but exclude idle gaps, retries, validation and saves.')
     summary['baseline_evaluation_protocol'] = {}
     sample_rows = []
     score_ids = {}
@@ -197,7 +222,7 @@ def main():
     summary['schema_version'] = 2
     summary['boundary'] = ('Baseline is the completed 8-A100 rerun with checkpoint payload rehashed and all 8 full evaluations verified. '
         'A/B are the published 8-A800 runs. Full-size reconstruction confirms the same backbone and initial common tensors; only the fusion modules add parameters. '
-        'Model/training configs and all task YAMLs, seeds and few-shot counts match. Remote A/B step-zero payloads, sample hashes and token-shard hashes are not supplied. '
+        'Model/training hyperparameters and all task YAMLs, seeds and few-shot counts match; baseline checkpoint cadence/retention differ by user request, and its execution acceleration is recorded separately. Remote A/B step-zero payloads, sample hashes and token-shard hashes are not supplied. '
         'A/B public evidence and paired bootstrap are unchanged; baseline differences are descriptive. 6ND is a compute proxy, not measured device FLOPs.')
     curves = [row for row in rows(out/'validation_curves.csv') if row['arm'] != 'baseline']
     basecurves = []
@@ -225,12 +250,25 @@ def main():
                 trunk_6nd_at_first=first['compute_trunk_6nd_pflop_days'] if first else None,
                 output_inclusive_6nd_at_first=first['compute_output_inclusive_6nd_pflop_days'] if first else None))
     configs['baseline'] = {k: resolved['config'][k] for k in ('architecture', 'model', 'tied_embeddings', 'seed', 'training')}
+    configs['baseline']['execution'] = resolved['config'].get('execution',{})
     assert preserved == json.dumps({key: {a: summary[key][a] for a in 'AB'} for key in ('training', 'macro')}, sort_keys=True)
     assert all(sha(out/name) == expected for name, expected in before_ab.items())
     write(out/'summary.json', summary)
     write(out/'training_protocol.json', configs)
     write(out/'comparability_audit.json', audit)
-    csvwrite(out/'training_summary.csv', [dict(arm=arm, **summary['training'][arm]) for arm in ('baseline', 'A', 'B')])
+    fields = list(dict.fromkeys(k for arm in ('baseline','A','B') for k in summary['training'][arm]))
+    csvwrite(out/'training_summary.csv', [dict(arm=arm, **{k:summary['training'][arm].get(k,'') for k in fields}) for arm in ('baseline','A','B')])
+    inventory=[]
+    for path in sorted(run.glob('checkpoint_*.json')):
+        entry=read(path); payload=run/entry['file']
+        assert payload.exists()
+        inventory.append(dict(entry,size_bytes=payload.stat().st_size))
+    assert [item['step'] for item in inventory] == list(range(5000,40001,5000))
+    write(out/'baseline_checkpoint_inventory.json',inventory)
+    write(out/'baseline_run_provenance.json',dict(source_run=run.name,completed_at=pipeline['completed_at'],
+        checkpoint=meta,release_manifest_sha256=sha(run/'release-manifest.json'),
+        fork=read(run/'fork-provenance.json'),resume_verification=read(run/'resume-verification.json'),
+        configuration_check=read(run/'ab-configuration-check.json'),execution=resolved['config'].get('execution',{})))
     csvwrite(out/'downstream.csv', summary['downstream'])
     csvwrite(out/'validation_curves.csv', curves)
     csvwrite(out/'training_curves.csv', all_train)

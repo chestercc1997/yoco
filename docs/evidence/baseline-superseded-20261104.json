@@ -1,0 +1,35 @@
+{
+  "status": "superseded_after_convergence_regression",
+  "source_run": "yoco-160m-baseline-8gpu-full-20261104T0114Z",
+  "training": {
+    "validation_loss": 3.4089059829711914,
+    "validation_perplexity": 30.232151672026937,
+    "last100_training_loss": 3.404486198425293,
+    "tokens": 10485760000,
+    "parameters": 166708224,
+    "final_step": 40000,
+    "world_size": 8,
+    "hardware": "8 x A100 80GB PCIe",
+    "active_seconds": 29121.136781508685,
+    "active_gpu_hours": 64.71363729224153,
+    "end_to_end_hours": 8.700689449166667,
+    "overflow_events": 20,
+    "peak_rank0_memory_gib": 12.901231288909912,
+    "shared_embedding_output_parameters": 77021184,
+    "trunk_parameters": 89687040,
+    "compute_trunk_6nd_pflop_days": 0.06530810948266667,
+    "compute_output_inclusive_6nd_pflop_days": 0.1213932240896,
+    "extra_repeated_kv_projection_pflop_days": 0.0,
+    "output_inclusive_plus_repeated_kv_proxy_pflop_days": 0.1213932240896,
+    "mean_active_tokens_per_second": 360073.85558719805
+  },
+  "macro_accuracy": 0.4366307470441544,
+  "checkpoint": {
+    "file": "checkpoint_00040000.pt",
+    "step": 40000,
+    "sha256": "57f87a18c05b9bdf55df21d941bf17b9716fbcc263c8609295e979fbb8aed2af",
+    "fingerprint": "f3d44940476de7b1976cbe1daa8d5018e0974631325e6b0c4a3744ff5d3e2aaf"
+  },
+  "immutable_report": "https://github.com/chestercc1997/yoco/tree/54982a9edfcedb2211ad792e1f6a5bc6ff2b718f/evaluation/ab_baseline_20261104",
+  "note": "Historical A100 baseline developed a sustained validation-loss regression near update 21354. It is retained in Git history and the original local run."
+}

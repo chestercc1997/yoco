@@ -1,0 +1,58 @@
+[
+  {
+    "file": "checkpoint_00005000.pt",
+    "step": 5000,
+    "sha256": "a92679c8c344ca00a25957cd73fa1a5d3fb8352938be38448d32d8495f741778",
+    "fingerprint": "ccc566e8f6fc1298aac51da36e73efcc1c2bbd1aa762a362815770f570107372",
+    "size_bytes": 2000749847
+  },
+  {
+    "file": "checkpoint_00010000.pt",
+    "step": 10000,
+    "sha256": "e693afecf7e8035a7b1f6dbafcf22bd140091d379e11cca8d68c1708d5b5d6ac",
+    "fingerprint": "ccc566e8f6fc1298aac51da36e73efcc1c2bbd1aa762a362815770f570107372",
+    "size_bytes": 2000749847
+  },
+  {
+    "file": "checkpoint_00015000.pt",
+    "step": 15000,
+    "sha256": "e503c777445a434dd35a5cabd3c61cdfa97ba4d9ece7aa6c959c73f1da16d928",
+    "fingerprint": "ccc566e8f6fc1298aac51da36e73efcc1c2bbd1aa762a362815770f570107372",
+    "size_bytes": 2000749847
+  },
+  {
+    "file": "checkpoint_00020000.pt",
+    "step": 20000,
+    "sha256": "c111651f7b789c9d9a2229b5362fd9f9f68392ddf183fa95befb319d375d3ebf",
+    "fingerprint": "ccc566e8f6fc1298aac51da36e73efcc1c2bbd1aa762a362815770f570107372",
+    "size_bytes": 2000749847
+  },
+  {
+    "file": "checkpoint_00025000.pt",
+    "step": 25000,
+    "sha256": "98277ac2cd9820736b7175f62a916378d5ab9be80d40083c172238df9cdb3cb3",
+    "fingerprint": "ccc566e8f6fc1298aac51da36e73efcc1c2bbd1aa762a362815770f570107372",
+    "size_bytes": 2000749847
+  },
+  {
+    "file": "checkpoint_00030000.pt",
+    "step": 30000,
+    "sha256": "42b91391044176b67cfa7bc9b042f5355f366571f8e0c6e373f4dcd1fed86cf5",
+    "fingerprint": "ccc566e8f6fc1298aac51da36e73efcc1c2bbd1aa762a362815770f570107372",
+    "size_bytes": 2000749847
+  },
+  {
+    "file": "checkpoint_00035000.pt",
+    "step": 35000,
+    "sha256": "629e47e8e5b3c95d662603508a8397dcece8848ae6445c24709fe2373a6f0edc",
+    "fingerprint": "ccc566e8f6fc1298aac51da36e73efcc1c2bbd1aa762a362815770f570107372",
+    "size_bytes": 2000749847
+  },
+  {
+    "file": "checkpoint_00040000.pt",
+    "step": 40000,
+    "sha256": "b4e767e1169299a874cc3115f6dde5ec5a1fccad831c1f2ceab7e143378701d4",
+    "fingerprint": "ccc566e8f6fc1298aac51da36e73efcc1c2bbd1aa762a362815770f570107372",
+    "size_bytes": 2000749847
+  }
+]

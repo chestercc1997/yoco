@@ -35,10 +35,18 @@
       "weight_decay": 0.05,
       "grad_clip": 1.0,
       "precision": "fp16_mixed_fp32_params",
-      "checkpoint_every": 250,
+      "checkpoint_every": 5000,
       "validation_every": 250,
       "validation_batches": 64,
-      "max_consecutive_overflows": 20
+      "max_consecutive_overflows": 20,
+      "keep_last_checkpoints": null
+    },
+    "execution": {
+      "checkpoint_activations": false,
+      "fused_adamw": true,
+      "compile": true,
+      "allow_tf32": true,
+      "compile_loss": true
     }
   },
   "A": {

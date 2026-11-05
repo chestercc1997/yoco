@@ -1,0 +1,221 @@
+{
+  "created_at": "2026-11-04T15:19:02.011799+00:00",
+  "cases": [
+    {
+      "step": 116,
+      "execution": {
+        "checkpoint_activations": true,
+        "fused_adamw": false,
+        "compile": false,
+        "allow_tf32": true
+      },
+      "precision": "fp16_mixed_fp32_params",
+      "measured_updates": 11,
+      "median_seconds": 0.7158381009940058,
+      "global_batch_tokens": 262144,
+      "peak_memory_bytes": 13841256960,
+      "no_checkpoints_written": true,
+      "not_a_formal_run": true,
+      "case": "legacy",
+      "max_training_loss_difference_from_legacy": 0.0,
+      "max_preclip_gradient_norm_difference_from_legacy": 0.0,
+      "steps_compared": 16
+    },
+    {
+      "step": 116,
+      "execution": {
+        "checkpoint_activations": false,
+        "fused_adamw": true,
+        "compile": false,
+        "allow_tf32": true
+      },
+      "precision": "fp16_mixed_fp32_params",
+      "measured_updates": 11,
+      "median_seconds": 0.5684205740690231,
+      "global_batch_tokens": 262144,
+      "peak_memory_bytes": 19512131584,
+      "no_checkpoints_written": true,
+      "not_a_formal_run": true,
+      "case": "no_recompute_fused",
+      "max_training_loss_difference_from_legacy": 2.86102294921875e-06,
+      "max_preclip_gradient_norm_difference_from_legacy": 0.0002442598342895508,
+      "steps_compared": 16
+    },
+    {
+      "step": 116,
+      "execution": {
+        "checkpoint_activations": false,
+        "fused_adamw": true,
+        "compile": true,
+        "allow_tf32": true
+      },
+      "precision": "fp16_mixed_fp32_params",
+      "measured_updates": 11,
+      "median_seconds": 0.37763654603622854,
+      "global_batch_tokens": 262144,
+      "peak_memory_bytes": 17444573184,
+      "no_checkpoints_written": true,
+      "not_a_formal_run": true,
+      "case": "compiled",
+      "max_training_loss_difference_from_legacy": 4.76837158203125e-06,
+      "max_preclip_gradient_norm_difference_from_legacy": 0.0001570582389831543,
+      "steps_compared": 16
+    },
+    {
+      "step": 116,
+      "execution": {
+        "checkpoint_activations": false,
+        "fused_adamw": true,
+        "compile": true,
+        "allow_tf32": true,
+        "compile_loss": true
+      },
+      "precision": "fp16_mixed_fp32_params",
+      "measured_updates": 11,
+      "median_seconds": 0.32726473710499704,
+      "global_batch_tokens": 262144,
+      "peak_memory_bytes": 11184976896,
+      "no_checkpoints_written": true,
+      "not_a_formal_run": true,
+      "case": "compiled_loss",
+      "max_training_loss_difference_from_legacy": 0.0002841949462890625,
+      "max_preclip_gradient_norm_difference_from_legacy": 0.00023931264877319336,
+      "steps_compared": 16
+    }
+  ],
+  "selected": "compiled_loss",
+  "recipe": "evaluation/ab_baseline_20261104/training_protocol.json",
+  "precision": "fp16_mixed_fp32_params",
+  "no_change_to": [
+    "model architecture",
+    "parameter dtype",
+    "AMP dtype",
+    "data",
+    "seed",
+    "microbatch",
+    "accumulation",
+    "sequence length",
+    "optimizer hyperparameters",
+    "LR schedule",
+    "40000 updates",
+    "validation size"
+  ],
+  "checkpoint_policy": {
+    "every": 5000,
+    "keep_all": true
+  },
+  "limits": "Short throughput and numerical probes do not establish long-run convergence or bitwise equality across kernels.",
+  "matched_config": {
+    "experiment": "yoco_160m_baseline_8gpu_ab_matched_accelerated",
+    "architecture": "yoco",
+    "seed": 42,
+    "model": {
+      "dim": 768,
+      "n_layers": 12,
+      "hidden_dim": 2304,
+      "n_self_heads": 3,
+      "n_attn_heads": 12,
+      "n_attn_kv_heads": 12,
+      "vocab_size": 100288,
+      "max_seq_len": 2048,
+      "model_parallel_size": 1,
+      "rope_theta": 10000.0,
+      "norm_eps": 1e-05
+    },
+    "tied_embeddings": true,
+    "training": {
+      "max_updates": 40000,
+      "sequence_length": 2048,
+      "world_size": 8,
+      "microbatch": 4,
+      "gradient_accumulation": 4,
+      "global_batch_tokens": 262144,
+      "optimizer": "AdamW",
+      "betas": [
+        0.9,
+        0.98
+      ],
+      "eps": 1e-08,
+      "lr": 0.00015,
+      "warmup_updates": 375,
+      "end_lr": 0.0,
+      "weight_decay": 0.05,
+      "grad_clip": 1.0,
+      "precision": "fp16_mixed_fp32_params",
+      "checkpoint_every": 5000,
+      "validation_every": 250,
+      "validation_batches": 64,
+      "max_consecutive_overflows": 20,
+      "keep_last_checkpoints": null
+    },
+    "data": {
+      "approved": true,
+      "dataset": "HuggingFaceFW/fineweb-edu",
+      "subset": "sample-10BT",
+      "manifest": "/root/yoco/data/fineweb_edu_10bt/manifest.json",
+      "revision": "87f09149ef4734204d70ed1d046ddc9ca3f2b8f9"
+    },
+    "status": "AUTHORIZED_AB_MATCHED_FP16_BASELINE_RERUN",
+    "execution": {
+      "checkpoint_activations": false,
+      "fused_adamw": true,
+      "compile": true,
+      "allow_tf32": true,
+      "compile_loss": true
+    }
+  },
+  "matched_run": "runs/yoco-160m-baseline-8gpu-matched-20261104T1519Z",
+  "configuration_check": {
+    "passed": true,
+    "comparisons": {
+      "A": {
+        "model_seed_and_training_matched": true,
+        "precision": "fp16_mixed_fp32_params"
+      },
+      "B": {
+        "model_seed_and_training_matched": true,
+        "precision": "fp16_mixed_fp32_params"
+      }
+    },
+    "checkpoint_policy_override": {
+      "checkpoint_every": 5000,
+      "keep_all": true
+    },
+    "execution": {
+      "checkpoint_activations": false,
+      "fused_adamw": true,
+      "compile": true,
+      "allow_tf32": true,
+      "compile_loss": true
+    },
+    "no_model_or_precision_change": true
+  },
+  "training_release_manifest_sha256": "19d111e1dd1d491c0113ff5c3bae210075588f6333442f8f2c87df6d0b3ecf64",
+  "resume_verification": {
+    "passed": true,
+    "world_size": 8,
+    "real_data": true,
+    "source_step": 100,
+    "split_resume_step": 102,
+    "final_step": 104,
+    "all_rank_rng_verified": true,
+    "fp16_numerical_tolerance": {
+      "model_max_absolute": 2e-05,
+      "model_relative_l2": 2e-06,
+      "optimizer_atol": 1e-06,
+      "loss_absolute": 5e-05
+    },
+    "resumed_model_difference": {
+      "max_absolute_difference": 1.2362375855445862e-05,
+      "relative_l2": 7.680181881551203e-07
+    },
+    "repeat_model_difference": {
+      "max_absolute_difference": 6.5583735704422e-06,
+      "relative_l2": 7.500714940388594e-07
+    },
+    "max_training_loss_difference": 1.9073486328125e-06,
+    "model_and_optimizer_max_absolute_difference": 1.2362375855445862e-05,
+    "completed_at": "2026-11-04T15:32:33.944201+00:00"
+  },
+  "precision_policy": "User requires the published A/B FP16 mixed / FP32 parameter recipe. FP32 diagnostic run stopped; do not resume it."
+}

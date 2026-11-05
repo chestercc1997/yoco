@@ -1,0 +1,845 @@
+{
+  "historical_run": "runs/yoco-160m-baseline-8gpu-full-20261104T0114Z",
+  "verdict": "Historical FP16 run completed, but sustained convergence regression makes it an unstable baseline.",
+  "established": [
+    "Regression is in raw validation and training logs, not only the plot.",
+    "No training restart near the regression; all eight ranks agree on gradient norms.",
+    "The recorded immutable release still matches all recorded hashes.",
+    "All training and validation token shard hashes were reverified successfully.",
+    "Late checkpoint gradients depend strongly on arithmetic precision and FP16 loss scaling.",
+    "Early checkpoint gradients agree closely across precision modes."
+  ],
+  "limits": [
+    "No checkpoint immediately preceding update 21354 remains, so the first trigger cannot be replayed.",
+    "Late-checkpoint probes establish sensitivity after divergence, not sole causation of the first spike.",
+    "No specific PyTorch version defect has been established.",
+    "FP32 diagnostic rerun was stopped at user request; the active recipe must match A/B FP16 precision.",
+    "A/B original checkpoints and gradient/scaler logs are unavailable locally.",
+    "Do not attribute the full A/B gap against this unstable run to the method alone."
+  ],
+  "integrity": {
+    "frozen_release_verified": true,
+    "cross_rank_gradient_mismatches": 0,
+    "token_verification_log": "logs/setup/baseline-audit-token-verification.log",
+    "manifest_sha256": "090868c9e65f7042d8126c420803eabcbb7381d552912956e4c802477d53f0ba",
+    "started_events": [
+      {
+        "time": "2026-11-04T01:18:36.546569+00:00",
+        "event": "started",
+        "step": 100,
+        "world_size": 8,
+        "parameters": 166708224,
+        "synthetic": false,
+        "resumed": true
+      }
+    ]
+  },
+  "first_major_spike": {
+    "update": 21354,
+    "pre_clip_gradient_norm": 991.305908203125,
+    "clip_threshold": 1.0,
+    "note": "Norm is measured before clipping; optimizer did not receive an unclipped norm of 991.",
+    "overflow_events": [
+      {
+        "time": "2026-11-04T05:52:43.978848+00:00",
+        "event": "overflow",
+        "step": 21353,
+        "scale": 64.0,
+        "consecutive": 1
+      },
+      {
+        "time": "2026-11-04T05:52:44.695942+00:00",
+        "event": "overflow",
+        "step": 21353,
+        "scale": 32.0,
+        "consecutive": 2
+      },
+      {
+        "time": "2026-11-04T05:52:45.404654+00:00",
+        "event": "overflow",
+        "step": 21353,
+        "scale": 16.0,
+        "consecutive": 3
+      }
+    ]
+  },
+  "gradient_windows": [
+    {
+      "start": 1001,
+      "end": 5000,
+      "count": 4000,
+      "median": 0.5186153650283813,
+      "maximum": 1.7142390012741089,
+      "clipped_steps": 5
+    },
+    {
+      "start": 5001,
+      "end": 20000,
+      "count": 15000,
+      "median": 0.3987870365381241,
+      "maximum": 96.53247833251953,
+      "clipped_steps": 221
+    },
+    {
+      "start": 20001,
+      "end": 20250,
+      "count": 250,
+      "median": 0.402863010764122,
+      "maximum": 3.038818359375,
+      "clipped_steps": 1
+    },
+    {
+      "start": 21251,
+      "end": 21500,
+      "count": 250,
+      "median": 0.4339035451412201,
+      "maximum": 991.305908203125,
+      "clipped_steps": 3
+    },
+    {
+      "start": 21501,
+      "end": 22000,
+      "count": 500,
+      "median": 0.8298297822475433,
+      "maximum": 15.413729667663574,
+      "clipped_steps": 171
+    },
+    {
+      "start": 22001,
+      "end": 25000,
+      "count": 3000,
+      "median": 2.109615683555603,
+      "maximum": 845.02734375,
+      "clipped_steps": 2964
+    },
+    {
+      "start": 35001,
+      "end": 40000,
+      "count": 5000,
+      "median": 2.749948263168335,
+      "maximum": 821.6781005859375,
+      "clipped_steps": 5000
+    }
+  ],
+  "validation": {
+    "best": {
+      "time": "2026-11-04T05:38:25.066035+00:00",
+      "event": "validation",
+      "step": 20250,
+      "loss": 3.2811391353607178,
+      "perplexity": 26.60606335159552
+    },
+    "final": {
+      "time": "2026-11-04T09:53:14.081621+00:00",
+      "event": "validation",
+      "step": 40000,
+      "loss": 3.4089059829711914,
+      "perplexity": 30.232151672026937
+    },
+    "selected": [
+      {
+        "time": "2026-11-04T03:26:08.806049+00:00",
+        "event": "validation",
+        "step": 10000,
+        "loss": 3.434805154800415,
+        "perplexity": 31.02536683276347
+      },
+      {
+        "time": "2026-11-04T05:35:11.741657+00:00",
+        "event": "validation",
+        "step": 20000,
+        "loss": 3.2860593795776367,
+        "perplexity": 26.737294260250717
+      },
+      {
+        "time": "2026-11-04T05:38:25.066035+00:00",
+        "event": "validation",
+        "step": 20250,
+        "loss": 3.2811391353607178,
+        "perplexity": 26.60606335159552
+      },
+      {
+        "time": "2026-11-04T05:51:20.016931+00:00",
+        "event": "validation",
+        "step": 21250,
+        "loss": 3.282705545425415,
+        "perplexity": 26.647772014918267
+      },
+      {
+        "time": "2026-11-04T05:54:35.646835+00:00",
+        "event": "validation",
+        "step": 21500,
+        "loss": 3.3536624908447266,
+        "perplexity": 28.607316043924538
+      },
+      {
+        "time": "2026-11-04T05:57:49.043915+00:00",
+        "event": "validation",
+        "step": 21750,
+        "loss": 3.4071125984191895,
+        "perplexity": 30.17798238594337
+      },
+      {
+        "time": "2026-11-04T06:01:01.938093+00:00",
+        "event": "validation",
+        "step": 22000,
+        "loss": 3.467249870300293,
+        "perplexity": 32.04848365209414
+      },
+      {
+        "time": "2026-11-04T09:53:14.081621+00:00",
+        "event": "validation",
+        "step": 40000,
+        "loss": 3.4089059829711914,
+        "perplexity": 30.232151672026937
+      }
+    ]
+  },
+  "overflow_count": 20,
+  "overflow_events": [
+    {
+      "time": "2026-11-04T03:02:17.787728+00:00",
+      "event": "overflow",
+      "step": 8148,
+      "scale": 1024.0,
+      "consecutive": 1
+    },
+    {
+      "time": "2026-11-04T03:36:31.468199+00:00",
+      "event": "overflow",
+      "step": 10796,
+      "scale": 1024.0,
+      "consecutive": 1
+    },
+    {
+      "time": "2026-11-04T03:52:25.869595+00:00",
+      "event": "overflow",
+      "step": 12027,
+      "scale": 1024.0,
+      "consecutive": 1
+    },
+    {
+      "time": "2026-11-04T04:31:50.776592+00:00",
+      "event": "overflow",
+      "step": 15085,
+      "scale": 1024.0,
+      "consecutive": 1
+    },
+    {
+      "time": "2026-11-04T04:32:23.461265+00:00",
+      "event": "overflow",
+      "step": 15129,
+      "scale": 512.0,
+      "consecutive": 1
+    },
+    {
+      "time": "2026-11-04T04:32:24.169168+00:00",
+      "event": "overflow",
+      "step": 15129,
+      "scale": 256.0,
+      "consecutive": 2
+    },
+    {
+      "time": "2026-11-04T04:32:24.877864+00:00",
+      "event": "overflow",
+      "step": 15129,
+      "scale": 128.0,
+      "consecutive": 3
+    },
+    {
+      "time": "2026-11-04T05:27:50.089755+00:00",
+      "event": "overflow",
+      "step": 19429,
+      "scale": 256.0,
+      "consecutive": 1
+    },
+    {
+      "time": "2026-11-04T05:41:01.100501+00:00",
+      "event": "overflow",
+      "step": 20452,
+      "scale": 256.0,
+      "consecutive": 1
+    },
+    {
+      "time": "2026-11-04T05:41:01.812198+00:00",
+      "event": "overflow",
+      "step": 20452,
+      "scale": 128.0,
+      "consecutive": 2
+    },
+    {
+      "time": "2026-11-04T05:52:43.978848+00:00",
+      "event": "overflow",
+      "step": 21353,
+      "scale": 64.0,
+      "consecutive": 1
+    },
+    {
+      "time": "2026-11-04T05:52:44.695942+00:00",
+      "event": "overflow",
+      "step": 21353,
+      "scale": 32.0,
+      "consecutive": 2
+    },
+    {
+      "time": "2026-11-04T05:52:45.404654+00:00",
+      "event": "overflow",
+      "step": 21353,
+      "scale": 16.0,
+      "consecutive": 3
+    },
+    {
+      "time": "2026-11-04T07:08:23.342137+00:00",
+      "event": "overflow",
+      "step": 27228,
+      "scale": 64.0,
+      "consecutive": 1
+    },
+    {
+      "time": "2026-11-04T07:12:40.794325+00:00",
+      "event": "overflow",
+      "step": 27550,
+      "scale": 32.0,
+      "consecutive": 1
+    },
+    {
+      "time": "2026-11-04T08:54:48.197736+00:00",
+      "event": "overflow",
+      "step": 35477,
+      "scale": 256.0,
+      "consecutive": 1
+    },
+    {
+      "time": "2026-11-04T08:54:48.909435+00:00",
+      "event": "overflow",
+      "step": 35477,
+      "scale": 128.0,
+      "consecutive": 2
+    },
+    {
+      "time": "2026-11-04T08:54:49.627816+00:00",
+      "event": "overflow",
+      "step": 35477,
+      "scale": 64.0,
+      "consecutive": 3
+    },
+    {
+      "time": "2026-11-04T09:13:17.128259+00:00",
+      "event": "overflow",
+      "step": 36902,
+      "scale": 64.0,
+      "consecutive": 1
+    },
+    {
+      "time": "2026-11-04T09:13:17.835475+00:00",
+      "event": "overflow",
+      "step": 36902,
+      "scale": 32.0,
+      "consecutive": 2
+    }
+  ],
+  "precision_probes": {
+    "numerics-step100": {
+      "source": "runs/diagnostics/baseline-numerics-step100.json",
+      "sha256": "8dda44d0d74e717792be141180a021a3778aee44e3dd083d879d1786b9498790",
+      "checkpoint_step": 100,
+      "batch": "validation",
+      "global_update": null,
+      "no_optimizer_updates": true,
+      "cases": [
+        {
+          "name": "fp32",
+          "scale": 1.0,
+          "loss": 8.839726448059082,
+          "gradient_norm": 1.149698719696768,
+          "nonfinite_parameters": [],
+          "seconds": 1.5490533348638564
+        },
+        {
+          "name": "bf16",
+          "scale": 1.0,
+          "loss": 8.840052604675293,
+          "gradient_norm": 1.1492244074595992,
+          "nonfinite_parameters": [],
+          "relative_gradient_l2": 0.012262783021513929,
+          "gradient_cosine": 0.999924793357507,
+          "seconds": 0.33080308395437896
+        },
+        {
+          "name": "fp16_scale1",
+          "scale": 1.0,
+          "loss": 8.839713096618652,
+          "gradient_norm": 1.1580832613954843,
+          "nonfinite_parameters": [],
+          "relative_gradient_l2": 0.1452466228055702,
+          "gradient_cosine": 0.9895545001179586,
+          "seconds": 0.3481350860092789
+        },
+        {
+          "name": "fp16_scale16",
+          "scale": 16.0,
+          "loss": 8.839713096618652,
+          "gradient_norm": 1.146266052150336,
+          "nonfinite_parameters": [],
+          "relative_gradient_l2": 0.08471330575235925,
+          "gradient_cosine": 0.9964054256121573,
+          "seconds": 0.1948019869159907
+        },
+        {
+          "name": "fp16_scale128",
+          "scale": 128.0,
+          "loss": 8.839713096618652,
+          "gradient_norm": 1.1495793174368405,
+          "nonfinite_parameters": [],
+          "relative_gradient_l2": 0.0032958832020850595,
+          "gradient_cosine": 0.9999943681456926,
+          "seconds": 0.19633135409094393
+        },
+        {
+          "name": "fp16_scale1024",
+          "scale": 1024.0,
+          "loss": 8.839713096618652,
+          "gradient_norm": 1.1496454749756635,
+          "nonfinite_parameters": [],
+          "relative_gradient_l2": 0.0004360435689313654,
+          "gradient_cosine": 0.9999999559770578,
+          "seconds": 0.19714687298983335
+        },
+        {
+          "name": "fp16_retention_fp32",
+          "scale": 128.0,
+          "loss": 8.839715957641602,
+          "gradient_norm": 1.1495895835113865,
+          "nonfinite_parameters": [],
+          "relative_gradient_l2": 0.0032902333204315754,
+          "gradient_cosine": 0.9999945476987272,
+          "seconds": 0.212791683152318
+        },
+        {
+          "name": "fp16_exact_reduction",
+          "scale": 128.0,
+          "loss": 8.839713096618652,
+          "gradient_norm": 1.1496063823447127,
+          "nonfinite_parameters": [],
+          "relative_gradient_l2": 0.0032958092980082663,
+          "gradient_cosine": 0.9999946366918763,
+          "seconds": 0.20490105310454965
+        },
+        {
+          "name": "fp16_sdpa_math",
+          "scale": 128.0,
+          "loss": 8.839715003967285,
+          "gradient_norm": 1.1495870429257173,
+          "nonfinite_parameters": [],
+          "relative_gradient_l2": 0.003291876525879529,
+          "gradient_cosine": 0.9999945028012259,
+          "seconds": 0.46606791811063886
+        },
+        {
+          "name": "fp16_no_checkpoint",
+          "scale": 128.0,
+          "loss": 8.839713096618652,
+          "gradient_norm": 1.1495792655877466,
+          "nonfinite_parameters": [],
+          "relative_gradient_l2": 0.0032960723388697063,
+          "gradient_cosine": 0.9999945034440777,
+          "seconds": 0.2979361228644848
+        },
+        {
+          "name": "fp16_head_fp32_scale1",
+          "scale": 1.0,
+          "loss": 8.839725494384766,
+          "gradient_norm": 1.1490785535282824,
+          "nonfinite_parameters": [],
+          "relative_gradient_l2": 0.04164927651772683,
+          "gradient_cosine": 0.999132307832631,
+          "seconds": 0.4093356318771839
+        },
+        {
+          "name": "fp16_head_fp32_scale128",
+          "scale": 128.0,
+          "loss": 8.839725494384766,
+          "gradient_norm": 1.1497016747843294,
+          "nonfinite_parameters": [],
+          "relative_gradient_l2": 0.0003290309525905704,
+          "gradient_cosine": 0.9999998647237541,
+          "seconds": 0.40070743090473115
+        },
+        {
+          "name": "fp16_head_fp32_sdpa_math",
+          "scale": 128.0,
+          "loss": 8.83972454071045,
+          "gradient_norm": 1.149702504281227,
+          "nonfinite_parameters": [],
+          "relative_gradient_l2": 0.00029253079527027996,
+          "gradient_cosine": 1.0000000450985684,
+          "seconds": 0.5988280719611794
+        },
+        {
+          "name": "fp16_self_fp32",
+          "scale": 128.0,
+          "loss": 8.839729309082031,
+          "gradient_norm": 1.1495753768990298,
+          "nonfinite_parameters": [],
+          "relative_gradient_l2": 0.0032870250377197313,
+          "gradient_cosine": 0.9999946390770823,
+          "seconds": 0.3753210878930986
+        },
+        {
+          "name": "fp16_cross_fp32",
+          "scale": 128.0,
+          "loss": 8.839730262756348,
+          "gradient_norm": 1.1495981385034768,
+          "nonfinite_parameters": [],
+          "relative_gradient_l2": 0.0032872077767170326,
+          "gradient_cosine": 0.9999944117688438,
+          "seconds": 0.35787704098038375
+        }
+      ]
+    },
+    "numerics-validation": {
+      "source": "runs/diagnostics/baseline-numerics-validation.json",
+      "sha256": "16da41bfd2bc1abb36d53d91bd7b9ff2b6bb6a3e22db2e7da901ddc13b54d05a",
+      "checkpoint_step": 40000,
+      "batch": "validation",
+      "global_update": null,
+      "no_optimizer_updates": true,
+      "cases": [
+        {
+          "name": "fp32",
+          "scale": 1.0,
+          "loss": 3.590444803237915,
+          "gradient_norm": 6.930065123236916,
+          "nonfinite_parameters": [],
+          "seconds": 1.5802256120368838
+        },
+        {
+          "name": "bf16",
+          "scale": 1.0,
+          "loss": 3.785097599029541,
+          "gradient_norm": 822.502963520497,
+          "nonfinite_parameters": [],
+          "relative_gradient_l2": 118.77675500120512,
+          "gradient_cosine": -0.08639797033709697,
+          "seconds": 0.33042169199325144
+        },
+        {
+          "name": "fp16_scale1",
+          "scale": 1.0,
+          "loss": 3.5925984382629395,
+          "gradient_norm": 133.4390149211429,
+          "nonfinite_parameters": [],
+          "relative_gradient_l2": 19.483680556101707,
+          "gradient_cosine": -0.20398225545642873,
+          "seconds": 0.34602000704035163
+        },
+        {
+          "name": "fp16_scale16",
+          "scale": 16.0,
+          "loss": 3.5925984382629395,
+          "gradient_norm": 13.100219584946968,
+          "nonfinite_parameters": [],
+          "relative_gradient_l2": 1.9186149829558752,
+          "gradient_cosine": 0.23602132254851255,
+          "seconds": 0.1953867869451642
+        },
+        {
+          "name": "fp16_scale128",
+          "scale": 128.0,
+          "loss": 3.5925984382629395,
+          "gradient_norm": 8.718374155345574,
+          "nonfinite_parameters": [],
+          "relative_gradient_l2": 1.0545890616242906,
+          "gradient_cosine": 0.5844493405669874,
+          "seconds": 0.1933198580518365
+        },
+        {
+          "name": "fp16_retention_fp32",
+          "scale": 128.0,
+          "loss": 3.5921854972839355,
+          "gradient_norm": 9.496374141016764,
+          "nonfinite_parameters": [],
+          "relative_gradient_l2": 1.0300469526278175,
+          "gradient_cosine": 0.6629010974722347,
+          "seconds": 0.21010873699560761
+        },
+        {
+          "name": "fp16_exact_reduction",
+          "scale": 128.0,
+          "loss": 3.5925984382629395,
+          "gradient_norm": 8.70308555169471,
+          "nonfinite_parameters": [],
+          "relative_gradient_l2": 1.0465259237811864,
+          "gradient_cosine": 0.5900129694291065,
+          "seconds": 0.1994685980025679
+        },
+        {
+          "name": "fp16_sdpa_math",
+          "scale": 128.0,
+          "loss": 3.5928220748901367,
+          "gradient_norm": 6.091994438624709,
+          "nonfinite_parameters": [],
+          "relative_gradient_l2": 0.5657360194727832,
+          "gradient_cosine": 0.8262747151716412,
+          "seconds": 0.4092437250073999
+        }
+      ]
+    },
+    "numerics-remedies": {
+      "source": "runs/diagnostics/baseline-numerics-remedies.json",
+      "sha256": "cdf92f61d04fabe7ac9bf72e24eff9ca3dbb01de320d12e347cbbee7503644d1",
+      "checkpoint_step": 40000,
+      "batch": "validation",
+      "global_update": null,
+      "no_optimizer_updates": true,
+      "cases": [
+        {
+          "name": "fp32",
+          "scale": 1.0,
+          "loss": 3.590444803237915,
+          "gradient_norm": 6.92983365254205,
+          "nonfinite_parameters": [],
+          "seconds": 1.581512687029317
+        },
+        {
+          "name": "fp16_scale128",
+          "scale": 128.0,
+          "loss": 3.5925984382629395,
+          "gradient_norm": 8.719785567280624,
+          "nonfinite_parameters": [],
+          "relative_gradient_l2": 1.0545494528935204,
+          "gradient_cosine": 0.5846139606296074,
+          "seconds": 0.3492760790977627
+        },
+        {
+          "name": "fp32_tf32",
+          "scale": 1.0,
+          "loss": 3.590686321258545,
+          "gradient_norm": 6.386050949414327,
+          "nonfinite_parameters": [],
+          "relative_gradient_l2": 0.3855038721702356,
+          "gradient_cosine": 0.922706817445618,
+          "seconds": 0.2709414819255471
+        },
+        {
+          "name": "fp16_cross_fp32_head_fp32",
+          "scale": 128.0,
+          "loss": 3.590385675430298,
+          "gradient_norm": 6.587900179265974,
+          "nonfinite_parameters": [],
+          "relative_gradient_l2": 0.17757678653129824,
+          "gradient_cosine": 0.9846953750539026,
+          "seconds": 0.5565889989957213
+        },
+        {
+          "name": "fp16_cross_fp32_head_fp32_retention_fp32",
+          "scale": 128.0,
+          "loss": 3.590426206588745,
+          "gradient_norm": 6.80294998357359,
+          "nonfinite_parameters": [],
+          "relative_gradient_l2": 0.15120464882825105,
+          "gradient_cosine": 0.9885261003344145,
+          "seconds": 0.5758394959848374
+        },
+        {
+          "name": "fp16_sdpa_efficient",
+          "scale": 128.0,
+          "loss": 3.592580556869507,
+          "gradient_norm": 12.69969275395755,
+          "nonfinite_parameters": [],
+          "relative_gradient_l2": 1.767302138163079,
+          "gradient_cosine": 0.3369802126677668,
+          "seconds": 0.21408130694180727
+        },
+        {
+          "name": "fp16_sdpa_flash",
+          "scale": 128.0,
+          "loss": 3.5925984382629395,
+          "gradient_norm": 8.718229763684961,
+          "nonfinite_parameters": [],
+          "relative_gradient_l2": 1.0535724682162624,
+          "gradient_cosine": 0.5853123144824689,
+          "seconds": 0.19627556507475674
+        },
+        {
+          "name": "fp16_sdpa_cudnn",
+          "scale": 128.0,
+          "loss": 3.592648506164551,
+          "gradient_norm": 12.631266936413992,
+          "nonfinite_parameters": [],
+          "relative_gradient_l2": 1.732304475137861,
+          "gradient_cosine": 0.3625021850424354,
+          "seconds": 1.6748449029400945
+        }
+      ]
+    },
+    "numerics-global40000": {
+      "source": "runs/diagnostics/baseline-numerics-global40000.json",
+      "sha256": "026ee00888cc12004dbda74bdb8c0863df3c37886754cde116f07c9c187a351f",
+      "checkpoint_step": 40000,
+      "batch": "global_train",
+      "global_update": 40000,
+      "no_optimizer_updates": true,
+      "cases": [
+        {
+          "name": "fp32",
+          "scale": 1.0,
+          "loss": 3.381748676300049,
+          "gradient_norm": 3.4923796120867836,
+          "nonfinite_parameters": [],
+          "seconds": 23.028293318115175
+        },
+        {
+          "name": "fp16_scale128",
+          "scale": 128.0,
+          "loss": 3.3857948780059814,
+          "gradient_norm": 2.135457728541631,
+          "nonfinite_parameters": [],
+          "relative_gradient_l2": 0.7857864327109854,
+          "gradient_cosine": 0.618538403343609,
+          "seconds": 5.350062238052487
+        },
+        {
+          "name": "fp16_sdpa_math",
+          "scale": 128.0,
+          "loss": 3.3858108520507812,
+          "gradient_norm": 2.0621975763719007,
+          "nonfinite_parameters": [],
+          "relative_gradient_l2": 0.7249087364044061,
+          "gradient_cosine": 0.6970370722750281,
+          "seconds": 11.440480595920235
+        },
+        {
+          "name": "fp16_cross_fp32",
+          "scale": 128.0,
+          "loss": 3.3820061683654785,
+          "gradient_norm": 1.6144363664578276,
+          "nonfinite_parameters": [],
+          "relative_gradient_l2": 0.6336223231470778,
+          "gradient_cosine": 0.8785049821353239,
+          "seconds": 10.264111045980826
+        }
+      ]
+    },
+    "global-remedies": {
+      "source": "runs/diagnostics/baseline-global-remedies.json",
+      "sha256": "d4130ef37b4b3a795fe46ffd4b03fb30892d9f7df488ee2e2ef63cc85032a744",
+      "checkpoint_step": 40000,
+      "batch": "global_train",
+      "global_update": 40000,
+      "no_optimizer_updates": true,
+      "cases": [
+        {
+          "name": "fp32",
+          "scale": 1.0,
+          "loss": 3.381748676300049,
+          "gradient_norm": 3.492350529699165,
+          "nonfinite_parameters": [],
+          "seconds": 23.014696434140205
+        },
+        {
+          "name": "fp32_tf32",
+          "scale": 1.0,
+          "loss": 3.3817501068115234,
+          "gradient_norm": 3.475128083647264,
+          "nonfinite_parameters": [],
+          "relative_gradient_l2": 0.15979519254498872,
+          "gradient_cosine": 0.9871816161957582,
+          "seconds": 7.627549693919718
+        },
+        {
+          "name": "fp16_cross_fp32_head_fp32_retention_fp32",
+          "scale": 128.0,
+          "loss": 3.3817317485809326,
+          "gradient_norm": 3.4588910461276363,
+          "nonfinite_parameters": [],
+          "relative_gradient_l2": 0.11194033765956693,
+          "gradient_cosine": 0.9937203720625324,
+          "seconds": 17.325080478098243
+        }
+      ]
+    },
+    "fp64-reference": {
+      "source": "runs/diagnostics/baseline-fp64-reference.json",
+      "sha256": "9ee16fb5f6f336b0d05b770411895f9f45c5084ff0d5ff4a365a56f34caeb892",
+      "checkpoint_step": 40000,
+      "batch": "validation",
+      "global_update": null,
+      "no_optimizer_updates": true,
+      "cases": [
+        {
+          "name": "fp32",
+          "scale": 1.0,
+          "loss": 3.590444803237915,
+          "gradient_norm": 6.9299756735282525,
+          "nonfinite_parameters": [],
+          "seconds": 1.5649727361742407
+        },
+        {
+          "name": "fp64",
+          "scale": 1.0,
+          "loss": 3.590439558029175,
+          "gradient_norm": 6.880750995902912,
+          "nonfinite_parameters": [],
+          "relative_gradient_l2": 0.042801628345092525,
+          "gradient_cosine": 0.9991028663534248,
+          "seconds": 1.0722896850202233
+        }
+      ]
+    },
+    "early-tf32": {
+      "source": "runs/diagnostics/baseline-early-tf32.json",
+      "sha256": "f309da0ebe209d9a3a3b98c3e1dc9c9131c7a0ee4f0bcdf56a169d1448b50d16",
+      "checkpoint_step": 100,
+      "batch": "validation",
+      "global_update": null,
+      "no_optimizer_updates": true,
+      "cases": [
+        {
+          "name": "fp32",
+          "scale": 1.0,
+          "loss": 8.839726448059082,
+          "gradient_norm": 1.149698719696768,
+          "nonfinite_parameters": [],
+          "seconds": 1.570090512977913
+        },
+        {
+          "name": "fp32_tf32",
+          "scale": 1.0,
+          "loss": 8.839716911315918,
+          "gradient_norm": 1.1496885582850844,
+          "nonfinite_parameters": [],
+          "relative_gradient_l2": 0.0002533452481527966,
+          "gradient_cosine": 0.9999999098516633,
+          "seconds": 0.2772732889279723
+        }
+      ]
+    }
+  },
+  "fp32_diagnostic_rerun": {
+    "run": "runs/yoco-160m-baseline-8gpu-fp32-20261104T1450Z",
+    "state": "stopped_by_user"
+  },
+  "rerun": {
+    "active_record": "runs/setup/baseline-matched-8gpu-active.json",
+    "precision": "fp16_mixed_fp32_params",
+    "TF32": true,
+    "world_size": 8,
+    "source_step": 100,
+    "target_step": 40000,
+    "checkpoint_every": 5000,
+    "keep_all_checkpoints": true,
+    "validation_every": 250,
+    "source_sha256": "3560daadcff9ad6f0a4989c9fe711986ad2eaa93f426ae95e032c3ebe6930bd2",
+    "preserved": [
+      "model architecture",
+      "optimizer state",
+      "RNG",
+      "data order",
+      "global batch",
+      "learning-rate schedule"
+    ],
+    "evaluation_precision": "fp16_mixed_fp32_params; model and training recipe match published A/B settings",
+    "execution_options": "Acceleration is measured separately; no reduced training tokens or altered optimizer hyperparameters."
+  }
+}

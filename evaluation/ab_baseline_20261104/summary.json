@@ -2,17 +2,18 @@
   "schema_version": 2,
   "training": {
     "baseline": {
-      "validation_loss": 3.4089059829711914,
-      "validation_perplexity": 30.232151672026937,
-      "last100_training_loss": 3.404486198425293,
+      "validation_loss": 3.1772193908691406,
+      "validation_perplexity": 23.979981805656045,
+      "last100_training_loss": 3.170113432407379,
       "tokens": 10485760000,
       "parameters": 166708224,
       "final_step": 40000,
       "world_size": 8,
       "hardware": "8 x A100 80GB PCIe",
-      "active_seconds": 29121.136781508685,
-      "active_gpu_hours": 64.71363729224153,
-      "end_to_end_hours": 8.700689449166667,
+      "active_seconds": 13762.475786347291,
+      "active_gpu_hours": 30.583279525216202,
+      "end_to_end_hours": 3.9665402475,
+      "training_and_evaluation_hours": 4.126539083611111,
       "overflow_events": 20,
       "peak_rank0_memory_gib": 12.901231288909912,
       "shared_embedding_output_parameters": 77021184,
@@ -21,7 +22,18 @@
       "compute_output_inclusive_6nd_pflop_days": 0.1213932240896,
       "extra_repeated_kv_projection_pflop_days": 0.0,
       "output_inclusive_plus_repeated_kv_proxy_pflop_days": 0.1213932240896,
-      "mean_active_tokens_per_second": 360073.85558719805
+      "mean_active_tokens_per_second": 761909.4240588694,
+      "execution": {
+        "checkpoint_activations": false,
+        "fused_adamw": true,
+        "compile": true,
+        "allow_tf32": true,
+        "compile_loss": true
+      },
+      "checkpoint_every": 5000,
+      "keep_last_checkpoints": null,
+      "best_validation_loss": 3.1702041625976562,
+      "maximum_validation_regression": 0.007175445556640625
     },
     "A": {
       "validation_loss": 3.1600544452667236,
@@ -73,13 +85,13 @@
       "task": "arc_easy",
       "metric": "acc_norm,none",
       "examples": 2376,
-      "baseline": 0.4297138047138047,
-      "baseline_stderr": 0.010157908005763489,
+      "baseline": 0.4436026936026936,
+      "baseline_stderr": 0.010194308914521161,
       "A": 0.4583333333333333,
-      "A_delta_pp": 2.86195286195286,
+      "A_delta_pp": 1.4730639730639705,
       "A_stderr": 0.010224097209176468,
       "B": 0.4537037037037037,
-      "B_delta_pp": 2.3989898989899006,
+      "B_delta_pp": 1.010101010101011,
       "B_stderr": 0.010215708295494234,
       "B_minus_A_pp": -0.46296296296295947
     },
@@ -87,13 +99,13 @@
       "task": "arc_challenge",
       "metric": "acc_norm,none",
       "examples": 1172,
-      "baseline": 0.25170648464163825,
-      "baseline_stderr": 0.012682496334042911,
+      "baseline": 0.24658703071672355,
+      "baseline_stderr": 0.012595726268789992,
       "A": 0.2568259385665529,
-      "A_delta_pp": 0.5119453924914641,
+      "A_delta_pp": 1.0238907849829337,
       "A_stderr": 0.012766923794116735,
       "B": 0.24488054607508533,
-      "B_delta_pp": -0.6825938566552919,
+      "B_delta_pp": -0.1706484641638223,
       "B_stderr": 0.012566273985131313,
       "B_minus_A_pp": -1.194539249146756
     },
@@ -101,13 +113,13 @@
       "task": "hellaswag",
       "metric": "acc_norm,none",
       "examples": 10042,
-      "baseline": 0.29286994622585144,
-      "baseline_stderr": 0.004541492151639358,
+      "baseline": 0.3132842063333997,
+      "baseline_stderr": 0.004628809258483689,
       "A": 0.31248755228042224,
-      "A_delta_pp": 1.9617606054570802,
+      "A_delta_pp": -0.07966540529774635,
       "A_stderr": 0.004625600916775252,
       "B": 0.31248755228042224,
-      "B_delta_pp": 1.9617606054570802,
+      "B_delta_pp": -0.07966540529774635,
       "B_stderr": 0.004625600916775252,
       "B_minus_A_pp": 0.0
     },
@@ -115,13 +127,13 @@
       "task": "piqa",
       "metric": "acc_norm,none",
       "examples": 1838,
-      "baseline": 0.5935799782372143,
-      "baseline_stderr": 0.01145968265012375,
+      "baseline": 0.6039173014145811,
+      "baseline_stderr": 0.011411089031912588,
       "A": 0.6109902067464635,
-      "A_delta_pp": 1.7410228509249226,
+      "A_delta_pp": 0.7072905331882429,
       "A_stderr": 0.0113747749744473,
       "B": 0.6251360174102285,
-      "B_delta_pp": 3.1556039173014194,
+      "B_delta_pp": 2.1218715995647397,
       "B_stderr": 0.01129456580561892,
       "B_minus_A_pp": 1.4145810663764968
     },
@@ -129,13 +141,13 @@
       "task": "winogrande",
       "metric": "acc,none",
       "examples": 1267,
-      "baseline": 0.5217048145224941,
-      "baseline_stderr": 0.014039239216484667,
+      "baseline": 0.5098658247829518,
+      "baseline_stderr": 0.014049749833367674,
       "A": 0.5224940805051302,
-      "A_delta_pp": 0.07892659826361781,
+      "A_delta_pp": 1.2628255722178405,
       "A_stderr": 0.014038257824059859,
       "B": 0.5074980268350434,
-      "B_delta_pp": -1.420678768745065,
+      "B_delta_pp": -0.23677979479084232,
       "B_stderr": 0.014050905521228646,
       "B_minus_A_pp": -1.4996053670086829
     },
@@ -143,13 +155,13 @@
       "task": "boolq",
       "metric": "acc,none",
       "examples": 3270,
-      "baseline": 0.4984709480122324,
-      "baseline_stderr": 0.00874501408442582,
+      "baseline": 0.5678899082568807,
+      "baseline_stderr": 0.008664067354619397,
       "A": 0.6162079510703364,
-      "A_delta_pp": 11.773700305810403,
+      "A_delta_pp": 4.831804281345575,
       "A_stderr": 0.008505584729104822,
       "B": 0.6048929663608563,
-      "B_delta_pp": 10.64220183486239,
+      "B_delta_pp": 3.700305810397564,
       "B_stderr": 0.008550454248281122,
       "B_minus_A_pp": -1.1314984709480114
     },
@@ -157,13 +169,13 @@
       "task": "openbookqa",
       "metric": "acc_norm,none",
       "examples": 500,
-      "baseline": 0.284,
-      "baseline_stderr": 0.020186703693570774,
+      "baseline": 0.3,
+      "baseline_stderr": 0.020514426225627987,
       "A": 0.318,
-      "A_delta_pp": 3.400000000000003,
+      "A_delta_pp": 1.8000000000000016,
       "A_stderr": 0.020847571620814014,
       "B": 0.3,
-      "B_delta_pp": 1.6000000000000014,
+      "B_delta_pp": 0.0,
       "B_stderr": 0.020514426225627987,
       "B_minus_A_pp": -1.8000000000000016
     },
@@ -171,19 +183,19 @@
       "task": "sciq",
       "metric": "acc_norm,none",
       "examples": 1000,
-      "baseline": 0.621,
-      "baseline_stderr": 0.015349091002225332,
+      "baseline": 0.665,
+      "baseline_stderr": 0.014933117490932629,
       "A": 0.66,
-      "A_delta_pp": 3.9000000000000035,
+      "A_delta_pp": -0.5000000000000004,
       "A_stderr": 0.014987482264363972,
       "B": 0.624,
-      "B_delta_pp": 0.30000000000000027,
+      "B_delta_pp": -4.100000000000003,
       "B_stderr": 0.0153251055088981,
       "B_minus_A_pp": -3.600000000000003
     }
   ],
   "macro": {
-    "baseline": 0.4366307470441544,
+    "baseline": 0.4562683706384038,
     "A": 0.46941738281277984,
     "B": 0.45907485158316746
   },
@@ -303,8 +315,8 @@
     "baseline": {
       "file": "checkpoint_00040000.pt",
       "step": 40000,
-      "sha256": "57f87a18c05b9bdf55df21d941bf17b9716fbcc263c8609295e979fbb8aed2af",
-      "fingerprint": "f3d44940476de7b1976cbe1daa8d5018e0974631325e6b0c4a3744ff5d3e2aaf"
+      "sha256": "b4e767e1169299a874cc3115f6dde5ec5a1fccad831c1f2ceab7e143378701d4",
+      "fingerprint": "ccc566e8f6fc1298aac51da36e73efcc1c2bbd1aa762a362815770f570107372"
     }
   },
   "source_sha256": {
@@ -351,32 +363,32 @@
     "B_sciq_results.json": "62b62f7daea274a3e585c14787a72c794ce6fdb30db6be68f48b76c99e6f1dc7",
     "B_sciq_provenance.json": "780e07b382f726eb8d5169aa530c63c693f2d5d2f5d11d60b0ab07463067df2e",
     "baseline_pilot_rank0": "3974b080fa41b271c2ee642e24215c1782407fa329e99b033aa99b4260808ffd",
-    "baseline_full_rank0": "4ff25510969806eeea24ec1978f78a45d7774dff6a0d90a0b672db218f5efde4",
-    "baseline_resolved_config": "99db0bf75e2e38ae46a12f23a0ac7e6329445d7d325f04b5b9b5cf1c34d57e20",
+    "baseline_full_rank0": "3c22e9ed092b3cef3275cd585c2433c0e8a41750945ff3334ec7adbe74354d2c",
+    "baseline_resolved_config": "a1321d144dd9c62a85fa2f75b56601feb0ebff511dc94cb1ee0c02704272c29d",
     "baseline_stage_complete": "5d661f43954f0138d9aab3e0860b6ea3e9305c33f8080c9156c3494fa80312d8",
-    "baseline_checkpoint_metadata": "9bd20fcbe6d4bf614fdffffb4c6455ea77604bd92913602b2a51d87802160131",
-    "baseline_pipeline_summary": "aad8f6a8889cbe326ee7fd448c1fbc802dbdf45eaec6332ca391330f33368abb",
-    "baseline_arc_easy_results.json": "d52e7bd1aa328db8944e2654a7e2aeda30cdb79ac66318139d58ac551c8cd58f",
-    "baseline_arc_easy_provenance.json": "e604e2b7d656ceb6dd1bbca19fb14edf58d42519767341a9faa92a849698d077",
-    "baseline_arc_challenge_results.json": "f8c572f3ef1ad7a67f16c1e7528c02bdc7ca344ac992f2146cb2529213870583",
-    "baseline_arc_challenge_provenance.json": "3a0b694c1b70919c0de07ab0dbe8a411ff38c0c9a588750d9354e363aa275c09",
-    "baseline_hellaswag_results.json": "2ca8fb79efb955a62c47475762ff125c8f72c1ca829f22a115ef98250a4a6368",
-    "baseline_hellaswag_provenance.json": "6211f77491fa02936a88c25de1d62a65e0c884a34e395094a532ffda20bc01ce",
-    "baseline_piqa_results.json": "67dae5ddb2e5fd4c8f209660ab4ba675e0a82b28da93bf6895b341f76fda7c8b",
-    "baseline_piqa_provenance.json": "6ef547e1435d1c6f39ccf6d11f140022e54aa755df7098155cc9949b35140ce9",
-    "baseline_winogrande_results.json": "a2f3bd15799f071e7945fb6061c6e732c8f34adcf92c041f005b2a531c518030",
-    "baseline_winogrande_provenance.json": "6da64a12c90eb0372e03245f7948670ac32af119bff8cdb6661ecc0879eae17e",
-    "baseline_boolq_results.json": "e2938ee2f9c394220fe371f636e949853f334bc4ed8e614ab85ea45537024dda",
-    "baseline_boolq_provenance.json": "7bbc3b0331ebf9c3abc8843185aeec4e27384d649f8317a44a6589495e533a97",
-    "baseline_openbookqa_results.json": "163670d32e52d615d1f7b0af535d942f83634f0accbf0016dba9dcedc52bcacd",
-    "baseline_openbookqa_provenance.json": "fc3f22fdd5c4986b4e33008fe350f79af7421ba9a78e905ef7e40b3706bf7e35",
-    "baseline_sciq_results.json": "60028a0e8cfb1dde7b155ad3a7c1c3befa3d026221e8a00f9a13b84ad411580d",
-    "baseline_sciq_provenance.json": "c10a5b923b72037e7c54ca5af2ecbf54c3a96757ecdf8e6c3af2ba6a9a7571cc"
+    "baseline_checkpoint_metadata": "2d08a17ca2283f7e7e3eb86a43a3d778848160bf8cc0020ce280ec88a5d53383",
+    "baseline_pipeline_summary": "1c8a2526ff1c145214730cf95a5b9fb7e0a0f6dd5b0a628b6899b89fb81312a3",
+    "baseline_arc_easy_results.json": "e7aeeae01a877e552e1466194857ee2e3604ca47d94d0581f7139b3bf9186a33",
+    "baseline_arc_easy_provenance.json": "2488f106bea912474aaf84f1bdfd0eb676f73ca380f37155963fe59b2eca635d",
+    "baseline_arc_challenge_results.json": "2fe2d481619c46b4c71584f07689f2ff9a7448e15353435e715efd296839d9bf",
+    "baseline_arc_challenge_provenance.json": "d4b2f670536bf240410fdafd9bcf6b471726e8313a5429f6c316ff6a60f9b5a6",
+    "baseline_hellaswag_results.json": "b751ee0008bef900b3621d4975f7fcb77000b7b6c6990d919d483646fdd1b307",
+    "baseline_hellaswag_provenance.json": "0233d22a856087de2ed2ee10238b22f46fbf0a11fa08d23504537eb4ac990f99",
+    "baseline_piqa_results.json": "27807cff091d366bfa350a45a287267e0d6ccb267a0f383d50127e547918d6d0",
+    "baseline_piqa_provenance.json": "b1f4839f5406968077d56a25ed7fb5db2ec3ac1bdeac93aecb8fbfcbe85e38ff",
+    "baseline_winogrande_results.json": "a919a75186cd0b1737d73428c88c5174853cc843e67ed3c7fafc24d55d1c0479",
+    "baseline_winogrande_provenance.json": "227cd5086fcadaf1e5b330212cc78f1e41a55682d74dde7ef9b147e54be726c1",
+    "baseline_boolq_results.json": "afd24ef39c87cf40bf3c8eacf4153fa820b31fe0d647b1e85535d10cf7da888a",
+    "baseline_boolq_provenance.json": "e56118764d0ef11e86477bbc5e0ebe38b71339467cf4f915ceddb1091d710cb6",
+    "baseline_openbookqa_results.json": "5be6a429b2f306172e02e3b8d645440d62d29437fd0cf561ace5554732211dc5",
+    "baseline_openbookqa_provenance.json": "70f4c9b9dc74f5e7661e8551830089e353eed25e3e64d1d9965786586b97cb73",
+    "baseline_sciq_results.json": "1fad5225788b610197823efcef87167d7de5207fd052872bf6f5633958381ec5",
+    "baseline_sciq_provenance.json": "9c4db12221c0429fffb0519acf74cb0582874d6e1d90503e15c108174047cf2b"
   },
-  "boundary": "Baseline is the completed 8-A100 rerun with checkpoint payload rehashed and all 8 full evaluations verified. A/B are the published 8-A800 runs. Full-size reconstruction confirms the same backbone and initial common tensors; only the fusion modules add parameters. Model/training configs and all task YAMLs, seeds and few-shot counts match. Remote A/B step-zero payloads, sample hashes and token-shard hashes are not supplied. A/B public evidence and paired bootstrap are unchanged; baseline differences are descriptive. 6ND is a compute proxy, not measured device FLOPs.",
+  "boundary": "Baseline is the completed 8-A100 rerun with checkpoint payload rehashed and all 8 full evaluations verified. A/B are the published 8-A800 runs. Full-size reconstruction confirms the same backbone and initial common tensors; only the fusion modules add parameters. Model/training hyperparameters and all task YAMLs, seeds and few-shot counts match; baseline checkpoint cadence/retention differ by user request, and its execution acceleration is recorded separately. Remote A/B step-zero payloads, sample hashes and token-shard hashes are not supplied. A/B public evidence and paired bootstrap are unchanged; baseline differences are descriptive. 6ND is a compute proxy, not measured device FLOPs.",
   "baseline_replacement": {
     "kind": "verified_local_eight_gpu_training",
-    "source_run": "yoco-160m-baseline-8gpu-full-20261104T0114Z",
+    "source_run": "yoco-160m-baseline-8gpu-matched-20261104T1519Z",
     "source_pilot": "yoco-160m-baseline-8gpu-pilot-20261104T0109Z",
     "resumed_at_step": 100,
     "original_schedule_preserved": true,
@@ -385,7 +397,14 @@
       "validation_loss": 3.163661003112793,
       "macro_accuracy": 0.4671128997966505
     },
-    "timing_note": "Baseline wall time includes pilot/resume pauses; successful-update active time excludes those pauses and overflow retries."
+    "execution": {
+      "checkpoint_activations": false,
+      "fused_adamw": true,
+      "compile": true,
+      "allow_tf32": true,
+      "compile_loss": true
+    },
+    "timing_note": "Wall time covers the resumed formal run through its final checkpoint; pipeline time adds all eight evaluations. Successful-update seconds also include the original pilot, but exclude idle gaps, retries, validation and saves."
   },
   "baseline_evaluation_protocol": {
     "arc_easy": {
@@ -491,6 +510,17 @@
       "A": 166708230,
       "B": 166708998
     },
+    "checkpoint_policy_exceptions": {
+      "checkpoint_every": 5000,
+      "keep_last_checkpoints": null
+    },
+    "baseline_execution": {
+      "checkpoint_activations": false,
+      "fused_adamw": true,
+      "compile": true,
+      "allow_tf32": true,
+      "compile_loss": true
+    },
     "extra_parameters": {
       "A": 6,
       "B": 774
@@ -528,5 +558,39 @@
   "retained_public_AB_sha256": {
     "ab_training_curves.csv": "cfca6281ecc92b14a20cb6dd108ea3120eb198720a52e41857dc20a344d2fd2d",
     "ab_paired_scores.csv": "07f28cbd3614f155f7c48afc845251389d6056ab4269ee1502202f190582bfd7"
-  }
+  },
+  "baseline_history": [
+    {
+      "source_run": "yoco-160m-baseline-8gpu-full-20261104T0114Z",
+      "training": {
+        "validation_loss": 3.4089059829711914,
+        "validation_perplexity": 30.232151672026937,
+        "last100_training_loss": 3.404486198425293,
+        "tokens": 10485760000,
+        "parameters": 166708224,
+        "final_step": 40000,
+        "world_size": 8,
+        "hardware": "8 x A100 80GB PCIe",
+        "active_seconds": 29121.136781508685,
+        "active_gpu_hours": 64.71363729224153,
+        "end_to_end_hours": 8.700689449166667,
+        "overflow_events": 20,
+        "peak_rank0_memory_gib": 12.901231288909912,
+        "shared_embedding_output_parameters": 77021184,
+        "trunk_parameters": 89687040,
+        "compute_trunk_6nd_pflop_days": 0.06530810948266667,
+        "compute_output_inclusive_6nd_pflop_days": 0.1213932240896,
+        "extra_repeated_kv_projection_pflop_days": 0.0,
+        "output_inclusive_plus_repeated_kv_proxy_pflop_days": 0.1213932240896,
+        "mean_active_tokens_per_second": 360073.85558719805
+      },
+      "macro_accuracy": 0.4366307470441544,
+      "checkpoint": {
+        "file": "checkpoint_00040000.pt",
+        "step": 40000,
+        "sha256": "57f87a18c05b9bdf55df21d941bf17b9716fbcc263c8609295e979fbb8aed2af",
+        "fingerprint": "f3d44940476de7b1976cbe1daa8d5018e0974631325e6b0c4a3744ff5d3e2aaf"
+      }
+    }
+  ]
 }

@@ -1,5 +1,21 @@
 # 用户执行约束（2026-10-29）
 
+## 2026-11-04 用户纠正：保持 A/B baseline 配置与精度（最新）
+
+- 用户明确拒绝擅自修改训练精度：baseline 必须与 A/B 发布配置一致，使用 `fp16_mixed_fp32_params`；不再继续全 FP32 训练。旧 FP32 作业已按本次要求停止，保留其记录。
+- 用户允许执行加速。可在不更改模型、FP16/FP32 参数精度、数据、microbatch=4、accumulation=4、global batch=262144、seed、AdamW 超参数和 40000 步学习率计划的前提下，测试并记录编译、融合 optimizer、关闭不必要的 activation recomputation 等执行选项。
+- 保存策略仍为每 5000 步一个 checkpoint，全部保留；验证仍每 250 步、2048 条序列。不要为了宣称 3–4 小时而减少训练 tokens 或验证规模。
+- 新匹配作业使用 `tools/run_baseline_matched.py` 和 `runs/setup/baseline-matched-8gpu-active.json`；启动前核查 GPU、状态和 tmux，禁止重复作业。仅训练 baseline，然后执行原八项下游评测。
+- **已完成并核查（2026-11-05）**：`runs/yoco-160m-baseline-8gpu-matched-20261104T1519Z` 已训练至 40000 步并完成八项下游，`PIPELINE_SUCCESS` 存在，最终 checkpoint SHA256 已重新核验。北京时间 11 月 5 日 03:40 完成；训练约 3 小时 58 分，含评测约 4 小时 8 分。最终验证 loss=3.177219391，下游宏平均=45.6268371%。每 5000 步的八份 checkpoint 全部保留。当前任务已完成，禁止自行重复启动。
+- 本次原始验证曲线从运行最优值的最大回升约 0.00718，未出现旧 FP16 run 在约 21354 步后的持续大幅退化。仍记录到 20 次动态 loss-scaler 溢出重试，不宣称完全没有数值波动。2026-11-05 用户已要求将本次数据更新 GitHub 并补充可复用的加速 docs；三组报告改绑本次 baseline，A/B 原始证据保持不变，旧结果保留在 Git 历史与 `docs/evidence/baseline-superseded-20261104.json`。
+
+## 2026-11-04 baseline 数值异常排查与修复重跑（最新）
+
+- 用户授权排查旧 A100 baseline 在约 21354 步后的 loss 异常，并在修复后从健康 checkpoint 重跑。旧完整 run 与发布报告保留作历史，不将其正常退出视为健康收敛证明。
+- 健康来源为原 pilot 的 step 100；保留模型、optimizer、各 rank RNG、数据顺序、八卡 batch 和原 40000 步 LR schedule。新的精度配置作为显式 fork 记录，不冒充原 FP16 作业无变化恢复。
+- 用户最新明确要求每 **5000 步** 保存一个 checkpoint，全部保留；验证仍每 250 步。正式训练不改成每 250 步保存。
+- 新控制器 `tools/run_baseline_stable.py`：先通过真实数据八卡恢复核对，再训练与八项下游评测。新作业从 `runs/setup/baseline-stable-8gpu-active.json` 读取；启动前核查状态、tmux 和 GPU，禁止重复启动。本条取代旧 run 完成后的“不重复训练”限制，仅授权本次数值修复重跑。
+
 ## 2026-11-04 本机 A100 八卡 baseline 完整训练授权（当前）
 
 - 用户明确要求用本机 8 张 A100 完整训练 baseline 160M，而非仅运行 100 步测试。本条授权本机原始 YOCO baseline 的 40000 步训练及同设置八项下游评测，取代历史 HPC3“不重训 baseline”对本轮任务的限制。

@@ -20,7 +20,7 @@ Baseline 使用本次完成的 **8×A100** 运行，A/B 使用已发布的 **8×
 
 ## 3. 相同 token 预算的验证收敛
 
-每组 160 个未平滑验证点。左图放大 7–10.486B tokens，右图为 A/B 减去新 baseline。完整保留 baseline 的回升，未裁掉灰色曲线；三组均使用最终第 40000 步结果。
+每组 160 个未平滑验证点。左图放大 7–10.486B tokens，右图为 A/B 减去新 baseline。完整保留三组的原始验证波动，未裁掉灰色曲线；三组均使用最终第 40000 步结果。
 
 ![验证收敛](03_validation_convergence.png)
 
@@ -28,7 +28,7 @@ Baseline 使用本次完成的 **8×A100** 运行，A/B 使用已发布的 **8×
 
 ## 4. Compute–loss 与同 loss 的计算代理
 
-左图 output-inclusive 6ND，中图加上 A/B 额外五次 K/V 投影的局部代理，右图按首次观测达到阈值比较。Baseline 未达到 loss=3.2 时明确标注未达到，不显示为零。该代理不是实测硬件 FLOPs；详细首次/持续命中步数见[阈值 CSV](../loss_thresholds.csv)。
+左图 output-inclusive 6ND，中图加上 A/B 额外五次 K/V 投影的局部代理，右图按首次观测达到阈值比较。本次 baseline 已达到 loss=3.2；缺失阈值仍明确标注，不显示为零。该代理不是实测硬件 FLOPs；详细首次/持续命中步数见[阈值 CSV](../loss_thresholds.csv)。
 
 ![计算量](04_compute_tradeoff.png)
 

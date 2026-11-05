@@ -1,0 +1,103 @@
+{
+  "source_run": "yoco-160m-baseline-8gpu-matched-20261104T1519Z",
+  "completed_at": "2026-11-04T19:40:25.201770+00:00",
+  "checkpoint": {
+    "file": "checkpoint_00040000.pt",
+    "step": 40000,
+    "sha256": "b4e767e1169299a874cc3115f6dde5ec5a1fccad831c1f2ceab7e143378701d4",
+    "fingerprint": "ccc566e8f6fc1298aac51da36e73efcc1c2bbd1aa762a362815770f570107372"
+  },
+  "release_manifest_sha256": "19d111e1dd1d491c0113ff5c3bae210075588f6333442f8f2c87df6d0b3ecf64",
+  "fork": {
+    "source_checkpoint": "/root/yoco/runs/yoco-160m-baseline-8gpu-pilot-20261104T0109Z/checkpoint_00000100.pt",
+    "source_sha256": "3560daadcff9ad6f0a4989c9fe711986ad2eaa93f426ae95e032c3ebe6930bd2",
+    "source_fingerprint": "f3d44940476de7b1976cbe1daa8d5018e0974631325e6b0c4a3744ff5d3e2aaf",
+    "source_step": 100,
+    "changes": {
+      "checkpoint_every": {
+        "before": 250,
+        "after": 5000
+      },
+      "keep_last_checkpoints": {
+        "before": 3,
+        "after": null
+      }
+    },
+    "preserved": [
+      "model",
+      "optimizer",
+      "RNG",
+      "data order",
+      "LR schedule",
+      "world size"
+    ],
+    "scaler_policy": "restore for FP16; disabled for FP32",
+    "target_fingerprint": "ccc566e8f6fc1298aac51da36e73efcc1c2bbd1aa762a362815770f570107372",
+    "execution": {
+      "checkpoint_activations": false,
+      "fused_adamw": true,
+      "compile": true,
+      "allow_tf32": true,
+      "compile_loss": true
+    },
+    "execution_note": "Execution acceleration is recorded separately from the A/B training recipe."
+  },
+  "resume_verification": {
+    "passed": true,
+    "world_size": 8,
+    "real_data": true,
+    "source_step": 100,
+    "split_resume_step": 102,
+    "final_step": 104,
+    "all_rank_rng_verified": true,
+    "fp16_numerical_tolerance": {
+      "model_max_absolute": 2e-05,
+      "model_relative_l2": 2e-06,
+      "optimizer_atol": 1e-06,
+      "loss_absolute": 5e-05
+    },
+    "resumed_model_difference": {
+      "max_absolute_difference": 1.2362375855445862e-05,
+      "relative_l2": 7.680181881551203e-07
+    },
+    "repeat_model_difference": {
+      "max_absolute_difference": 6.5583735704422e-06,
+      "relative_l2": 7.500714940388594e-07
+    },
+    "max_training_loss_difference": 1.9073486328125e-06,
+    "model_and_optimizer_max_absolute_difference": 1.2362375855445862e-05,
+    "completed_at": "2026-11-04T15:32:33.944201+00:00"
+  },
+  "configuration_check": {
+    "passed": true,
+    "comparisons": {
+      "A": {
+        "model_seed_and_training_matched": true,
+        "precision": "fp16_mixed_fp32_params"
+      },
+      "B": {
+        "model_seed_and_training_matched": true,
+        "precision": "fp16_mixed_fp32_params"
+      }
+    },
+    "checkpoint_policy_override": {
+      "checkpoint_every": 5000,
+      "keep_all": true
+    },
+    "execution": {
+      "checkpoint_activations": false,
+      "fused_adamw": true,
+      "compile": true,
+      "allow_tf32": true,
+      "compile_loss": true
+    },
+    "no_model_or_precision_change": true
+  },
+  "execution": {
+    "checkpoint_activations": false,
+    "fused_adamw": true,
+    "compile": true,
+    "allow_tf32": true,
+    "compile_loss": true
+  }
+}

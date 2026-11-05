@@ -12,6 +12,17 @@
     "A": 166708230,
     "B": 166708998
   },
+  "checkpoint_policy_exceptions": {
+    "checkpoint_every": 5000,
+    "keep_last_checkpoints": null
+  },
+  "baseline_execution": {
+    "checkpoint_activations": false,
+    "fused_adamw": true,
+    "compile": true,
+    "allow_tf32": true,
+    "compile_loss": true
+  },
   "extra_parameters": {
     "A": 6,
     "B": 774

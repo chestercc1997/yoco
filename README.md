@@ -16,24 +16,27 @@ self-decoder layers, constructing shared memory once before layers 7–12:
 | B (`conditional_kv`) | Per-token scores from normalized source hidden states | Layers 1–6 |
 | Original YOCO baseline | K/V from the final self-decoder output | Layer 6 |
 
-**Completed three-way comparison (2026-11-04):** the original YOCO baseline
+**Completed three-way comparison (2026-11-05):** the original YOCO baseline
 completed 40,000 updates on **8×A100**; A/B retain the published **8×A800** runs.
 All three consumed 10,485,760,000 tokens and completed all eight full zero-shot tasks.
 
 | Metric | New YOCO baseline · 8×A100 | A | B |
 | --- | ---: | ---: | ---: |
-| Final validation loss | 3.408906 | 3.160054 | 3.159059 |
-| Eight-task macro average (%) | 43.6631 | 46.9417 | 45.9075 |
+| Final validation loss | 3.177219 | 3.160054 | 3.159059 |
+| Eight-task macro average (%) | 45.6268 | 46.9417 | 45.9075 |
 | Trunk 6ND (PFLOP-days) | 0.065308109 | 0.065308114 | 0.065308673 |
 
 The baseline above is the newly completed eight-A100 run. Full-size model checks
 confirm the same common backbone tensors at initialization; A adds 6 parameters,
-B adds 774. Published model/training settings and all task YAMLs, seeds and zero-shot
-counts match. Remote A/B step-zero payloads and token-shard hashes are not available
+B adds 774. Model/training hyperparameters and all task YAMLs, seeds and zero-shot
+counts match. Baseline saves every 5,000 steps and retains all eight checkpoints;
+its compiler/fused-optimizer execution options are documented separately. Remote A/B step-zero payloads and token-shard hashes are not available
 for a fresh check, so baseline differences remain descriptive. A has the highest
-downstream macro; B has the lowest final validation loss. The new baseline has
-late-training loss rebounds, shown in the un-smoothed curves. 6ND remains a compute
-proxy. See the [complete report, backbone audit, seven figures and CSVs](evaluation/ab_baseline_20261104/README.md).
+downstream macro; B has the lowest final validation loss. The accelerated FP16 baseline trained in 3.97 hours
+and completed training plus evaluation in 4.13 hours.
+Its validation curve has no sustained regression like the superseded run.
+See [reusable acceleration settings and commands](docs/BASELINE_A100_ACCELERATION.md).
+6ND remains a compute proxy; timings across different execution options do not isolate architecture effects. See the [complete report, backbone audit, seven figures and CSVs](evaluation/ab_baseline_20261104/README.md).
 
 [七张三组对比图 / Comparison figures](evaluation/ab_baseline_20261104/figures/README.md) · PNG / PDF / SVG
 

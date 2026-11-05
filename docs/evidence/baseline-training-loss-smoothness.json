@@ -1,0 +1,54 @@
+{
+  "source": "evaluation/ab_baseline_20261104/training_curves.csv",
+  "source_sha256": "050d501379adbc27c59416b357a3db9c2c42237d9ebe1c05227fa8c8836a415d",
+  "method": "Raw losses are never smoothed in the plots. Diagnostics subtract a centered 251-step median; exclude the first 1000 warmup/rapid-learning steps.",
+  "threshold_note": "0.15 residual and 0.3 adjacent jump are descriptive diagnostic thresholds, not formal statistical significance tests.",
+  "series": {
+    "baseline": {
+      "steps": 40000,
+      "analyzed_steps": [
+        1001,
+        40000
+      ],
+      "residual_std": 0.029290234276239165,
+      "residual_p99": 0.06724858283996588,
+      "maximum_positive_residual": 0.12162065505981445,
+      "peak_step": 36970,
+      "peak_raw_loss": 3.296983003616333,
+      "positive_residual_over_0_15": 0,
+      "maximum_positive_adjacent_jump": 0.17654705047607422,
+      "positive_adjacent_jumps_over_0_3": 0
+    },
+    "A": {
+      "steps": 40000,
+      "analyzed_steps": [
+        1001,
+        40000
+      ],
+      "residual_std": 0.029259294150596884,
+      "residual_p99": 0.06701386451721195,
+      "maximum_positive_residual": 0.12023782730102539,
+      "peak_step": 36970,
+      "peak_raw_loss": 3.284559726715088,
+      "positive_residual_over_0_15": 0,
+      "maximum_positive_adjacent_jump": 0.17755126953125,
+      "positive_adjacent_jumps_over_0_3": 0
+    },
+    "B": {
+      "steps": 40000,
+      "analyzed_steps": [
+        1001,
+        40000
+      ],
+      "residual_std": 0.029242260716507356,
+      "residual_p99": 0.06714471340179459,
+      "maximum_positive_residual": 0.12052035331726074,
+      "peak_step": 36970,
+      "peak_raw_loss": 3.283731460571289,
+      "positive_residual_over_0_15": 0,
+      "maximum_positive_adjacent_jump": 0.17613625526428223,
+      "positive_adjacent_jumps_over_0_3": 0
+    }
+  },
+  "scope": "Training-loss smoothness does not establish absence of gradient spikes or scaler overflows."
+}

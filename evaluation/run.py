@@ -51,6 +51,8 @@ def main():
         "architecture": architecture(config), "checkpoint_sha256": sha256(args.checkpoint),
         "dataset_lock": lock, "task_yaml_sha256": sha256(yaml_path), "num_fewshot": 0,
         "limit": args.limit, "seed": 42,
+        "precision": config.get('evaluation_precision',config['training'].get('precision','fp16_mixed_fp32_params')),
+        "execution": config.get('execution',{}),
         "versions": {name: importlib.metadata.version(name) for name in ("lm_eval", "datasets", "transformers", "torch")},
     }
     atomic_json(args.output / "provenance.json", provenance)
