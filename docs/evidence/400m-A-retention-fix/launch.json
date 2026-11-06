@@ -1,0 +1,48 @@
+{
+  "recorded_at": "2026-11-06T12:18:10.736873+00:00",
+  "snapshot_not_live": true,
+  "run": "runs/yoco-400m-A-8gpu-retentionfix-20261106",
+  "source_checkpoint_step": 20000,
+  "unchanged_configuration": {
+    "architecture": true,
+    "model": true,
+    "training": true,
+    "data": true,
+    "seed": true,
+    "memory_fusion": true,
+    "tied_embeddings": true
+  },
+  "execution_after": {
+    "checkpoint_activations": false,
+    "fused_adamw": true,
+    "compile": false,
+    "allow_tf32": true,
+    "compile_loss": false,
+    "emulate_precision_casts": true,
+    "compile_scope": "layers"
+  },
+  "local_arithmetic_change": "FP32 retention cross-state accumulation and sum until RMSNorm, then original activation dtype.",
+  "latest_train": {
+    "time": "2026-11-06T12:18:09.892806+00:00",
+    "event": "train",
+    "step": 20298,
+    "loss": 3.097681760787964,
+    "lr": 7.458170347003154e-05,
+    "grad_norm": 0.2902633249759674,
+    "scale": 16384.0,
+    "tokens": 5320998912,
+    "seconds": 1.4350899409037083,
+    "peak_memory_bytes": 35802723840
+  },
+  "latest_validation": {
+    "time": "2026-11-06T12:17:01.120501+00:00",
+    "event": "validation",
+    "step": 20250,
+    "loss": 3.0343539714813232,
+    "perplexity": 20.787544214275357
+  },
+  "median_recent_seconds": 1.4261875699739903,
+  "nonfinite_forward_count": 0,
+  "complete": false,
+  "downstream_complete": false
+}

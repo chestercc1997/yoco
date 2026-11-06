@@ -1,0 +1,11 @@
+{
+  "passed": true,
+  "original_nonfinite": 6688,
+  "fixed_nonfinite": 0,
+  "fixed_maximum": 110592.0,
+  "closed_form_expected_maximum": 110592,
+  "maximum_closed_form_error": 8.0,
+  "normalized_activation_dtype": "torch.float16",
+  "normal_range_output_exact": true,
+  "precision_scope": "Only accumulation/sum before existing FP32 RMSNorm; original FP16 activation interface retained."
+}

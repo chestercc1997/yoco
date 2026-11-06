@@ -92,8 +92,14 @@ def chunk_gate_retention(q, k, v, g, chunk_size=256, last_hidden_state=None):
     for i in range(n):
         states.append(state.to(q.dtype))
         state = state * gs[:, :, i, -1].exp()[..., None, None] + contributions[:, :, i].to(acc_dtype)
-    cross = (qr * gs.exp().to(q.dtype)[..., None]) @ torch.stack(states, dim=2)
-    return (inner + cross).reshape(b, h, length, v.shape[-1])
+    # The recurrent states are FP32 already. AMP must not narrow their
+    # cross-chunk result to FP16 before RMSNorm: finite values above 65504
+    # otherwise become Inf and normalize to NaN. Keep this accumulation and
+    # the final sum in the existing state dtype, then normalize before casting.
+    with torch.autocast(device_type=q.device.type, enabled=False):
+        cross = (qr.to(acc_dtype) * gs.exp()[..., None]) @ torch.stack(states, dim=2).to(acc_dtype)
+        output = inner.to(acc_dtype) + cross
+    return output.reshape(b, h, length, v.shape[-1])
 
 
 def recurrent_gate_retention(q, k, v, g, incremental_state):

@@ -9,13 +9,14 @@ and figures. Checkpoints and training data are intentionally excluded.
 
 Method A is now training at **400.59M parameters on 8×A100**, with the same data,
 FP16 mixed precision with FP32 parameters, global batch and 40,000-update schedule. The model has
-24 layers and 12 global K/V mixture weights. Regional layer compilation passed
-same-batch gradient and checkpoint-resume checks; the full-model compilation
-candidate was rejected for its larger gradient differences. Final scores are pending.
-On November 6, the run resumed from update 10,000 after fixing AMP overflow
-backoff's consecutive-success counter. FP16, data, batch, schedule and the
-5,000-update checkpoint cadence are unchanged. The original forward NaN was
-not reproduced in an isolated replay; its sole cause has not been established.
+24 layers and 12 global K/V mixture weights. The current run resumed from update
+20,000 after reproducing and fixing a retention overflow: cross-chunk FP32 state
+accumulation must stay FP32 until RMSNorm, then return to the FP16 activation
+interface. Eight-rank checkpoint restoration is audited bit for bit before any
+forward pass. Data, global FP16 mixed precision, batch, schedule and the
+5,000-update checkpoint cadence are unchanged. Compilation is currently disabled:
+its gradient difference at the captured failure exceeded the original acceptance
+criterion. Final training and downstream scores are pending.
 See the [400M A configuration, numerical checks and run record](docs/PLAN_A_400M_8GPU.md).
 
 ## Completed 160M A/B experiment

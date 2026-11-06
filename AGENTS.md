@@ -1,5 +1,16 @@
 # 用户执行约束（2026-10-29）
 
+## 2026-11-06 第二次 NaN 的可复现修复与第 20000 步恢复（最新）
+
+- 用户再次明确要求修复后从上一个正常 checkpoint 续训。上一修复 run `runs/yoco-400m-A-8gpu-repaired-20261106` 已在完成 24934 步后、24935/rank0/microbatch1 出现前向 NaN 而停止，不能再称其仍在训练或已完成；下游未开始。真实故障现场在该 run 的 `nonfinite_forward_00024935_rank0.pt`，不需要重放几千步。
+- 已复现并定位：第一层 retention 的 q/k/v 和跨块 FP32 states 全部有限，但 AMP 将 cross-chunk matmul 的输出写回 FP16（出现 69 个非有限值），加和后 94 个非有限值，进入 RMSNorm 后扩散成 NaN。eager 与 compiled 都失败，关闭 reduced-precision reduction 也失败；FP32 诊断正常。证据 `docs/evidence/400m-A-retention-fix/`。
+- 已修复公共 `backend.py`/`gate_retention.py`：仅让已有 FP32 跨块状态累积及最终加和在归一化前保持 FP32，再转回原 v.dtype；整体仍为 FP16 mixed / FP32 parameters，模型定义、参数、数据、batch、LR、验证和每 5000 步保存不变。此处确有局部算术修复，不能冒称每个中间张量 dtype 与旧 buggy 代码相同，也不能切换成全 FP32/BF16 训练。
+- 真实故障现场修复后 loss 有限；完整 128 序列全局 batch 的前后向均有限。native FP16 平均 loss=2.9898578，FP32 诊断参考=2.9898505；梯度仍存在混合精度与 FP32 的差异，不宣称最终精度已验证。修复后的 compiled/native 梯度相对 L2 差异约 1.1076%，超过原 0.5% 标准，**已关闭 compile**，不继续使用未通过数值检查的加速。其他 execution 选项保持原值。
+- 当前 `runs/setup/400m-A-active.json` 指向新目录 `runs/yoco-400m-A-8gpu-retentionfix-20261106`，tmux `yoco-400m-A-8gpu`。八卡 `20000→20002→20004`、连续/重复核对、891 张量/卡的恢复前精确加载核对和 eval smoke **均已通过，已正式续训**，目标 40000 及八项下游；先查实际状态，不重复启动。来源是上个 run 的完整 `checkpoint_00020000.pt`，SHA256 `7c82eefeb5db702d59c4de11a184f1cac9407e49a43a1f6d83cafa55cf9c9939`，保留 optimizer/scaler/RNG，不从只含模型的故障快照续训。
+- 第 20000 步独立连续重复自身超过此前第 10000 步的后训练阈值，因此新增恢复前逐项精确加载的硬检查。训练后误差仍限制在独立重复的 2 倍和明确上限内，模型最大绝对差上限5e-4、相对L2上限1e-4；loss 上限保持5e-5。新旧阈值与重复超出旧阈值的情况均写入 resume-check.json，不伪称旧阈值通过，不伪称训练后参数逐位一致。核心恢复状态（权重、optimizer、scaler、RNG）在任何前向之前按位核对通过。
+- `--model-repair` 是明确的修复 manifest，限定上述两个模型源文件的修改前后 hash 和指定 source checkpoint，不是跳过一致性检查。控制器将其冻结到新 release/configs/model-repair.json。新的全程曲线按恢复祖先递归拼接，已实际核验前 20000 个训练点和 80 个验证点齐全；排除旧失败尾段和诊断数据。旧 release 不可编辑。
+- 恢复命令：`tools/run_400m_A.py --run-dir /root/yoco/runs/yoco-400m-A-8gpu-retentionfix-20261106 --recover-from /root/yoco/runs/yoco-400m-A-8gpu-repaired-20261106 --model-repair /root/yoco/runs/diagnostics/400m-A-nan24935/model-repair.json`，日志追加写入 controller.log。
+
 ## 2026-11-06 400M A 故障排查与恢复（当前）
 
 - 用户明确要求修复故障后，从上一个 checkpoint 继续完整训练。原正式 run `runs/yoco-400m-A-8gpu-full-20261105T0310Z` 在完成 14310 步后，于 rank3 的下一步前向 loss 非有限而退出；八项下游尚未开始，不能报告为仍在训练或已完成。

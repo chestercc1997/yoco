@@ -1,0 +1,159 @@
+{
+  "passed": true,
+  "world_size": 8,
+  "real_data": true,
+  "source_step": 20000,
+  "split_resume_step": 20002,
+  "final_step": 20004,
+  "all_rank_rng_verified": true,
+  "exact_pre_forward_restore": {
+    "passed": true,
+    "ranks": [
+      {
+        "rank": 0,
+        "step": 20000,
+        "passed": true,
+        "checked_tensors": 891,
+        "mismatches": [],
+        "no_forward_or_optimizer_updates": true
+      },
+      {
+        "rank": 1,
+        "step": 20000,
+        "passed": true,
+        "checked_tensors": 891,
+        "mismatches": [],
+        "no_forward_or_optimizer_updates": true
+      },
+      {
+        "rank": 2,
+        "step": 20000,
+        "passed": true,
+        "checked_tensors": 891,
+        "mismatches": [],
+        "no_forward_or_optimizer_updates": true
+      },
+      {
+        "rank": 3,
+        "step": 20000,
+        "passed": true,
+        "checked_tensors": 891,
+        "mismatches": [],
+        "no_forward_or_optimizer_updates": true
+      },
+      {
+        "rank": 4,
+        "step": 20000,
+        "passed": true,
+        "checked_tensors": 891,
+        "mismatches": [],
+        "no_forward_or_optimizer_updates": true
+      },
+      {
+        "rank": 5,
+        "step": 20000,
+        "passed": true,
+        "checked_tensors": 891,
+        "mismatches": [],
+        "no_forward_or_optimizer_updates": true
+      },
+      {
+        "rank": 6,
+        "step": 20000,
+        "passed": true,
+        "checked_tensors": 891,
+        "mismatches": [],
+        "no_forward_or_optimizer_updates": true
+      },
+      {
+        "rank": 7,
+        "step": 20000,
+        "passed": true,
+        "checked_tensors": 891,
+        "mismatches": [],
+        "no_forward_or_optimizer_updates": true
+      }
+    ],
+    "world_size": 8,
+    "source_checkpoint": "/root/yoco/runs/yoco-400m-A-8gpu-repaired-20261106/checkpoint_00020000.pt",
+    "model_optimizer_scaler_rng_bitwise_equal": true
+  },
+  "fp16_numerical_tolerance": {
+    "trained_state_control": {
+      "model": {
+        "resumed": {
+          "max_absolute_difference": 0.00024709105491638184,
+          "relative_l2": 5.977613130949133e-06
+        },
+        "independent_repeat": {
+          "max_absolute_difference": 0.00024139881134033203,
+          "relative_l2": 1.3373878340844439e-05
+        },
+        "maximum_absolute_limit": 0.00048279762268066406,
+        "relative_l2_limit": 2.6747756681688878e-05,
+        "absolute_hard_ceiling": 0.0005,
+        "relative_l2_hard_ceiling": 0.0001,
+        "repeat_envelope_factor": 2,
+        "prior_caps": {
+          "absolute": 0.00015,
+          "relative_l2": 1e-05
+        },
+        "prior_caps_exceeded_by_repeat": true
+      },
+      "exp_avg": {
+        "resumed": {
+          "max_absolute_difference": 1.9373172108316794e-05,
+          "relative_l2": 0.004610546523640824
+        },
+        "independent_repeat": {
+          "max_absolute_difference": 2.4395012587774545e-05,
+          "relative_l2": 0.01010507166180307
+        },
+        "maximum_absolute_limit": 4.879002517554909e-05,
+        "relative_l2_limit": 0.02021014332360614,
+        "absolute_hard_ceiling": 5e-05,
+        "relative_l2_hard_ceiling": 0.05,
+        "repeat_envelope_factor": 2,
+        "prior_caps": {
+          "absolute": 1e-05,
+          "relative_l2": 0.01
+        },
+        "prior_caps_exceeded_by_repeat": true
+      },
+      "exp_avg_sq": {
+        "resumed": {
+          "max_absolute_difference": 1.330590748693794e-09,
+          "relative_l2": 0.00011703039866427424
+        },
+        "independent_repeat": {
+          "max_absolute_difference": 4.336278891514667e-09,
+          "relative_l2": 0.0001998007966378435
+        },
+        "maximum_absolute_limit": 8.672557783029333e-09,
+        "relative_l2_limit": 0.000399601593275687,
+        "absolute_hard_ceiling": 1e-08,
+        "relative_l2_hard_ceiling": 0.001,
+        "repeat_envelope_factor": 2,
+        "prior_caps": {
+          "absolute": 1e-08,
+          "relative_l2": 0.001
+        },
+        "prior_caps_exceeded_by_repeat": false
+      }
+    },
+    "loss_absolute": 5e-05,
+    "RNG_scaler_steps_groups": "exact",
+    "first_resumed_loss": "exact across all three runs"
+  },
+  "resumed_model_difference": {
+    "max_absolute_difference": 0.00024709105491638184,
+    "relative_l2": 5.977613130949133e-06
+  },
+  "repeat_model_difference": {
+    "max_absolute_difference": 0.00024139881134033203,
+    "relative_l2": 1.3373878340844439e-05
+  },
+  "max_training_loss_difference": 8.106231689453125e-06,
+  "model_and_optimizer_max_absolute_difference": 0.00024709105491638184,
+  "completed_at": "2026-11-06T12:10:10.000118+00:00"
+}

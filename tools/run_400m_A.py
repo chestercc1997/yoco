@@ -38,7 +38,7 @@ def now():
     return datetime.datetime.now(datetime.timezone.utc).isoformat()
 
 
-def prepare(run, recover_from=None, activate=True):
+def prepare(run, recover_from=None, activate=True, model_repair=None):
     run.mkdir(parents=True,exist_ok=True)
     release=run/"release"
     recovery_path=run/'recovery-source.json'
@@ -46,6 +46,7 @@ def prepare(run, recover_from=None, activate=True):
         recorded=json.loads(recovery_path.read_text())
         if recover_from is not None: assert Path(recorded['source_run'])==recover_from
         recover_from=Path(recorded['source_run'])
+    repair=json.loads(Path(model_repair).read_text()) if model_repair else (recorded.get('model_repair') if recovery_path.exists() else None)
     permitted={run}
     if recover_from is not None: permitted.add(recover_from)
     if ACTIVE.exists() and Path(json.loads(ACTIVE.read_text())["run_dir"]).resolve() not in permitted:
@@ -66,7 +67,13 @@ def prepare(run, recover_from=None, activate=True):
     assert measured[chosen]['process_clean_exit'] and measured['eager']['process_clean_exit']
     assert measured[chosen]['numerical_checks_passed'],'400M acceleration numerical check failed'
     assert measured['eager']['median_seconds']/measured[chosen]['median_seconds']>=1.05
-    assert config['execution']=={k:v for k,v in measured[chosen]['execution'].items() if k!='probe_settings'}
+    previous_execution={k:v for k,v in measured[chosen]['execution'].items() if k!='probe_settings'}
+    if repair:
+        assert config['execution']==repair['execution_after']
+        assert previous_execution==repair['execution_before']
+        assert config['execution']==dict(previous_execution,compile=False)
+        assert repair['compiled_candidate_rejected']
+    else:assert config['execution']==previous_execution
     assert digest(INITIALIZATION)==preflight['initialization_sha256']
     recovery=None
     if recover_from is not None:
@@ -75,29 +82,41 @@ def prepare(run, recover_from=None, activate=True):
         assert source_status['state']=='failed','Only recover a stopped, failed run'
         source_config=json.loads((recover_from/'resolved_config.json').read_text())
         for key in ('architecture','seed','model','tied_embeddings','training','data','memory_fusion','execution'):
-            assert source_config['config'].get(key)==config.get(key),f'Recovery changes {key}'
+            if key=='execution' and repair:
+                assert source_config['config'][key]==repair['execution_before'] and config[key]==repair['execution_after']
+            else:assert source_config['config'].get(key)==config.get(key),f'Recovery changes {key}'
         meta=json.loads((recover_from/'latest.json').read_text())
         source_checkpoint=recover_from/meta['file']
         assert meta['step']>0 and meta['step']<40000 and meta['step']%5000==0
         assert meta['fingerprint']==hashlib.sha256(json.dumps(source_config['identity'],sort_keys=True).encode()).hexdigest()
         assert digest(source_checkpoint)==meta['sha256']
         old_files=json.loads((recover_from/'release-manifest.json').read_text())['files']
+        changed={}
         for name,expected in old_files.items():
             if name.startswith('runtime/'):
                 assert digest(recover_from/'release'/name)==expected
-                if name!='runtime/train.py': assert digest(ROOT/name)==expected,f'Recovery changes model code {name}'
+                if name!='runtime/train.py' and digest(ROOT/name)!=expected:
+                    changed[name.removeprefix('runtime/')]={'before':expected,'after':digest(ROOT/name)}
+        if changed:
+            assert repair and repair['passed'] and repair['source_checkpoint_sha256']==meta['sha256']
+            assert changed==repair['model_source_changes']
+            assert set(changed)=={'yoco_official/backend.py','yoco_official/gate_retention.py'}
+        else: assert repair is None,'Repair manifest supplied without matching model changes'
         proof_path=ROOT/'runs/diagnostics/400m-A-failure-20261106/amp-backoff-regression.json'
         proof=json.loads(proof_path.read_text())
         assert proof['passed'] and proof['fixed']==proof['native']==proof['synchronized_remote_overflow']
         recovery={'source_run':str(recover_from),'source_checkpoint':str(source_checkpoint),
             'source_step':meta['step'],'source_sha256':meta['sha256'],
-            'source_fingerprint':meta['fingerprint'],'repair':'Reset AMP growth tracker after synchronized overflow backoff',
+            'source_fingerprint':meta['fingerprint'],'repair':repair['repair'] if repair else 'Reset AMP growth tracker after synchronized overflow backoff',
+            'model_repair':repair,
+            'execution_changes':({'compile':{'before':True,'after':False,'reason':'Trained failure snapshot gradient comparison exceeded the original 0.5% criterion.'}} if repair else {}),
             'trainer_sha256_before':old_files['runtime/train.py'],
             'trainer_sha256_after':digest(ROOT/'runtime/train.py'),
             'repair_check':proof,'recorded_at':now(),
             'preserved':['model','FP16 mixed / FP32 parameters','optimizer state','scaler state at source checkpoint',
-                         'eight-rank RNG','data order','batch','LR schedule','validation','checkpoint cadence','execution settings'],
-            'limitation':'A confirmed scaler bug is repaired; do not assert it alone proves the cause of a non-finite forward.'}
+                         'eight-rank RNG','data order','batch','LR schedule','validation','checkpoint cadence']+([] if repair else ['execution settings']),
+            'limitation':('The saved step-24935 forward failure is reproduced and fixed; full-run convergence remains to be measured.' if repair else
+                'A confirmed scaler bug is repaired; do not assert it alone proves the cause of a non-finite forward.')}
         if recovery_path.exists():
             assert recorded['source_sha256']==meta['sha256']
             assert recorded['trainer_sha256_after']==recovery['trainer_sha256_after']
@@ -113,6 +132,7 @@ def prepare(run, recover_from=None, activate=True):
         shutil.copyfile(ROOT/'requirements.a100-py312.lock.txt',release/'requirements.lock.txt')
         atomic_json(release/'configs/A.json',config)
         atomic_json(release/'configs/baseline-reference.json',json.loads((ROOT/'configs/yoco_400m_baseline_8gpu.json').read_text()))
+        if repair:atomic_json(release/'configs/model-repair.json',repair)
         shutil.copyfile(INITIALIZATION,run/'initialization.pt')
         hashes={str(p.relative_to(release)):digest(p) for p in sorted(release.rglob('*')) if p.is_file()}
         atomic_json(run/'release-manifest.json',{'created_at':now(),'files':hashes,
@@ -140,6 +160,7 @@ def main():
     parser.add_argument("--run-dir", type=Path, required=True)
     parser.add_argument("--prepare-only", action="store_true")
     parser.add_argument('--recover-from',type=Path,help='Failed immutable run; recover its latest verified scheduled checkpoint')
+    parser.add_argument('--model-repair',type=Path,help='Validated numerical repair manifest; frozen into the new release')
     args = parser.parse_args()
     run = args.run_dir.resolve()
     ACTIVE.parent.mkdir(parents=True, exist_ok=True)
@@ -148,7 +169,8 @@ def main():
         fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
     except BlockingIOError:
         raise SystemExit("The 400M method A pipeline is already running.")
-    release = prepare(run,args.recover_from.resolve() if args.recover_from else None,activate=not args.prepare_only)
+    release = prepare(run,args.recover_from.resolve() if args.recover_from else None,activate=not args.prepare_only,
+                      model_repair=args.model_repair)
     recovery=json.loads((run/'recovery-source.json').read_text()) if (run/'recovery-source.json').exists() else None
     base_step=recovery['source_step'] if recovery else 0
     first_step,checked_step=base_step+2,base_step+4
@@ -208,6 +230,8 @@ def main():
         source = run / f'checks/resumed/checkpoint_{checked_step:08d}.pt'
         train_command = [sys.executable, "-m", "torch.distributed.run", "--standalone", "--nproc-per-node=8",
                          "-m", "runtime.train", "--config", str(config)]
+        if (release/'configs/model-repair.json').exists():
+            train_command+=['--model-repair',str(release/'configs/model-repair.json')]
         if not (run / "resume-verification.json").exists():
             split = run / "checks/resumed"
             direct = run / "checks/uninterrupted"
@@ -221,6 +245,17 @@ def main():
             repeat = run / "checks/uninterrupted-repeat"
             if not (repeat / f'checkpoint_{checked_step:08d}.json').exists():
                 command("check-repeat", train_command + ["--run-dir",str(repeat),*initial_args,"--stop-after",str(checked_step)])
+            exact_restore=None
+            if recovery and (release/'configs/model-repair.json').exists():
+                audit=run/'checks/exact-source'
+                if not (audit/'exact-restore.json').exists():
+                    command('exact-restore',[sys.executable,'-m','torch.distributed.run','--standalone','--nproc-per-node=8',
+                        str(ROOT/'tools/check_400m_restore.py'),'--release',str(release),'--config',str(config),
+                        '--checkpoint',recovery['source_checkpoint'],'--model-repair',str(release/'configs/model-repair.json'),
+                        '--run-dir',str(audit)])
+                exact_restore=json.loads((audit/'exact-restore.json').read_text())
+                assert exact_restore['passed'] and exact_restore['world_size']==8
+                assert exact_restore['model_optimizer_scaler_rng_bitwise_equal']
             a = torch.load(split / f"checkpoint_{checked_step:08d}.pt", map_location="cpu", weights_only=False, mmap=True)
             b = torch.load(direct / f"checkpoint_{checked_step:08d}.pt", map_location="cpu", weights_only=False, mmap=True)
             repeated = torch.load(repeat / f"checkpoint_{checked_step:08d}.pt", map_location="cpu", weights_only=False, mmap=True)
@@ -292,6 +327,13 @@ def main():
                     control=moment_difference(repeated['optimizer'],b['optimizer'],field)
                     metrics[field]=(resumed,control,*floors,*ceilings)
                 for name,(resumed,control,abs_floor,rel_floor,abs_cap,rel_cap) in metrics.items():
+                    previous_caps={'absolute':abs_cap,'relative_l2':rel_cap}
+                    if exact_restore:
+                        # Exact pre-forward restoration is checked independently.
+                        # These bounds concern native AMP execution variability,
+                        # not the correctness of loading checkpoint tensors.
+                        abs_cap,rel_cap={'model':(5e-4,1e-4),'exp_avg':(5e-5,5e-2),
+                                         'exp_avg_sq':(1e-8,1e-3)}[name]
                     abs_limit=min(abs_cap,max(abs_floor,2*control['max_absolute_difference']))
                     rel_limit=min(rel_cap,max(rel_floor,2*control['relative_l2']))
                     assert control['max_absolute_difference']<abs_cap and control['relative_l2']<rel_cap,f'Repeated execution exceeds hard ceiling: {name}'
@@ -299,6 +341,9 @@ def main():
                     controlled_tolerances[name]={'resumed':resumed,'independent_repeat':control,
                         'maximum_absolute_limit':abs_limit,'relative_l2_limit':rel_limit,
                         'absolute_hard_ceiling':abs_cap,'relative_l2_hard_ceiling':rel_cap,'repeat_envelope_factor':2}
+                    controlled_tolerances[name]['prior_caps']=previous_caps
+                    controlled_tolerances[name]['prior_caps_exceeded_by_repeat']=(
+                        control['max_absolute_difference']>=previous_caps['absolute'] or control['relative_l2']>=previous_caps['relative_l2'])
             else:
                 assert resumed_difference['relative_l2']<2e-6 and resumed_difference['max_absolute_difference']<2e-5
                 assert repeat_difference['relative_l2']<2e-6 and repeat_difference['max_absolute_difference']<2e-5
@@ -319,6 +364,7 @@ def main():
             atomic_json(run / "resume-verification.json", {"passed":True,"world_size":8,"real_data":True,
                 "source_step":base_step,"split_resume_step":first_step,"final_step":checked_step,
                 "all_rank_rng_verified":True,
+                "exact_pre_forward_restore":exact_restore,
                 "fp16_numerical_tolerance":({'trained_state_control':controlled_tolerances,'loss_absolute':5e-5,
                     'RNG_scaler_steps_groups':'exact','first_resumed_loss':'exact across all three runs'} if recovery else
                     {'model_max_absolute':2e-5,'model_relative_l2':2e-6,'optimizer_atol':1e-6,'loss_absolute':5e-5}),
@@ -339,15 +385,17 @@ def main():
         latest = json.loads((run / "latest.json").read_text())
         checkpoint = run / latest["file"]
         assert latest["step"] == 40000 and digest(checkpoint) == latest["sha256"]
-        training_events=[json.loads(line) for folder in (run/'checks/resumed',run)
-                         for line in (folder/'rank0.jsonl').read_text().splitlines()]
-        if recovery:
-            parent=Path(recovery['source_run'])
-            prefix=[json.loads(line) for folder in (parent/'checks/resumed',parent)
-                    for line in (folder/'rank0.jsonl').read_text().splitlines()]
-            prefix=[e for e in prefix if e.get('step',base_step+1)<=base_step and
-                    not (e['event']=='overflow' and e['step']==base_step)]
-            training_events=prefix+training_events
+        def lineage_events(directory,through):
+            origin=directory/'recovery-source.json'
+            parent_record=json.loads(origin.read_text()) if origin.exists() else None
+            floor=parent_record['source_step'] if parent_record else 0
+            prefix=lineage_events(Path(parent_record['source_run']),min(through,floor)) if parent_record else []
+            own=[json.loads(line) for folder in (directory/'checks/resumed',directory)
+                 for line in (folder/'rank0.jsonl').read_text().splitlines()]
+            own=[e for e in own if (floor<=e.get('step',-1)<through if e['event']=='overflow'
+                 else floor<e.get('step',-1)<=through)]
+            return prefix+own
+        training_events=lineage_events(run,40000)
         updates={e['step']:e for e in training_events if e['event']=='train'}
         assert sorted(updates)==list(range(1,40001))
         validations={e['step']:e for e in training_events if e['event']=='validation' and e['step']%250==0}

@@ -1,0 +1,46 @@
+{
+  "passed": true,
+  "repair": "Keep retention cross-chunk accumulation and its sum in FP32 until RMSNorm, then restore the original FP16 activation interface; disable rejected compilation.",
+  "source_checkpoint_sha256": "7c82eefeb5db702d59c4de11a184f1cac9407e49a43a1f6d83cafa55cf9c9939",
+  "model_source_changes": {
+    "yoco_official/backend.py": {
+      "before": "830f672ae7f9b6fae3304b69b5b01681478f5de1584eb44b3264857194f1929e",
+      "after": "d8c025c5bd4e06e3f4d2977daaf636efb11beccc767d052c20b773e793973065"
+    },
+    "yoco_official/gate_retention.py": {
+      "before": "c1c16cdaf57f67cc537feabbdff7a8588746a160d3b63da24cbb34e453c33026",
+      "after": "e317190116956b878c7cef85c2874d4e8dadaa962cb07311711544dd4f1c4259"
+    }
+  },
+  "execution_before": {
+    "checkpoint_activations": false,
+    "fused_adamw": true,
+    "compile": true,
+    "allow_tf32": true,
+    "compile_loss": false,
+    "emulate_precision_casts": true,
+    "compile_scope": "layers"
+  },
+  "execution_after": {
+    "checkpoint_activations": false,
+    "fused_adamw": true,
+    "compile": false,
+    "allow_tf32": true,
+    "compile_loss": false,
+    "emulate_precision_casts": true,
+    "compile_scope": "layers"
+  },
+  "compiled_candidate_rejected": true,
+  "compiled_gradient_relative_l2_vs_eager": 0.011075695020503543,
+  "original_gradient_criterion": 0.005,
+  "full_update_samples": 128,
+  "fixed_eager_loss": 2.989857755601406,
+  "fp32_reference_loss": 2.989850454032421,
+  "all_fixed_gradients_finite": true,
+  "fp16_gradient_relative_l2_vs_fp32_reference": 0.3080492035588659,
+  "captured_failure_reproduced_and_eliminated": true,
+  "global_precision": "fp16_mixed_fp32_params",
+  "local_arithmetic_change": "Cross-chunk matmul/sum must not narrow to FP16 before the existing FP32 RMSNorm; normalize then cast to v.dtype.",
+  "unchanged_training_configuration": true,
+  "no_new_accuracy_or_convergence_claim": true
+}

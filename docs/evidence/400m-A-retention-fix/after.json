@@ -1,0 +1,88 @@
+{
+  "snapshot": "runs/yoco-400m-A-8gpu-repaired-20261106/nonfinite_forward_00024935_rank0.pt",
+  "saved_step": 24934,
+  "update": 24935,
+  "rank": 0,
+  "microbatch": 1,
+  "no_optimizer_updates": true,
+  "token_sha256": "af0c33ea41d98d569db538007b5d9948d7ac22cd7633f95982110f3e92638d40",
+  "cases": [
+    {
+      "name": "eager_fp16",
+      "loss": "2.970219612121582",
+      "logits": {
+        "dtype": "torch.float16",
+        "shape": [
+          4,
+          2048,
+          100288
+        ],
+        "nonfinite": 0,
+        "maximum_finite_absolute": 43.78125
+      },
+      "first_nonfinite": null
+    },
+    {
+      "name": "compiled_layers_fp16",
+      "loss": "2.9702515602111816",
+      "logits": {
+        "dtype": "torch.float16",
+        "shape": [
+          4,
+          2048,
+          100288
+        ],
+        "nonfinite": 0,
+        "maximum_finite_absolute": 43.78125
+      },
+      "first_nonfinite": null
+    },
+    {
+      "name": "eager_fp16_full_reduction",
+      "loss": "2.970320701599121",
+      "logits": {
+        "dtype": "torch.float16",
+        "shape": [
+          4,
+          2048,
+          100288
+        ],
+        "nonfinite": 0,
+        "maximum_finite_absolute": 43.78125
+      },
+      "first_nonfinite": null
+    },
+    {
+      "name": "compiled_layers_fp16_full_reduction",
+      "loss": "2.9702494144439697",
+      "logits": {
+        "dtype": "torch.float16",
+        "shape": [
+          4,
+          2048,
+          100288
+        ],
+        "nonfinite": 0,
+        "maximum_finite_absolute": 43.78125
+      },
+      "first_nonfinite": null
+    },
+    {
+      "name": "eager_fp32_tf32_reference",
+      "loss": "2.9701764583587646",
+      "logits": {
+        "dtype": "torch.float32",
+        "shape": [
+          4,
+          2048,
+          100288
+        ],
+        "nonfinite": 0,
+        "maximum_finite_absolute": 43.78183364868164
+      },
+      "first_nonfinite": null
+    }
+  ],
+  "nonfinite_weight_tensors": [],
+  "complete": true
+}

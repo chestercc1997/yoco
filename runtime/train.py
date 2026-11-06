@@ -131,7 +131,7 @@ def save_checkpoint(run, model, optimizer, scaler, step, fingerprint, rank, worl
     if world > 1: dist.barrier()
 
 
-def verify_fork(checkpoint, config, manifest, world):
+def verify_fork(checkpoint, config, manifest, world, model_repair=None):
     """Allow a documented arithmetic/retention change, never an implicit restart."""
     checkpoint = Path(checkpoint).resolve()
     meta = json.loads(checkpoint.with_suffix('.json').read_text())
@@ -150,16 +150,27 @@ def verify_fork(checkpoint, config, manifest, world):
     current = {k:v for k,v in config['training'].items() if k not in allowed}
     if previous != current: raise RuntimeError('Fork changes optimizer, schedule, batch, or validation')
     root = Path(__file__).parent
+    changed = {}
     for filename, expected_hash in identity['model_source_sha256'].items():
-        if filename != 'train.py' and sha256(root/filename) != expected_hash:
-            raise RuntimeError(f'Fork changes model source {filename}')
+        actual_hash=sha256(root/filename)
+        if filename != 'train.py' and actual_hash != expected_hash:
+            changed[filename]={'before':expected_hash,'after':actual_hash}
+    repair=None
+    if changed:
+        if model_repair is None:raise RuntimeError(f'Fork changes model source {sorted(changed)} without a validated repair')
+        repair=json.loads(Path(model_repair).read_text())
+        if (not repair.get('passed') or repair.get('source_checkpoint_sha256')!=meta['sha256']
+            or repair.get('model_source_changes')!=changed
+            or set(changed)!={'yoco_official/backend.py','yoco_official/gate_retention.py'}):
+            raise RuntimeError('Model repair provenance or source hashes do not match')
     return {'source_checkpoint':str(checkpoint), 'source_sha256':meta['sha256'],
             'source_fingerprint':meta['fingerprint'], 'source_step':meta['step'],
             'changes':{k:{'before':old['training'].get(k,3 if k=='keep_last_checkpoints' else None),
                           'after':config['training'].get(k,3 if k=='keep_last_checkpoints' else None)}
                        for k in sorted(allowed) if old['training'].get(k,3 if k=='keep_last_checkpoints' else None) != config['training'].get(k,3 if k=='keep_last_checkpoints' else None)},
             'preserved':['model','optimizer','RNG','data order','LR schedule','world size'],
-            'scaler_policy':'restore for FP16; disabled for FP32'}
+            'scaler_policy':'restore for FP16; disabled for FP32',
+            'model_repair':repair,'changed_model_source_sha256':changed}
 
 
 def main():
@@ -167,6 +178,7 @@ def main():
     p.add_argument('--smoke',action='store_true'); p.add_argument('--stop-after',type=int)
     p.add_argument('--init-model',help='optional deterministic initialization checkpoint')
     p.add_argument('--resume-from',help='verified source checkpoint for a new arithmetic/retention fork')
+    p.add_argument('--model-repair',help='Frozen, validated manifest authorizing a specific numerical kernel repair')
     p.add_argument('--benchmark-updates',type=int,help='isolated throughput probe; no checkpoints or validation')
     a=p.parse_args(); c=json.loads(Path(a.config).read_text()); t=c['training']
     rank=int(os.environ.get('RANK',0)); world=int(os.environ.get('WORLD_SIZE',1)); local=int(os.environ.get('LOCAL_RANK',0))
@@ -210,7 +222,7 @@ def main():
     fork=None
     if rank==0 and not checkpoint_path and a.resume_from:
         if a.smoke or a.init_model: raise RuntimeError('A fork requires real data and no alternate initialization')
-        fork=verify_fork(a.resume_from,c,manifest,world)
+        fork=verify_fork(a.resume_from,c,manifest,world,a.model_repair)
         checkpoint_path=fork['source_checkpoint']
         atomic_json(run/'fork-provenance.json',dict(fork,target_fingerprint=fingerprint,
             execution=execution,execution_note='Execution acceleration is recorded separately from the A/B training recipe.'))

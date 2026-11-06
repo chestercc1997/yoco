@@ -1,0 +1,67 @@
+{
+  "q": {
+    "dtype": "torch.float32",
+    "nonfinite": 0,
+    "finite_max_abs": 11.953497886657715
+  },
+  "k": {
+    "dtype": "torch.float32",
+    "nonfinite": 0,
+    "finite_max_abs": 10.238377571105957
+  },
+  "v": {
+    "dtype": "torch.float16",
+    "nonfinite": 0,
+    "finite_max_abs": 22.78125
+  },
+  "g": {
+    "dtype": "torch.float16",
+    "nonfinite": 0,
+    "finite_max_abs": 3.4453125
+  },
+  "scores": {
+    "dtype": "torch.float16",
+    "nonfinite": 0,
+    "finite_max_abs": 73.5625
+  },
+  "weighted": {
+    "dtype": "torch.float32",
+    "nonfinite": 0,
+    "finite_max_abs": 73.5438461303711
+  },
+  "inner": {
+    "dtype": "torch.float16",
+    "nonfinite": 0,
+    "finite_max_abs": 7452.0
+  },
+  "contributions": {
+    "dtype": "torch.float16",
+    "nonfinite": 0,
+    "finite_max_abs": 187.0
+  },
+  "state": {
+    "dtype": "torch.float32",
+    "nonfinite": 0,
+    "finite_max_abs": 910.6961669921875
+  },
+  "cross": {
+    "dtype": "torch.float16",
+    "nonfinite": 69,
+    "finite_max_abs": 65440.0
+  },
+  "half_sum": {
+    "dtype": "torch.float16",
+    "nonfinite": 94,
+    "finite_max_abs": 65504.0
+  },
+  "fp32_sum": {
+    "dtype": "torch.float32",
+    "nonfinite": 69,
+    "finite_max_abs": 68096.0
+  },
+  "normalized_half": {
+    "dtype": "torch.float16",
+    "nonfinite": 69,
+    "finite_max_abs": 15.515625
+  }
+}

@@ -52,7 +52,7 @@
   "execution": {
     "checkpoint_activations": false,
     "fused_adamw": true,
-    "compile": true,
+    "compile": false,
     "allow_tf32": true,
     "compile_loss": false,
     "emulate_precision_casts": true,

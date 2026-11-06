@@ -2,7 +2,23 @@
 
 2026 年 11 月 5 日，400M 方法 A 已在本机 8×A100 80GB PCIe 上开始完整训练，目标为 40000 步及八项下游评测。当前尚无最终指标；[启动时状态](evidence/400m-A-launch.json)是发布时的快照，实时状态在本机 `runs/setup/400m-A-active.json`。160M 已完成结果继续保存在[原三组报告](../evaluation/ab_baseline_20261104/README.md)，两种规模的结果分开记录。
 
-2026 年 11 月 6 日，修复版已从原第 10000 步 checkpoint 恢复正式训练，目标仍为 40000 步及八项下游。旧 run 在完成 14310 步后，rank3 下一步前向 loss 非有限而停止。来源 checkpoint 校验和、权重及 optimizer 状态正常，出错卡对应批次没有越界 token。使用旧不可变代码从 10000 隔离重放到 14311，这次没有重现前向 NaN；重放快照的 eager/compiled 运算均有限，见[故障核查记录](evidence/400m-A-failure-review.json)及[快照对照](evidence/400m-A-snapshot-check.json)。这些诊断步数不计为修复版正式训练进度，也不能证明已定位原 NaN 的唯一根因。
+## 当前：retention 溢出修复，从第 20000 步续训
+
+第二次作业在 24935/rank0/microbatch1 发生前向 NaN，已保存模型与输入现场。该故障在未编译和按层编译的 FP16 路径均可复现，关闭 FP16 reduced-precision reduction 也无法消除；全 FP32 仅作为诊断参照时正常。[现场对照](evidence/400m-A-retention-fix/before.json)显示，第一个异常在 self layer 1 的 retention 输出、RMSNorm 输入处。q/k/v、chunk 内项及 FP32 recurrent states 均有限，但跨块矩阵乘法被 autocast 写成 FP16，69 个值溢出；加和后有 94 个非有限值，随后归一化扩散成 NaN。详见[逐运算定位](evidence/400m-A-retention-fix/retention-operation-check.json)。这次有实际现场支持，不将其倒推为已证明第一次 14311 故障的唯一原因。
+
+修复让跨块状态矩阵乘法与最终加和在既有 FP32 state dtype 中完成，经过原 RMSNorm 后再转换为 `v.dtype`。数学定义、参数、norm epsilon、数据与训练超参数不变；整体仍是 FP16 mixed / FP32 parameters。这里确实修正了局部中间结果的 dtype，不能宣称每个中间算子的精度都和旧错误路径一致，也没有改成全 FP32 或 BF16 训练。
+
+[故障现场复测](evidence/400m-A-retention-fix/after.json)的 logits 和 loss 均有限；[独立闭式回归](evidence/400m-A-retention-fix/synthetic-regression.json)构造最终结果 110592，旧代码溢出，修复后有限，归一化输出仍为 FP16，正常范围输出逐项相同。[完整 128 序列 batch 的反向检查](evidence/400m-A-retention-fix/fixed-full-gradient.json)没有非有限梯度；native FP16 平均 loss=2.9898578，FP32 诊断参考=2.9898505。但二者梯度相对 L2 仍约 0.308，不能用 loss 接近宣称与全 FP32 梯度等同或最终精度已验证。当前保留用户要求的 AMP 配方，最终效果仍需完整训练和下游评测。
+
+本次修复后的 compiled/native 梯度相对 L2 差异约 1.1076%，超过原 0.5% 标准，因此**关闭 compile**。仍保留 fused AdamW 和关闭 activation recomputation，其他执行选项不变。模型源文件变化限定为 `backend.py` 与 `gate_retention.py`，修改前后 hash 和来源 checkpoint SHA256 被写入[修复 manifest](evidence/400m-A-retention-fix/model-repair.json)，训练器拒绝未声明的模型源文件变化。
+
+当前作业为 `runs/yoco-400m-A-8gpu-retentionfix-20261106`，来源为前一作业的完整第 20000 步 checkpoint。真实数据八卡恢复、连续及独立重复运行、eval smoke 已通过，随后从受检 20004 步正式继续到 40000。额外执行了[恢复前精确加载核对](evidence/400m-A-retention-fix/exact-restore.json)：每个 rank 核对 891 个张量，模型、optimizer、scaler 和 RNG 全部逐项一致，且没有进行任何前向或 optimizer update。训练后不要求 GPU AMP 运算逐位相同；[恢复对照](evidence/400m-A-retention-fix/resume-check.json)记录独立重复误差、2 倍误差范围、硬上限及旧阈值被重复运行超出的情况。模型恢复后相对 L2 为 5.98e-6，连续重复自身 1.34e-5；最大 loss 差异仍受 5e-5 限制。精确加载核对与训练后舍入变异分开记录，不通过改训练精度来通过检查。
+
+实时状态仍从 ACTIVE 查询；新结果递归接续前两次 run 的前 20000 步，排除各次失败尾段。每 5000 步正式 checkpoint 全部保留，完成后仍自动做八项下游；以下首次恢复记录为历史证据。
+
+## 首次 AMP 计数修复（历史）
+
+2026 年 11 月 6 日，第一次修复版从原第 10000 步 checkpoint 恢复训练。旧 run 在完成 14310 步后，rank3 下一步前向 loss 非有限而停止。来源 checkpoint 校验和、权重及 optimizer 状态正常，出错卡对应批次没有越界 token。使用旧不可变代码从 10000 隔离重放到 14311，没有重现前向 NaN，见[核查记录](evidence/400m-A-failure-review.json)及[快照对照](evidence/400m-A-snapshot-check.json)。这些诊断步数不计为正式进度，首次故障没有现场权重，不能将这次重放当作已定位其唯一根因。
 
 排查已确认 AMP 回退逻辑有误：手动调用 `scaler.update(new_scale=...)` 只降低 scale，不会清零连续成功计数。因此原记录中溢出后仅成功 64 步，scale 就再次增长，违背原设定的连续成功 2000 步。当前训练器通过公开的 scaler state API 清零该计数；FP16、FP32 参数、初始 scale、growth/backoff 系数及其余配方均不变。[回归证据](evidence/400m-A-amp-backoff-check.json)核对了原生 AMP 行为、其他 rank 溢出的同步回退及 state 保存/恢复。该缺陷已修复，但尚不能断言它是前向 NaN 的唯一原因。前向出现非有限 loss 时还会保留模型、输入、目标和 scaler 的诊断现场，并停止；诊断文件不是正式 checkpoint，不用于跳过 batch 或自动重试。
 
@@ -30,7 +46,7 @@
 
 AdamW 的 betas=0.9/0.98、eps=1e-8、weight decay=0.05、grad clip=1.0；峰值 LR=1.5e-4，warmup 375 步后按原 40000 步计划线性衰减。验证每 250 步一次，每次 2048 条序列；checkpoint 每 5000 步保存、全部保留。配置见 [400M A](../configs/yoco_400m_plan_A_8gpu.json)和[同规格 baseline 参考](../configs/yoco_400m_baseline_8gpu.json)。
 
-## 加速与数值检查
+## 初期加速与数值检查（历史；当前 compile 已关闭）
 
 使用同一初始化和相同的 40 步真实数据前缀比较；测速舍弃前 5 次初始化 update，取剩余 35 次中位数。下表的原执行路径关闭编译，使用原 PyTorch FP16 运算；数值比较均以该路径为参考。
 
@@ -62,25 +78,26 @@ AdamW 的 betas=0.9/0.98、eps=1e-8、weight decay=0.05、grad clip=1.0；峰值
 
 ## 本次运行与复用
 
-当前 run 为 `runs/yoco-400m-A-8gpu-repaired-20261106`，旧失败 run `runs/yoco-400m-A-8gpu-full-20261105T0310Z` 原样保留。tmux 为 `yoco-400m-A-8gpu`，控制器为 [run_400m_A.py](../tools/run_400m_A.py)。修复代码和配置固定在新 run 的 `release/` 中，`recovery-source.json` 记录第 10000 步来源 checksum 与训练器修复前后 hash。先从该来源完成四步恢复核对，再从受检第 10004 步继续正式训练；模型、optimizer、scaler、八卡 RNG 和原 LR schedule 接续保存状态。
+当前 run 为 `runs/yoco-400m-A-8gpu-retentionfix-20261106`，前两次失败 run 原样保留。tmux 为 `yoco-400m-A-8gpu`，控制器为 [run_400m_A.py](../tools/run_400m_A.py)。修复代码和配置固定在新 run 的 `release/` 中，`recovery-source.json` 记录第 20000 步来源 checksum、修改 hash 和执行选项变化。模型、optimizer、scaler、八卡 RNG 和原 LR schedule 接续保存状态。
 
-[修复版启动快照](evidence/400m-A-repair-launch.json)逐项核对了模型、训练、数据、方法 A、执行选项和 seed 与原 run 一致，并记录发布时的实际训练步数；该文件不是实时状态，也不包含最终训练或下游结果。
+[首次修复版启动快照](evidence/400m-A-repair-launch.json)是历史发布快照，不是实时状态，也不包含最终训练或下游结果；当前执行选项已有上文明确记录的 compile 关闭及局部数值修复。
 
 本次恢复入口如下；已在运行时只查状态，不重复执行：
 
 ```bash
 python tools/run_400m_A.py \
-  --run-dir runs/yoco-400m-A-8gpu-repaired-20261106 \
-  --recover-from runs/yoco-400m-A-8gpu-full-20261105T0310Z
+  --run-dir runs/yoco-400m-A-8gpu-retentionfix-20261106 \
+  --recover-from runs/yoco-400m-A-8gpu-repaired-20261106 \
+  --model-repair runs/diagnostics/400m-A-nan24935/model-repair.json
 ```
 
-新结果只接续旧 run 的前 10000 步及修复版后续，排除旧失败尾段和诊断重放。第 5000、10000 步正式 checkpoint 仍在旧目录；后续每 5000 步在新目录保存并全部保留。
+新结果只接续有效恢复祖先前缀，排除旧失败尾段和诊断重放。第 5000、10000 步正式 checkpoint 在第一次旧目录，第 15000、20000 步在第二次目录；后续每 5000 步在当前目录保存并全部保留。
 
 同一作业恢复时使用原控制器与相同 run 路径；控制器会检查活动记录和锁，避免重复运行。实时查看：
 
 ```bash
 cat runs/setup/400m-A-active.json
-tail -n 5 runs/yoco-400m-A-8gpu-repaired-20261106/rank0.jsonl
+tail -n 5 runs/yoco-400m-A-8gpu-retentionfix-20261106/rank0.jsonl
 ```
 
 在新机器上先准备同一数据和环境，按实际位置修改 manifest 路径，再生成受检初始化：

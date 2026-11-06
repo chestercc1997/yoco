@@ -1,0 +1,190 @@
+{
+  "checkpoint_step": 24934,
+  "update": 24935,
+  "global_samples": 128,
+  "loss_scale": 512.0,
+  "no_optimizer_updates": true,
+  "limitation": "Captured failure weights; one-GPU accumulation differs from distributed reduction order.",
+  "cases": [
+    {
+      "name": "fp32_reference",
+      "loss": 2.989850454032421,
+      "gradient_norm": 0.3473223212876739,
+      "nonfinite_parameters": [],
+      "largest_gradients": [
+        [
+          "embed_tokens.weight",
+          0.18378395008593854
+        ],
+        [
+          "cross_decoder.v_proj.weight",
+          0.0998974076409871
+        ],
+        [
+          "self_decoder.layers.11.mixer.v_proj.weight",
+          0.07146047208164649
+        ],
+        [
+          "self_decoder.layers.6.mixer.v_proj.weight",
+          0.06743115266793255
+        ],
+        [
+          "cross_decoder.k_proj.weight",
+          0.05149120817293506
+        ],
+        [
+          "self_decoder.layers.9.mixer.v_proj.weight",
+          0.04706855390753781
+        ],
+        [
+          "self_decoder.layers.10.mixer.v_proj.weight",
+          0.043015690111519074
+        ],
+        [
+          "self_decoder.layers.0.ffn.fc2.weight",
+          0.03969078832242386
+        ],
+        [
+          "self_decoder.layers.6.ffn.fc2.weight",
+          0.03843850998985934
+        ],
+        [
+          "self_decoder.layers.7.ffn.fc2.weight",
+          0.0353022431567617
+        ],
+        [
+          "self_decoder.layers.5.mixer.v_proj.weight",
+          0.035246593900486844
+        ],
+        [
+          "self_decoder.layers.7.mixer.v_proj.weight",
+          0.03497994441688961
+        ]
+      ],
+      "seconds": 50.2337004491128
+    },
+    {
+      "name": "eager_fp16",
+      "loss": 2.989857755601406,
+      "gradient_norm": 0.32681676978254875,
+      "nonfinite_parameters": [],
+      "largest_gradients": [
+        [
+          "embed_tokens.weight",
+          0.183890772049082
+        ],
+        [
+          "cross_decoder.v_proj.weight",
+          0.0766170435147835
+        ],
+        [
+          "self_decoder.layers.6.mixer.v_proj.weight",
+          0.06057045077659069
+        ],
+        [
+          "self_decoder.layers.11.mixer.v_proj.weight",
+          0.05823747881935833
+        ],
+        [
+          "cross_decoder.k_proj.weight",
+          0.050078227549639844
+        ],
+        [
+          "self_decoder.layers.9.mixer.v_proj.weight",
+          0.04074602417148621
+        ],
+        [
+          "self_decoder.layers.10.mixer.v_proj.weight",
+          0.0364593781735929
+        ],
+        [
+          "self_decoder.layers.6.ffn.fc2.weight",
+          0.035672319045103956
+        ],
+        [
+          "cross_decoder.layers.11.ffn.fc2.weight",
+          0.034708419223567884
+        ],
+        [
+          "self_decoder.layers.7.ffn.fc2.weight",
+          0.03370344941881048
+        ],
+        [
+          "self_decoder.layers.5.mixer.v_proj.weight",
+          0.03309686747360342
+        ],
+        [
+          "self_decoder.layers.0.ffn.fc2.weight",
+          0.032861239700991966
+        ]
+      ],
+      "seconds": 13.050495143048465,
+      "relative_gradient_l2": 0.3080492035588659,
+      "gradient_cosine": 0.9514280259490798
+    },
+    {
+      "name": "compiled_layers_fp16",
+      "loss": 2.989872857928276,
+      "gradient_norm": 0.32681977600474404,
+      "nonfinite_parameters": [],
+      "largest_gradients": [
+        [
+          "embed_tokens.weight",
+          0.1838869736032042
+        ],
+        [
+          "cross_decoder.v_proj.weight",
+          0.07662418760830479
+        ],
+        [
+          "self_decoder.layers.6.mixer.v_proj.weight",
+          0.06053192392458062
+        ],
+        [
+          "self_decoder.layers.11.mixer.v_proj.weight",
+          0.05823989553118539
+        ],
+        [
+          "cross_decoder.k_proj.weight",
+          0.050083815743020725
+        ],
+        [
+          "self_decoder.layers.9.mixer.v_proj.weight",
+          0.04074954396231104
+        ],
+        [
+          "self_decoder.layers.10.mixer.v_proj.weight",
+          0.036455158360778984
+        ],
+        [
+          "self_decoder.layers.6.ffn.fc2.weight",
+          0.035680502873557854
+        ],
+        [
+          "cross_decoder.layers.11.ffn.fc2.weight",
+          0.034707178186375004
+        ],
+        [
+          "self_decoder.layers.7.ffn.fc2.weight",
+          0.03370656142557779
+        ],
+        [
+          "self_decoder.layers.5.mixer.v_proj.weight",
+          0.03310542071459951
+        ],
+        [
+          "self_decoder.layers.0.ffn.fc2.weight",
+          0.032860201693042906
+        ]
+      ],
+      "seconds": 33.069926149910316,
+      "relative_gradient_l2": 0.3080693616311357,
+      "gradient_cosine": 0.9514213367531915,
+      "relative_gradient_l2_vs_eager": 0.011075695020503543,
+      "gradient_cosine_vs_eager": 0.9999386994425278
+    }
+  ],
+  "complete": true,
+  "global_precision_configuration": "fp16_mixed_fp32_params",
+  "source_weights": "runs/yoco-400m-A-8gpu-repaired-20261106/nonfinite_forward_00024935_rank0.pt"
+}

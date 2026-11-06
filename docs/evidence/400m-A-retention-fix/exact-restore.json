@@ -1,0 +1,72 @@
+{
+  "passed": true,
+  "ranks": [
+    {
+      "rank": 0,
+      "step": 20000,
+      "passed": true,
+      "checked_tensors": 891,
+      "mismatches": [],
+      "no_forward_or_optimizer_updates": true
+    },
+    {
+      "rank": 1,
+      "step": 20000,
+      "passed": true,
+      "checked_tensors": 891,
+      "mismatches": [],
+      "no_forward_or_optimizer_updates": true
+    },
+    {
+      "rank": 2,
+      "step": 20000,
+      "passed": true,
+      "checked_tensors": 891,
+      "mismatches": [],
+      "no_forward_or_optimizer_updates": true
+    },
+    {
+      "rank": 3,
+      "step": 20000,
+      "passed": true,
+      "checked_tensors": 891,
+      "mismatches": [],
+      "no_forward_or_optimizer_updates": true
+    },
+    {
+      "rank": 4,
+      "step": 20000,
+      "passed": true,
+      "checked_tensors": 891,
+      "mismatches": [],
+      "no_forward_or_optimizer_updates": true
+    },
+    {
+      "rank": 5,
+      "step": 20000,
+      "passed": true,
+      "checked_tensors": 891,
+      "mismatches": [],
+      "no_forward_or_optimizer_updates": true
+    },
+    {
+      "rank": 6,
+      "step": 20000,
+      "passed": true,
+      "checked_tensors": 891,
+      "mismatches": [],
+      "no_forward_or_optimizer_updates": true
+    },
+    {
+      "rank": 7,
+      "step": 20000,
+      "passed": true,
+      "checked_tensors": 891,
+      "mismatches": [],
+      "no_forward_or_optimizer_updates": true
+    }
+  ],
+  "world_size": 8,
+  "source_checkpoint": "/root/yoco/runs/yoco-400m-A-8gpu-repaired-20261106/checkpoint_00020000.pt",
+  "model_optimizer_scaler_rng_bitwise_equal": true
+}
