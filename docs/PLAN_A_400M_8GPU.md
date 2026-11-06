@@ -2,6 +2,12 @@
 
 2026 年 11 月 5 日，400M 方法 A 已在本机 8×A100 80GB PCIe 上开始完整训练，目标为 40000 步及八项下游评测。当前尚无最终指标；[启动时状态](evidence/400m-A-launch.json)是发布时的快照，实时状态在本机 `runs/setup/400m-A-active.json`。160M 已完成结果继续保存在[原三组报告](../evaluation/ab_baseline_20261104/README.md)，两种规模的结果分开记录。
 
+2026 年 11 月 6 日，修复版已从原第 10000 步 checkpoint 恢复正式训练，目标仍为 40000 步及八项下游。旧 run 在完成 14310 步后，rank3 下一步前向 loss 非有限而停止。来源 checkpoint 校验和、权重及 optimizer 状态正常，出错卡对应批次没有越界 token。使用旧不可变代码从 10000 隔离重放到 14311，这次没有重现前向 NaN；重放快照的 eager/compiled 运算均有限，见[故障核查记录](evidence/400m-A-failure-review.json)及[快照对照](evidence/400m-A-snapshot-check.json)。这些诊断步数不计为修复版正式训练进度，也不能证明已定位原 NaN 的唯一根因。
+
+排查已确认 AMP 回退逻辑有误：手动调用 `scaler.update(new_scale=...)` 只降低 scale，不会清零连续成功计数。因此原记录中溢出后仅成功 64 步，scale 就再次增长，违背原设定的连续成功 2000 步。当前训练器通过公开的 scaler state API 清零该计数；FP16、FP32 参数、初始 scale、growth/backoff 系数及其余配方均不变。[回归证据](evidence/400m-A-amp-backoff-check.json)核对了原生 AMP 行为、其他 rank 溢出的同步回退及 state 保存/恢复。该缺陷已修复，但尚不能断言它是前向 NaN 的唯一原因。前向出现非有限 loss 时还会保留模型、输入、目标和 scaler 的诊断现场，并停止；诊断文件不是正式 checkpoint，不用于跳过 batch 或自动重试。
+
+修复版已完成真实数据八卡 `10000→10002→10004`、`10000→10004` 及一次独立连续重复对照，见[恢复证据](evidence/400m-A-repair-resume-check.json)。八卡 RNG、scaler、optimizer step 和参数组均精确一致，首步 loss 在三次运行中相同。训练中 checkpoint 的 FP16/Adam 舍入波动比初始化时更大：恢复模型最大差异约 1.058e-4，连续重复自身约 1.103e-4；全模型相对 L2 分别约 6.24e-6 和 4.58e-6。原初始化的逐元素阈值会连独立连续重复也拒绝，因此训练中恢复改用独立重复误差的 2 倍以内，同时保留固定上限（模型最大绝对差 1.5e-4、相对 L2 1e-5；optimizer 一、二阶矩另设上限）。loss 阈值仍为 5e-5，实测最大差异 2.03e-5。这里调整的是有对照证据的恢复验收规则，训练精度和超参数未改；不宣称逐位复现。
+
 ## 模型与基座
 
 本次沿用同一 YOCO gRet 主干结构，构造新的约 400M 规格，而非引用官方已发布的 400M checkpoint。基座对应同规格 baseline 的 seed 42 随机初始化；正式训练对象仅为方法 A，从头预训练。该规模尚未另训 baseline/B 对照。
@@ -56,13 +62,25 @@ AdamW 的 betas=0.9/0.98、eps=1e-8、weight decay=0.05、grad clip=1.0；峰值
 
 ## 本次运行与复用
 
-本机 run 为 `runs/yoco-400m-A-8gpu-full-20261105T0310Z`，tmux 为 `yoco-400m-A-8gpu`，控制器为 [run_400m_A.py](../tools/run_400m_A.py)。代码和配置固定在该 run 的 `release/` 中，初始化、数值检查和恢复证据保存在 run 内；完整训练从已核对的第 4 步继续到 40000 步，不沿用短程测速试验的权重。
+当前 run 为 `runs/yoco-400m-A-8gpu-repaired-20261106`，旧失败 run `runs/yoco-400m-A-8gpu-full-20261105T0310Z` 原样保留。tmux 为 `yoco-400m-A-8gpu`，控制器为 [run_400m_A.py](../tools/run_400m_A.py)。修复代码和配置固定在新 run 的 `release/` 中，`recovery-source.json` 记录第 10000 步来源 checksum 与训练器修复前后 hash。先从该来源完成四步恢复核对，再从受检第 10004 步继续正式训练；模型、optimizer、scaler、八卡 RNG 和原 LR schedule 接续保存状态。
+
+[修复版启动快照](evidence/400m-A-repair-launch.json)逐项核对了模型、训练、数据、方法 A、执行选项和 seed 与原 run 一致，并记录发布时的实际训练步数；该文件不是实时状态，也不包含最终训练或下游结果。
+
+本次恢复入口如下；已在运行时只查状态，不重复执行：
+
+```bash
+python tools/run_400m_A.py \
+  --run-dir runs/yoco-400m-A-8gpu-repaired-20261106 \
+  --recover-from runs/yoco-400m-A-8gpu-full-20261105T0310Z
+```
+
+新结果只接续旧 run 的前 10000 步及修复版后续，排除旧失败尾段和诊断重放。第 5000、10000 步正式 checkpoint 仍在旧目录；后续每 5000 步在新目录保存并全部保留。
 
 同一作业恢复时使用原控制器与相同 run 路径；控制器会检查活动记录和锁，避免重复运行。实时查看：
 
 ```bash
 cat runs/setup/400m-A-active.json
-tail -n 5 runs/yoco-400m-A-8gpu-full-20261105T0310Z/rank0.jsonl
+tail -n 5 runs/yoco-400m-A-8gpu-repaired-20261106/rank0.jsonl
 ```
 
 在新机器上先准备同一数据和环境，按实际位置修改 manifest 路径，再生成受检初始化：

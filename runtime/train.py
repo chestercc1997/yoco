@@ -45,6 +45,22 @@ def cross_entropy(logits, targets):
     return torch.nn.functional.cross_entropy(logits.flatten(0,1),targets.flatten())
 
 
+def backoff_loss_scaler(scaler):
+    """Apply synchronized overflow backoff and restart consecutive-success count.
+
+    update(new_scale=...) changes the scale but does not reset GradScaler's
+    growth tracker. The distributed overflow decision can include another
+    rank's failure, so use the public state API to mirror native AMP backoff.
+    """
+    state = scaler.state_dict()
+    if not state:
+        raise ValueError('Overflow backoff requires an enabled GradScaler')
+    state['scale'] *= state['backoff_factor']
+    state['_growth_tracker'] = 0
+    scaler.update(new_scale=state['scale'])
+    scaler.load_state_dict(state)
+
+
 class Tokens:
     def __init__(self, manifest, split, length, seed):
         self.seed, self.length = seed, length
@@ -265,15 +281,28 @@ def main():
             with sync:
                 with autocast(precision):
                     logits=train_model(x)[0]; loss=loss_function(logits,y)
-                if not torch.isfinite(loss): raise RuntimeError('Non-finite loss; refusing unattended retry of divergent training')
+                if not torch.isfinite(loss):
+                    log(run,rank,'nonfinite_forward',step=step,attempted_update=update,
+                        microbatch=j,loss=str(float(loss.detach())),scale=scaler.get_scale())
+                    # Diagnostic evidence only: do not treat a partial update as
+                    # a resumable checkpoint or change the scheduled cadence.
+                    context=run/f'nonfinite_forward_{update:08d}_rank{rank}.pt'
+                    temporary=context.with_suffix('.pt.tmp')
+                    torch.save({'model':{name:value.detach().cpu() for name,value in model.state_dict().items()},
+                        'config':c,'step':step,'failure_update':update,'rank':rank,'microbatch':j,
+                        'input_tokens':x.detach().cpu(),'targets':y.detach().cpu(),
+                        'scaler':scaler.state_dict(),'diagnostic_only':True},temporary)
+                    temporary.replace(context)
+                    raise RuntimeError('Non-finite loss; refusing unattended retry of divergent training')
                 scaler.scale(loss/accum).backward(); loss_sum+=loss.detach()/accum
         scaler.unscale_(optimizer); norm=torch.nn.utils.clip_grad_norm_(model.parameters(),t['grad_clip'])
         finite=torch.isfinite(norm).to(torch.int32)
         if world>1: dist.all_reduce(finite,op=dist.ReduceOp.MIN)
         if not finite.item():
             if not scaler.is_enabled(): raise RuntimeError('Non-finite FP32 gradient; stopping before optimizer update')
-            scaler.update(new_scale=scaler.get_scale()/2); overflows+=1
-            log(run,rank,'overflow',step=step,scale=scaler.get_scale(),consecutive=overflows)
+            backoff_loss_scaler(scaler); overflows+=1
+            log(run,rank,'overflow',step=step,scale=scaler.get_scale(),consecutive=overflows,
+                growth_tracker=scaler.state_dict()['_growth_tracker'])
             if overflows>=t['max_consecutive_overflows']: raise RuntimeError('Repeated gradient overflow')
             continue
         scaler.step(optimizer); scaler.update(); overflows=0; step=update

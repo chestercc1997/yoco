@@ -12,6 +12,10 @@ FP16 mixed precision with FP32 parameters, global batch and 40,000-update schedu
 24 layers and 12 global K/V mixture weights. Regional layer compilation passed
 same-batch gradient and checkpoint-resume checks; the full-model compilation
 candidate was rejected for its larger gradient differences. Final scores are pending.
+On November 6, the run resumed from update 10,000 after fixing AMP overflow
+backoff's consecutive-success counter. FP16, data, batch, schedule and the
+5,000-update checkpoint cadence are unchanged. The original forward NaN was
+not reproduced in an isolated replay; its sole cause has not been established.
 See the [400M A configuration, numerical checks and run record](docs/PLAN_A_400M_8GPU.md).
 
 ## Completed 160M A/B experiment

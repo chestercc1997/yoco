@@ -1,0 +1,89 @@
+{
+  "snapshot": "runs/diagnostics/400m-A-failure-20261106/replay/before-original-failure.pt",
+  "saved_step": 14310,
+  "update": 14311,
+  "rank": 3,
+  "microbatch": 0,
+  "no_optimizer_updates": true,
+  "token_sha256": "486ec65fd8b298dad46539f22c63192785fe72690efd0494f50b95fd955977e5",
+  "nonfinite_weight_tensors": [],
+  "complete": true,
+  "cases": [
+    {
+      "name": "eager_fp16",
+      "loss": "3.311595916748047",
+      "logits": {
+        "dtype": "torch.float16",
+        "shape": [
+          4,
+          2048,
+          100288
+        ],
+        "nonfinite": 0,
+        "maximum_finite_absolute": 45.96875
+      },
+      "first_nonfinite": null
+    },
+    {
+      "name": "compiled_layers_fp16",
+      "loss": "3.311617136001587",
+      "logits": {
+        "dtype": "torch.float16",
+        "shape": [
+          4,
+          2048,
+          100288
+        ],
+        "nonfinite": 0,
+        "maximum_finite_absolute": 45.96875
+      },
+      "first_nonfinite": null
+    },
+    {
+      "name": "eager_fp16_full_reduction",
+      "loss": "3.3115041255950928",
+      "logits": {
+        "dtype": "torch.float16",
+        "shape": [
+          4,
+          2048,
+          100288
+        ],
+        "nonfinite": 0,
+        "maximum_finite_absolute": 45.96875
+      },
+      "first_nonfinite": null
+    },
+    {
+      "name": "compiled_layers_fp16_full_reduction",
+      "loss": "3.311593532562256",
+      "logits": {
+        "dtype": "torch.float16",
+        "shape": [
+          4,
+          2048,
+          100288
+        ],
+        "nonfinite": 0,
+        "maximum_finite_absolute": 45.96875
+      },
+      "first_nonfinite": null
+    },
+    {
+      "name": "eager_fp32_tf32_reference",
+      "loss": "3.3115386962890625",
+      "logits": {
+        "dtype": "torch.float32",
+        "shape": [
+          4,
+          2048,
+          100288
+        ],
+        "nonfinite": 0,
+        "maximum_finite_absolute": 45.966304779052734
+      },
+      "first_nonfinite": null
+    }
+  ],
+  "limitation": "Snapshot belongs to the isolated replay, not the missing original failure weights."
+}

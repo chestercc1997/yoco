@@ -1,0 +1,57 @@
+{
+  "formal_run_failed_after_step": 14310,
+  "nonfinite_forward_attempted_update": 14311,
+  "source_checkpoint": {
+    "file": "checkpoint_00010000.pt",
+    "step": 10000,
+    "sha256": "778250c85985c341a375ca0e238972c0cd3a9d213837290bac7c67bfd8881a92",
+    "fingerprint": "43cd29522d1f5e18180934890667d0c5df351861203f39df56f54bb692020da1"
+  },
+  "isolated_replay": {
+    "directory": "runs/diagnostics/400m-A-failure-20261106/replay",
+    "diagnostic_only": true,
+    "used_original_unmodified_release": true,
+    "stage": {
+      "step": 14311,
+      "formal_complete": false,
+      "synthetic": false
+    },
+    "last_training": {
+      "time": "2026-11-06T02:51:38.678904+00:00",
+      "event": "train",
+      "step": 14311,
+      "loss": 3.1167750358581543,
+      "lr": 9.724542586750788e-05,
+      "grad_norm": 0.2967183291912079,
+      "scale": 8192.0,
+      "tokens": 3751542784,
+      "seconds": 0.9108887640759349,
+      "peak_memory_bytes": 30506823168
+    },
+    "last_validation": {
+      "time": "2026-11-06T02:51:43.241100+00:00",
+      "event": "validation",
+      "step": 14311,
+      "loss": 3.1140034198760986,
+      "perplexity": 22.510985170750196
+    },
+    "overflow_retries": 1,
+    "failure_snapshots": []
+  },
+  "gradient_spike_comparison": [
+    {
+      "step": 11499,
+      "original_grad_norm": 11.980352401733398,
+      "replay_grad_norm": 0.2986680269241333
+    },
+    {
+      "step": 13937,
+      "original_grad_norm": 39.947425842285156,
+      "replay_grad_norm": 0.30018192529678345
+    }
+  ],
+  "confirmed_bug": "Manual GradScaler.update(new_scale=...) did not reset the consecutive-success growth tracker.",
+  "repair": "Reset the growth tracker via public state APIs while preserving all scaler hyperparameters, model, data, precision and training configuration.",
+  "causality_limit": "The original non-finite forward was not reproduced; a sole cause at a specific operator has not been established.",
+  "no_final_400m_training_or_downstream_result": true
+}

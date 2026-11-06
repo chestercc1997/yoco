@@ -38,11 +38,18 @@ def now():
     return datetime.datetime.now(datetime.timezone.utc).isoformat()
 
 
-def prepare(run):
+def prepare(run, recover_from=None, activate=True):
     run.mkdir(parents=True,exist_ok=True)
     release=run/"release"
-    if ACTIVE.exists() and Path(json.loads(ACTIVE.read_text())["run_dir"]).resolve()!=run:
-        raise RuntimeError("A 400M A run is already recorded; inspect before creating another")
+    recovery_path=run/'recovery-source.json'
+    if recovery_path.exists():
+        recorded=json.loads(recovery_path.read_text())
+        if recover_from is not None: assert Path(recorded['source_run'])==recover_from
+        recover_from=Path(recorded['source_run'])
+    permitted={run}
+    if recover_from is not None: permitted.add(recover_from)
+    if ACTIVE.exists() and Path(json.loads(ACTIVE.read_text())["run_dir"]).resolve() not in permitted:
+        raise RuntimeError("A different 400M A run is already recorded; inspect before creating another")
     config=json.loads((ROOT/"configs/yoco_400m_plan_A_8gpu.json").read_text())
     reference=json.loads((ROOT/"configs/yoco_160m_baseline_8gpu_matched.json").read_text())
     preflight=json.loads((ROOT/"runs/setup/yoco-400m-A-preflight.json").read_text())
@@ -61,6 +68,41 @@ def prepare(run):
     assert measured['eager']['median_seconds']/measured[chosen]['median_seconds']>=1.05
     assert config['execution']=={k:v for k,v in measured[chosen]['execution'].items() if k!='probe_settings'}
     assert digest(INITIALIZATION)==preflight['initialization_sha256']
+    recovery=None
+    if recover_from is not None:
+        assert recover_from!=run,'Recovery must preserve the failed immutable release'
+        source_status=json.loads((recover_from/'pipeline-status.json').read_text())
+        assert source_status['state']=='failed','Only recover a stopped, failed run'
+        source_config=json.loads((recover_from/'resolved_config.json').read_text())
+        for key in ('architecture','seed','model','tied_embeddings','training','data','memory_fusion','execution'):
+            assert source_config['config'].get(key)==config.get(key),f'Recovery changes {key}'
+        meta=json.loads((recover_from/'latest.json').read_text())
+        source_checkpoint=recover_from/meta['file']
+        assert meta['step']>0 and meta['step']<40000 and meta['step']%5000==0
+        assert meta['fingerprint']==hashlib.sha256(json.dumps(source_config['identity'],sort_keys=True).encode()).hexdigest()
+        assert digest(source_checkpoint)==meta['sha256']
+        old_files=json.loads((recover_from/'release-manifest.json').read_text())['files']
+        for name,expected in old_files.items():
+            if name.startswith('runtime/'):
+                assert digest(recover_from/'release'/name)==expected
+                if name!='runtime/train.py': assert digest(ROOT/name)==expected,f'Recovery changes model code {name}'
+        proof_path=ROOT/'runs/diagnostics/400m-A-failure-20261106/amp-backoff-regression.json'
+        proof=json.loads(proof_path.read_text())
+        assert proof['passed'] and proof['fixed']==proof['native']==proof['synchronized_remote_overflow']
+        recovery={'source_run':str(recover_from),'source_checkpoint':str(source_checkpoint),
+            'source_step':meta['step'],'source_sha256':meta['sha256'],
+            'source_fingerprint':meta['fingerprint'],'repair':'Reset AMP growth tracker after synchronized overflow backoff',
+            'trainer_sha256_before':old_files['runtime/train.py'],
+            'trainer_sha256_after':digest(ROOT/'runtime/train.py'),
+            'repair_check':proof,'recorded_at':now(),
+            'preserved':['model','FP16 mixed / FP32 parameters','optimizer state','scaler state at source checkpoint',
+                         'eight-rank RNG','data order','batch','LR schedule','validation','checkpoint cadence','execution settings'],
+            'limitation':'A confirmed scaler bug is repaired; do not assert it alone proves the cause of a non-finite forward.'}
+        if recovery_path.exists():
+            assert recorded['source_sha256']==meta['sha256']
+            assert recorded['trainer_sha256_after']==recovery['trainer_sha256_after']
+            recovery=recorded
+        else: atomic_json(recovery_path,recovery)
     if not (run/'release-manifest.json').exists():
         if release.exists():raise RuntimeError('Incomplete release; inspect before continuing')
         release.mkdir()
@@ -83,11 +125,13 @@ def prepare(run):
     record=json.loads((run/'release-manifest.json').read_text())
     assert all(digest(release/name)==expected for name,expected in record['files'].items())
     assert digest(run/'initialization.pt')==record['initialization_sha256']
-    atomic_json(ACTIVE,{'run_dir':str(run),'release':str(release),'status':str(run/'pipeline-status.json'),
-        'heartbeat':str(run/'heartbeat.json'),'tmux_session':'yoco-400m-A-8gpu',
-        'world_size':8,'method':'A','parameters':400590860,'max_updates':40000,
-        'initial_step':0,'formal_resume_step':4,'precision':'fp16_mixed_fp32_params',
-        'checkpoint_every':5000,'keep_all_checkpoints':True,'recorded_at':now()})
+    if activate:
+        atomic_json(ACTIVE,{'run_dir':str(run),'release':str(release),'status':str(run/'pipeline-status.json'),
+            'heartbeat':str(run/'heartbeat.json'),'tmux_session':'yoco-400m-A-8gpu',
+            'world_size':8,'method':'A','parameters':400590860,'max_updates':40000,
+            'initial_step':recovery['source_step'] if recovery else 0,
+            'formal_resume_step':recovery['source_step']+4 if recovery else 4,'precision':'fp16_mixed_fp32_params',
+            'recovery_source':recovery,'checkpoint_every':5000,'keep_all_checkpoints':True,'recorded_at':now()})
     return release
 
 
@@ -95,6 +139,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--run-dir", type=Path, required=True)
     parser.add_argument("--prepare-only", action="store_true")
+    parser.add_argument('--recover-from',type=Path,help='Failed immutable run; recover its latest verified scheduled checkpoint')
     args = parser.parse_args()
     run = args.run_dir.resolve()
     ACTIVE.parent.mkdir(parents=True, exist_ok=True)
@@ -103,7 +148,10 @@ def main():
         fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
     except BlockingIOError:
         raise SystemExit("The 400M method A pipeline is already running.")
-    release = prepare(run)
+    release = prepare(run,args.recover_from.resolve() if args.recover_from else None,activate=not args.prepare_only)
+    recovery=json.loads((run/'recovery-source.json').read_text()) if (run/'recovery-source.json').exists() else None
+    base_step=recovery['source_step'] if recovery else 0
+    first_step,checked_step=base_step+2,base_step+4
     if args.prepare_only:
         print(f"Prepared immutable 400M A release and verified initialization: {run}",flush=True)
         return
@@ -119,7 +167,8 @@ def main():
     os.environ["PATH"] = str(Path(sys.executable).parent) + os.pathsep + os.environ["PATH"]
     status = {"state": "starting", "run_dir": str(run), "pid": os.getpid(), "started_at": now(),
               "single_node_transport":{"NCCL_SOCKET_IFNAME":"lo","GLOO_SOCKET_IFNAME":"lo"},
-              "initialization": str(run / "initialization.pt"), "resume_step": 4, "target_step": 40000,
+              "initialization": str(run / "initialization.pt"), "resume_step": checked_step, "target_step": 40000,
+              "recovery_source":recovery,
               "world_size": 8, "synthetic": False, "stages": {}}
     guard = threading.Lock()
 
@@ -156,27 +205,28 @@ def main():
                                       "--output", str(run / "downstream-offline.json")])
         ready=json.loads((run / 'downstream-offline.json').read_text())
         assert ready['ready'] and ready['offline']
-        source = run / 'checks/resumed/checkpoint_00000004.pt'
+        source = run / f'checks/resumed/checkpoint_{checked_step:08d}.pt'
         train_command = [sys.executable, "-m", "torch.distributed.run", "--standalone", "--nproc-per-node=8",
                          "-m", "runtime.train", "--config", str(config)]
         if not (run / "resume-verification.json").exists():
             split = run / "checks/resumed"
             direct = run / "checks/uninterrupted"
-            if not (split / 'checkpoint_00000002.json').exists():
-                command("check-first", train_command + ["--run-dir",str(split),"--init-model",str(run/"initialization.pt"),"--stop-after","2"])
-            if not (split / 'checkpoint_00000004.json').exists():
-                command("check-resume", train_command + ["--run-dir",str(split),"--init-model",str(run/"initialization.pt"),"--stop-after","4"])
-            if not (direct / 'checkpoint_00000004.json').exists():
-                command("check-direct", train_command + ["--run-dir",str(direct),"--init-model",str(run/"initialization.pt"),"--stop-after","4"])
+            initial_args=['--resume-from',recovery['source_checkpoint']] if recovery else ['--init-model',str(run/'initialization.pt')]
+            if not (split / f'checkpoint_{first_step:08d}.json').exists():
+                command("check-first", train_command + ["--run-dir",str(split),*initial_args,"--stop-after",str(first_step)])
+            if not (split / f'checkpoint_{checked_step:08d}.json').exists():
+                command("check-resume", train_command + ["--run-dir",str(split),*initial_args,"--stop-after",str(checked_step)])
+            if not (direct / f'checkpoint_{checked_step:08d}.json').exists():
+                command("check-direct", train_command + ["--run-dir",str(direct),*initial_args,"--stop-after",str(checked_step)])
             repeat = run / "checks/uninterrupted-repeat"
-            if not (repeat / 'checkpoint_00000004.json').exists():
-                command("check-repeat", train_command + ["--run-dir",str(repeat),"--init-model",str(run/"initialization.pt"),"--stop-after","4"])
-            a = torch.load(split / "checkpoint_00000004.pt", map_location="cpu", weights_only=False, mmap=True)
-            b = torch.load(direct / "checkpoint_00000004.pt", map_location="cpu", weights_only=False, mmap=True)
-            repeated = torch.load(repeat / "checkpoint_00000004.pt", map_location="cpu", weights_only=False, mmap=True)
+            if not (repeat / f'checkpoint_{checked_step:08d}.json').exists():
+                command("check-repeat", train_command + ["--run-dir",str(repeat),*initial_args,"--stop-after",str(checked_step)])
+            a = torch.load(split / f"checkpoint_{checked_step:08d}.pt", map_location="cpu", weights_only=False, mmap=True)
+            b = torch.load(direct / f"checkpoint_{checked_step:08d}.pt", map_location="cpu", weights_only=False, mmap=True)
+            repeated = torch.load(repeat / f"checkpoint_{checked_step:08d}.pt", map_location="cpu", weights_only=False, mmap=True)
             import numpy as np
             torch.set_num_threads(4)
-            assert a["step"] == b["step"] == 4 and a["world_size"] == b["world_size"] == 8
+            assert a["step"] == b["step"] == checked_step and a["world_size"] == b["world_size"] == 8
             assert a["scaler"] == b["scaler"] and a["scaler"]["scale"] > 0
             worst = 0.
             def compare(left, right, path=''):
@@ -184,6 +234,13 @@ def main():
                 if isinstance(left, torch.Tensor):
                     if not left.is_floating_point() or path.endswith('/step'):
                         assert torch.equal(left,right), f"Exact resume state differs: {path}"
+                    elif recovery and (path.startswith('model/') or path.startswith('optimizer/state/')):
+                        # Trained FP16 Adam states amplify rounding near zero.
+                        # Validate them against an independent repeated run below,
+                        # with hard ceilings; never relax RNG or step counters.
+                        assert left.shape==right.shape and left.dtype==right.dtype
+                        assert torch.isfinite(left).all() and torch.isfinite(right).all()
+                        worst=max(worst,float((left-right).abs().max()))
                     else:
                         # AMP kernels need a rounding tolerance; counters/RNG remain exact.
                         tolerance=2e-5 if path.startswith('model/') else 1e-6
@@ -198,6 +255,11 @@ def main():
                     for i,(x,y) in enumerate(zip(left,right)): compare(x,y,path+'/'+str(i))
                 else: assert left == right
             compare(a["model"],b["model"],'model'); compare(a["optimizer"],b["optimizer"],'optimizer'); compare(a["rngs"],b["rngs"],'rngs')
+            if recovery:
+                assert repeated['scaler']==b['scaler']
+                compare(repeated['model'],b['model'],'model')
+                compare(repeated['optimizer'],b['optimizer'],'optimizer')
+                compare(repeated['rngs'],b['rngs'],'rngs')
             def model_difference(left,right):
                 diff=reference=0.; maximum=0.
                 for key in left:
@@ -207,23 +269,59 @@ def main():
                 return {'max_absolute_difference':maximum,'relative_l2':math.sqrt(diff/reference)}
             resumed_difference=model_difference(a['model'],b['model'])
             repeat_difference=model_difference(repeated['model'],b['model'])
-            assert resumed_difference['relative_l2']<2e-6 and resumed_difference['max_absolute_difference']<2e-5
-            assert repeat_difference['relative_l2']<2e-6 and repeat_difference['max_absolute_difference']<2e-5
+            controlled_tolerances=None
+            if recovery:
+                def moment_difference(left,right,field):
+                    diff=reference=0.;maximum=0.
+                    assert left['state'].keys()==right['state'].keys()
+                    for key,state in left['state'].items():
+                        x,y=state[field],right['state'][key][field]
+                        if field=='exp_avg_sq':assert (x>=0).all() and (y>=0).all()
+                        delta=x-y;maximum=max(maximum,float(delta.abs().max()))
+                        diff+=float(delta.double().square().sum());reference+=float(y.double().square().sum())
+                    return {'max_absolute_difference':maximum,'relative_l2':math.sqrt(diff/reference)}
+                # Initial-state tolerances alone reject ordinary repeats of this
+                # trained checkpoint. Require <=2x independent-repeat variation
+                # AND fixed ceilings. Scaler, counters, groups, RNG stay exact.
+                controlled_tolerances={}
+                metrics={'model':(resumed_difference,repeat_difference,2e-5,2e-6,1.5e-4,1e-5)}
+                for field,floors,ceilings in (
+                    ('exp_avg',(1e-6,1e-3),(1e-5,1e-2)),
+                    ('exp_avg_sq',(1e-10,1e-5),(1e-8,1e-3))):
+                    resumed=moment_difference(a['optimizer'],b['optimizer'],field)
+                    control=moment_difference(repeated['optimizer'],b['optimizer'],field)
+                    metrics[field]=(resumed,control,*floors,*ceilings)
+                for name,(resumed,control,abs_floor,rel_floor,abs_cap,rel_cap) in metrics.items():
+                    abs_limit=min(abs_cap,max(abs_floor,2*control['max_absolute_difference']))
+                    rel_limit=min(rel_cap,max(rel_floor,2*control['relative_l2']))
+                    assert control['max_absolute_difference']<abs_cap and control['relative_l2']<rel_cap,f'Repeated execution exceeds hard ceiling: {name}'
+                    assert resumed['max_absolute_difference']<abs_limit and resumed['relative_l2']<rel_limit,f'Resume exceeds repeated-run envelope: {name}'
+                    controlled_tolerances[name]={'resumed':resumed,'independent_repeat':control,
+                        'maximum_absolute_limit':abs_limit,'relative_l2_limit':rel_limit,
+                        'absolute_hard_ceiling':abs_cap,'relative_l2_hard_ceiling':rel_cap,'repeat_envelope_factor':2}
+            else:
+                assert resumed_difference['relative_l2']<2e-6 and resumed_difference['max_absolute_difference']<2e-5
+                assert repeat_difference['relative_l2']<2e-6 and repeat_difference['max_absolute_difference']<2e-5
             def training_losses(directory):
                 return {e['step']:e['loss'] for e in map(json.loads,(directory/'rank0.jsonl').read_text().splitlines()) if e['event']=='train'}
             split_losses=training_losses(split); direct_losses=training_losses(direct)
             loss_difference=max(abs(split_losses[step]-direct_losses[step]) for step in direct_losses)
             assert loss_difference<5e-5
+            if recovery:
+                repeated_losses=training_losses(repeat)
+                assert split_losses[base_step+1]==direct_losses[base_step+1]==repeated_losses[base_step+1]
             del a,b,repeated
             for rank in range(8):
                 events=[json.loads(line) for line in (split / f"rank{rank}.jsonl").read_text().splitlines()]
-                assert [e["step"] for e in events if e["event"] == "started"] == [0,2]
+                assert [e["step"] for e in events if e["event"] == "started"] == [base_step,first_step]
                 assert not any(e["event"] == "overflow" for e in events)
-                assert [e["step"] for e in events if e["event"] == "train"] == [1,2,3,4]
+                assert [e["step"] for e in events if e["event"] == "train"] == list(range(base_step+1,checked_step+1))
             atomic_json(run / "resume-verification.json", {"passed":True,"world_size":8,"real_data":True,
-                "source_step":0,"split_resume_step":2,"final_step":4,
+                "source_step":base_step,"split_resume_step":first_step,"final_step":checked_step,
                 "all_rank_rng_verified":True,
-                "fp16_numerical_tolerance":{'model_max_absolute':2e-5,'model_relative_l2':2e-6,'optimizer_atol':1e-6,'loss_absolute':5e-5},
+                "fp16_numerical_tolerance":({'trained_state_control':controlled_tolerances,'loss_absolute':5e-5,
+                    'RNG_scaler_steps_groups':'exact','first_resumed_loss':'exact across all three runs'} if recovery else
+                    {'model_max_absolute':2e-5,'model_relative_l2':2e-6,'optimizer_atol':1e-6,'loss_absolute':5e-5}),
                 "resumed_model_difference":resumed_difference,"repeat_model_difference":repeat_difference,
                 "max_training_loss_difference":loss_difference,
                 "model_and_optimizer_max_absolute_difference":worst,"completed_at":now()})
@@ -234,7 +332,7 @@ def main():
                 '--checkpoint',str(source),'--locks-dir',str(locks),'--task','arc_easy','--limit','4',
                 '--device','cuda:0','--output',str(run/'eval-smoke')])
         smoke=json.loads((run/'eval-smoke/results.json').read_text())
-        assert smoke['model_step']==4 and smoke['smoke_only']
+        assert smoke['model_step']==checked_step and smoke['smoke_only']
         command("training", train_command + ["--run-dir",str(run),"--resume-from",str(source),"--stop-after","40000"])
         stage = json.loads((run / "stage_complete.json").read_text())
         assert stage == {"step": 40000, "formal_complete": True, "synthetic": False}
@@ -243,6 +341,13 @@ def main():
         assert latest["step"] == 40000 and digest(checkpoint) == latest["sha256"]
         training_events=[json.loads(line) for folder in (run/'checks/resumed',run)
                          for line in (folder/'rank0.jsonl').read_text().splitlines()]
+        if recovery:
+            parent=Path(recovery['source_run'])
+            prefix=[json.loads(line) for folder in (parent/'checks/resumed',parent)
+                    for line in (folder/'rank0.jsonl').read_text().splitlines()]
+            prefix=[e for e in prefix if e.get('step',base_step+1)<=base_step and
+                    not (e['event']=='overflow' and e['step']==base_step)]
+            training_events=prefix+training_events
         updates={e['step']:e for e in training_events if e['event']=='train'}
         assert sorted(updates)==list(range(1,40001))
         validations={e['step']:e for e in training_events if e['event']=='validation' and e['step']%250==0}
@@ -284,6 +389,7 @@ def main():
                    "world_size": 8, "method":"A", "parameters":400590860, "global_batch_tokens": 262144, "total_training_tokens": 40000 * 262144,
                    "tasks": scores, "macro_accuracy": sum(row["score"] for row in scores) / len(scores), "completed_at": now()}
         summary['training_review']=review
+        summary['recovery_source']=recovery
         atomic_json(run / "summary.json", summary)
         status["state"] = "complete"
         update("pipeline", "passed", summary=str(run / "summary.json"))

@@ -1,0 +1,79 @@
+{
+  "passed": true,
+  "device": "cpu",
+  "native": {
+    "after_backoff": {
+      "scale": 4.0,
+      "growth_factor": 2.0,
+      "backoff_factor": 0.5,
+      "growth_interval": 3,
+      "_growth_tracker": 0
+    },
+    "after_one_success": {
+      "scale": 4.0,
+      "growth_factor": 2.0,
+      "backoff_factor": 0.5,
+      "growth_interval": 3,
+      "_growth_tracker": 1
+    }
+  },
+  "fixed": {
+    "after_backoff": {
+      "scale": 4.0,
+      "growth_factor": 2.0,
+      "backoff_factor": 0.5,
+      "growth_interval": 3,
+      "_growth_tracker": 0
+    },
+    "after_one_success": {
+      "scale": 4.0,
+      "growth_factor": 2.0,
+      "backoff_factor": 0.5,
+      "growth_interval": 3,
+      "_growth_tracker": 1
+    }
+  },
+  "legacy_bug": {
+    "after_backoff": {
+      "scale": 4.0,
+      "growth_factor": 2.0,
+      "backoff_factor": 0.5,
+      "growth_interval": 3,
+      "_growth_tracker": 2
+    },
+    "after_one_success": {
+      "scale": 8.0,
+      "growth_factor": 2.0,
+      "backoff_factor": 0.5,
+      "growth_interval": 3,
+      "_growth_tracker": 0
+    }
+  },
+  "synchronized_remote_overflow": {
+    "after_backoff": {
+      "scale": 4.0,
+      "growth_factor": 2.0,
+      "backoff_factor": 0.5,
+      "growth_interval": 3,
+      "_growth_tracker": 0
+    },
+    "after_one_success": {
+      "scale": 4.0,
+      "growth_factor": 2.0,
+      "backoff_factor": 0.5,
+      "growth_interval": 3,
+      "_growth_tracker": 1
+    }
+  },
+  "precision_and_scaler_hyperparameters_unchanged": true,
+  "checkpoint_state_roundtrip_passed": true,
+  "trainer_sha256": "125d3ab25a72563fff0b863562fdbaab87e425fab722b888e3c487c36c28d9b2",
+  "regression_test_sha256": "f039cfabb51842cee8da1c8418edd9c49ec04b9bb9638bf94fff3a6439d5da3e",
+  "original_incident": {
+    "last_overflow_step": 13936,
+    "next_scale_growth_step": 14000,
+    "successful_steps_between": 64,
+    "required_consecutive_successful_steps": 2000
+  },
+  "causality_limit": "This proves an AMP growth-tracker bug, not the sole cause of the later non-finite forward."
+}

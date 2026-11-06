@@ -1,0 +1,72 @@
+{
+  "passed": true,
+  "world_size": 8,
+  "real_data": true,
+  "source_step": 10000,
+  "split_resume_step": 10002,
+  "final_step": 10004,
+  "all_rank_rng_verified": true,
+  "fp16_numerical_tolerance": {
+    "trained_state_control": {
+      "model": {
+        "resumed": {
+          "max_absolute_difference": 0.00010577309876680374,
+          "relative_l2": 6.236663201185833e-06
+        },
+        "independent_repeat": {
+          "max_absolute_difference": 0.00011027976870536804,
+          "relative_l2": 4.581175560670085e-06
+        },
+        "maximum_absolute_limit": 0.00015,
+        "relative_l2_limit": 9.16235112134017e-06,
+        "absolute_hard_ceiling": 0.00015,
+        "relative_l2_hard_ceiling": 1e-05,
+        "repeat_envelope_factor": 2
+      },
+      "exp_avg": {
+        "resumed": {
+          "max_absolute_difference": 4.96591383125633e-06,
+          "relative_l2": 0.003368870034756244
+        },
+        "independent_repeat": {
+          "max_absolute_difference": 2.7927344490308315e-06,
+          "relative_l2": 0.0021473464563625797
+        },
+        "maximum_absolute_limit": 5.585468898061663e-06,
+        "relative_l2_limit": 0.0042946929127251595,
+        "absolute_hard_ceiling": 1e-05,
+        "relative_l2_hard_ceiling": 0.01,
+        "repeat_envelope_factor": 2
+      },
+      "exp_avg_sq": {
+        "resumed": {
+          "max_absolute_difference": 2.7666828827932477e-09,
+          "relative_l2": 0.00012456739703908107
+        },
+        "independent_repeat": {
+          "max_absolute_difference": 3.0831870390102267e-09,
+          "relative_l2": 0.00012845153340146942
+        },
+        "maximum_absolute_limit": 6.1663740780204535e-09,
+        "relative_l2_limit": 0.00025690306680293884,
+        "absolute_hard_ceiling": 1e-08,
+        "relative_l2_hard_ceiling": 0.001,
+        "repeat_envelope_factor": 2
+      }
+    },
+    "loss_absolute": 5e-05,
+    "RNG_scaler_steps_groups": "exact",
+    "first_resumed_loss": "exact across all three runs"
+  },
+  "resumed_model_difference": {
+    "max_absolute_difference": 0.00010577309876680374,
+    "relative_l2": 6.236663201185833e-06
+  },
+  "repeat_model_difference": {
+    "max_absolute_difference": 0.00011027976870536804,
+    "relative_l2": 4.581175560670085e-06
+  },
+  "max_training_loss_difference": 2.0265579223632812e-05,
+  "model_and_optimizer_max_absolute_difference": 0.00011027976870536804,
+  "completed_at": "2026-11-06T03:05:32.446205+00:00"
+}

@@ -1,0 +1,32 @@
+{
+  "recorded_at": "2026-11-06T03:08:03.153695+00:00",
+  "publication_snapshot_not_live": true,
+  "run_dir": "runs/yoco-400m-A-8gpu-repaired-20261106",
+  "source_checkpoint": "runs/yoco-400m-A-8gpu-full-20261105T0310Z/checkpoint_00010000.pt",
+  "preserved_configuration": {
+    "model": true,
+    "training": true,
+    "data": true,
+    "memory_fusion": true,
+    "execution": true,
+    "seed": true,
+    "tied_embeddings": true
+  },
+  "resume_check_passed": true,
+  "latest_training": {
+    "time": "2026-11-06T03:08:02.394673+00:00",
+    "event": "train",
+    "step": 10103,
+    "loss": 3.220224380493164,
+    "lr": 0.00011317476340694005,
+    "grad_norm": 0.2945259213447571,
+    "scale": 4096.0,
+    "tokens": 2648440832,
+    "seconds": 0.9255679599009454,
+    "peak_memory_bytes": 30506822656
+  },
+  "target_updates": 40000,
+  "complete": false,
+  "full_downstream_complete": false,
+  "note": "Only the AMP backoff counter and failure diagnostics changed in the trainer; original non-finite forward sole cause remains unconfirmed."
+}

@@ -1,5 +1,17 @@
 # 用户执行约束（2026-10-29）
 
+## 2026-11-06 400M A 故障排查与恢复（当前）
+
+- 用户明确要求修复故障后，从上一个 checkpoint 继续完整训练。原正式 run `runs/yoco-400m-A-8gpu-full-20261105T0310Z` 在完成 14310 步后，于 rank3 的下一步前向 loss 非有限而退出；八项下游尚未开始，不能报告为仍在训练或已完成。
+- 最近正式 checkpoint 为第 10000 步，SHA256 为 `778250c85985c341a375ca0e238972c0cd3a9d213837290bac7c67bfd8881a92`。恢复须保留 optimizer、scaler、八卡 RNG、数据顺序及原精度/配方，每 5000 步保存并全部保留，不静默跳过出错 batch。
+- **隔离故障重放已完成**：`runs/diagnostics/400m-A-failure-20261106/replay` 用原不可变 release 从 10000 到 14311，未重现前向 NaN；原 13937 步约 39.95 的梯度范数本次约 0.300。重放快照的 eager、按层编译、FP16 完整 reduction 和 FP32 诊断均有限，不据此断言原故障唯一根因。诊断步数不计入正式训练，禁止重复重放。
+- `tools/diagnose_400m_failure.py` 已核验第 10000 步权重和 optimizer 全部有限、文件校验和正确；rank3 在 14311 对应的四批数据 token 不越界，使用第 10000 步权重时 eager 和按层编译前向都有限。该检查没有故障现场的 14310 权重，不能据此排除后期内核/数值问题或宣称已修复。
+- 原记录还显示 13937 步裁剪前 grad norm 约 39.95（常态约 0.3），但尚未证明与后续非有限 loss 的因果关系。重放脚本在故障处捕获权重及输入，供 `tools/analyze_400m_snapshot.py` 对照；FP32 仅可作为不更新权重的诊断参照，不改正式训练 FP16。
+- 已确认并修复 root `runtime/train.py` 的 AMP 回退错误：原 `scaler.update(new_scale=...)` 不清零 `_growth_tracker`，导致 13936 步溢出后只成功 64 步就在 14000 再次加大 scale，而原设定应连续成功 2000 步。`backoff_loss_scaler` 使用公开 state API 正确清零计数，保持 FP16/scaler 超参数及其余训练配方不变；CPU 与原生 AMP、远端 rank 溢出、保存/恢复回归核对通过，见 `docs/evidence/400m-A-amp-backoff-check.json`。不要将该修复冒称已证明是前向 NaN 的唯一根因。
+- **修复版已恢复正式训练**：当前 `runs/setup/400m-A-active.json` 指向 `runs/yoco-400m-A-8gpu-repaired-20261106`，tmux `yoco-400m-A-8gpu`。真实数据八卡恢复与连续/独立重复对照、eval smoke 已通过，正式阶段从受检 10004 续训至 40000 并执行八项下游。先查 pipeline-status、heartbeat 与 tmux，禁止重复启动。新结果只衔接旧 run 的前 10000 步，不混入旧失败尾段或诊断曲线。
+- 训练中 FP16 恢复的逐元素差异超过原初始化阈值，但独立连续重复也超过该阈值。恢复最大差异 1.058e-4，小于重复自身 1.103e-4；相对 L2 为 6.24e-6 与 4.58e-6。验收采用重复误差 2 倍内与固定硬上限双约束，RNG/scaler/optimizer steps/groups 精确一致，loss 差异 2.03e-5 < 5e-5。完整证据 `docs/evidence/400m-A-repair-resume-check.json`；未改训练精度或超参数，不冒称逐位相同。
+- 来源 checksum、训练/模型/执行配置一致性和新不可变 release 的 CPU 准备检查已通过。恢复命令为 `tools/run_400m_A.py --run-dir /root/yoco/runs/yoco-400m-A-8gpu-repaired-20261106 --recover-from /root/yoco/runs/yoco-400m-A-8gpu-full-20261105T0310Z`，controller log 追加写入。不要编辑任何已准备或运行中的 release；`--prepare-only` 不切换 ACTIVE。
+
 ## 2026-11-05 进一步加速与方法 A 400M 完整训练授权（最新）
 
 - 用户要求继续测试不改变训练 setting 的加速，并明确要求加速通过精度检查后，正式训练 **400M 方法 A**。仅训练 A；同规格 baseline 用于结构与共同初始化核对，不额外启动 baseline/B 完整作业。
