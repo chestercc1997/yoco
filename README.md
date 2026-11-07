@@ -13,7 +13,12 @@ learned K/V fusion (A), and conditional K/V fusion (B) share bitwise-equal backb
 initializations and the existing FineWeb-Edu/tokenizer/FP16 training recipe.
 Each arm runs on 8×A100 for 40,000 updates and all eight downstream tasks;
 every 5,000-update checkpoint is retained. The controller first checks real-data
-eight-rank checkpoint restoration for all three arms. Final SWA results are pending.
+eight-rank checkpoint restoration for all three arms. The SWA baseline completed
+40,000 updates and all eight full tasks on November 7, 2026: validation loss
+**3.180143**, eight-task macro **46.3682%**, with all eight scheduled checkpoints
+retained and independently hashed. Method A is now training on eight GPUs;
+method B and the final three-arm comparison remain pending. See the
+[verified baseline result](docs/evidence/swa-160m-baseline-completed-20261107.json).
 See [configuration, checks and live-status commands](docs/SWA_160M_AB.md).
 
 The [reproduction skill](.agents/skills/yoco-reproduction/SKILL.md) makes the

@@ -1,0 +1,125 @@
+{
+  "path": "/root/yoco/runs/yoco-swa-160m-ab-8gpu-20261107/baseline/checkpoint_00040000.pt",
+  "step": 40000,
+  "sha256": "7e7090838efc84f13b18ff4926d0df090ebb1650eead456c585e9e5d5c7aeb38",
+  "fingerprint": "ec3239d44776277deb8a64a636a34d5db866a0f9581ee8eded66283ed8e514a5",
+  "finite_tensors_checked": 405,
+  "full_optimizer_scaler_eight_rank_rng": true,
+  "checkpoint_health_verified": true,
+  "training_setting_changes": false,
+  "config_matches_frozen_release": true,
+  "model_parameter_dtype": "float32",
+  "training_precision": "fp16_mixed_fp32_params",
+  "optimizer_hyperparameters_match": true,
+  "optimizer_parameter_states": 101,
+  "all_optimizer_steps": 40000,
+  "learning_rate": 0.0,
+  "seed": 42,
+  "global_batch_tokens": 262144,
+  "checkpoint_every": 5000,
+  "retention_all": true,
+  "accepted_training_points": 40000,
+  "scheduled_validation_points": 160,
+  "validation_loss": 3.180143117904663,
+  "maximum_validation_regression": 0,
+  "nonfinite_forward_events": 0,
+  "overflow_retries": 5,
+  "scaler_hyperparameters": {
+    "growth_factor": 2.0,
+    "backoff_factor": 0.5,
+    "growth_interval": 2000
+  },
+  "partial_only": true,
+  "note": "Verified baseline update 40000 checkpoint. All three full 40000-step runs, full downstream tasks, final comparison and publication must be checked separately.",
+  "scaler_state_at_checkpoint": {
+    "scale": 1048576.0,
+    "growth_factor": 2.0,
+    "backoff_factor": 0.5,
+    "growth_interval": 2000,
+    "_growth_tracker": 962
+  },
+  "arm": "baseline",
+  "scaler_state_consistent_with_logged_backoff": true,
+  "successful_updates_since_logged_backoff": 962,
+  "amp_backoff_audit": {
+    "passed": true,
+    "world_size": 8,
+    "rejected_attempts": 5,
+    "all_ranks_synchronized": true,
+    "all_retry_groups_completed_with_finite_loss_and_norm": true,
+    "groups": [
+      {
+        "retried_update": 28044,
+        "rejected_attempts": 1,
+        "backoff_scale": 1048576.0,
+        "completed_loss": 3.2261886596679688,
+        "completed_grad_norm": 0.4465019106864929
+      },
+      {
+        "retried_update": 31669,
+        "rejected_attempts": 1,
+        "backoff_scale": 1048576.0,
+        "completed_loss": 3.166440963745117,
+        "completed_grad_norm": 0.4008789658546448
+      },
+      {
+        "retried_update": 34623,
+        "rejected_attempts": 2,
+        "backoff_scale": 524288.0,
+        "completed_loss": 3.2087738513946533,
+        "completed_grad_norm": 0.424989253282547
+      },
+      {
+        "retried_update": 39039,
+        "rejected_attempts": 1,
+        "backoff_scale": 1048576.0,
+        "completed_loss": 3.1102986335754395,
+        "completed_grad_norm": 0.3849763870239258
+      }
+    ]
+  },
+  "training_complete": true,
+  "retained_checkpoint_count": 8,
+  "retained_checkpoints_sha256_verified": [
+    {
+      "step": 5000,
+      "file": "checkpoint_00005000.pt",
+      "sha256": "57843c1aba08b1649ce322f4c4bd2b91e32b7018e4934b20be7c82d91fdbc5af"
+    },
+    {
+      "step": 10000,
+      "file": "checkpoint_00010000.pt",
+      "sha256": "d6991db01a71294aa514a2e23d1d754bd7266e4d2d17da10cd1ba1340c69ec9f"
+    },
+    {
+      "step": 15000,
+      "file": "checkpoint_00015000.pt",
+      "sha256": "84025b6b9dc2f2fec5619bfdf22ce727e23ca8a3ab720b5b9aa145a3d9c363a5"
+    },
+    {
+      "step": 20000,
+      "file": "checkpoint_00020000.pt",
+      "sha256": "5501e0b03d0230533158dc634df4f6125300e63bd270fd959a61d957badd5f1e"
+    },
+    {
+      "step": 25000,
+      "file": "checkpoint_00025000.pt",
+      "sha256": "dcb3d2977ca12bfa38824de4d9bceb9520f1cb5a06b4a7741eb4fdf2fe089741"
+    },
+    {
+      "step": 30000,
+      "file": "checkpoint_00030000.pt",
+      "sha256": "183ea1f5b3efe1a4bfc93f151057284b75b6b7aacfe47bb6ce283af5b5629ab1"
+    },
+    {
+      "step": 35000,
+      "file": "checkpoint_00035000.pt",
+      "sha256": "e174c5abbd67e8cb2d5496936d782e121f07d3915c506684baa315bcbe64d283"
+    },
+    {
+      "step": 40000,
+      "file": "checkpoint_00040000.pt",
+      "sha256": "7e7090838efc84f13b18ff4926d0df090ebb1650eead456c585e9e5d5c7aeb38"
+    }
+  ]
+}

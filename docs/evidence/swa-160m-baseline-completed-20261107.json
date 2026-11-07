@@ -1,0 +1,150 @@
+{
+  "complete": true,
+  "arm": "baseline",
+  "architecture": "YOCO-SWA",
+  "step": 40000,
+  "world_size": 8,
+  "parameters": 163155456,
+  "checkpoint": "/root/yoco/runs/yoco-swa-160m-ab-8gpu-20261107/baseline/checkpoint_00040000.pt",
+  "sha256": "7e7090838efc84f13b18ff4926d0df090ebb1650eead456c585e9e5d5c7aeb38",
+  "global_batch_tokens": 262144,
+  "total_training_tokens": 10485760000,
+  "tasks": [
+    {
+      "task": "arc_easy",
+      "metric": "acc_norm,none",
+      "score": 0.4671717171717172,
+      "documents": 2376
+    },
+    {
+      "task": "arc_challenge",
+      "metric": "acc_norm,none",
+      "score": 0.2431740614334471,
+      "documents": 1172
+    },
+    {
+      "task": "boolq",
+      "metric": "acc,none",
+      "score": 0.6198776758409786,
+      "documents": 3270
+    },
+    {
+      "task": "hellaswag",
+      "metric": "acc_norm,none",
+      "score": 0.3111929894443338,
+      "documents": 10042
+    },
+    {
+      "task": "openbookqa",
+      "metric": "acc_norm,none",
+      "score": 0.288,
+      "documents": 500
+    },
+    {
+      "task": "piqa",
+      "metric": "acc_norm,none",
+      "score": 0.6262241566920566,
+      "documents": 1838
+    },
+    {
+      "task": "winogrande",
+      "metric": "acc,none",
+      "score": 0.4988161010260458,
+      "documents": 1267
+    },
+    {
+      "task": "sciq",
+      "metric": "acc_norm,none",
+      "score": 0.655,
+      "documents": 1000
+    }
+  ],
+  "macro_accuracy": 0.4636820877010724,
+  "training_review": {
+    "final_validation_loss": 3.180143117904663,
+    "best_validation_loss": 3.180143117904663,
+    "maximum_validation_regression": 0.0,
+    "overflow_retries": 5,
+    "nonfinite_forward_events": 0,
+    "maximum_gradient_norm": 18.66633415222168,
+    "convergence_warning": false,
+    "checkpoints": [
+      {
+        "file": "checkpoint_00005000.pt",
+        "step": 5000,
+        "sha256": "57843c1aba08b1649ce322f4c4bd2b91e32b7018e4934b20be7c82d91fdbc5af",
+        "fingerprint": "ec3239d44776277deb8a64a636a34d5db866a0f9581ee8eded66283ed8e514a5"
+      },
+      {
+        "file": "checkpoint_00010000.pt",
+        "step": 10000,
+        "sha256": "d6991db01a71294aa514a2e23d1d754bd7266e4d2d17da10cd1ba1340c69ec9f",
+        "fingerprint": "ec3239d44776277deb8a64a636a34d5db866a0f9581ee8eded66283ed8e514a5"
+      },
+      {
+        "file": "checkpoint_00015000.pt",
+        "step": 15000,
+        "sha256": "84025b6b9dc2f2fec5619bfdf22ce727e23ca8a3ab720b5b9aa145a3d9c363a5",
+        "fingerprint": "ec3239d44776277deb8a64a636a34d5db866a0f9581ee8eded66283ed8e514a5"
+      },
+      {
+        "file": "checkpoint_00020000.pt",
+        "step": 20000,
+        "sha256": "5501e0b03d0230533158dc634df4f6125300e63bd270fd959a61d957badd5f1e",
+        "fingerprint": "ec3239d44776277deb8a64a636a34d5db866a0f9581ee8eded66283ed8e514a5"
+      },
+      {
+        "file": "checkpoint_00025000.pt",
+        "step": 25000,
+        "sha256": "dcb3d2977ca12bfa38824de4d9bceb9520f1cb5a06b4a7741eb4fdf2fe089741",
+        "fingerprint": "ec3239d44776277deb8a64a636a34d5db866a0f9581ee8eded66283ed8e514a5"
+      },
+      {
+        "file": "checkpoint_00030000.pt",
+        "step": 30000,
+        "sha256": "183ea1f5b3efe1a4bfc93f151057284b75b6b7aacfe47bb6ce283af5b5629ab1",
+        "fingerprint": "ec3239d44776277deb8a64a636a34d5db866a0f9581ee8eded66283ed8e514a5"
+      },
+      {
+        "file": "checkpoint_00035000.pt",
+        "step": 35000,
+        "sha256": "e174c5abbd67e8cb2d5496936d782e121f07d3915c506684baa315bcbe64d283",
+        "fingerprint": "ec3239d44776277deb8a64a636a34d5db866a0f9581ee8eded66283ed8e514a5"
+      },
+      {
+        "file": "checkpoint_00040000.pt",
+        "step": 40000,
+        "sha256": "7e7090838efc84f13b18ff4926d0df090ebb1650eead456c585e9e5d5c7aeb38",
+        "fingerprint": "ec3239d44776277deb8a64a636a34d5db866a0f9581ee8eded66283ed8e514a5"
+      }
+    ]
+  },
+  "completed_at": "2026-11-07T10:45:39.050418+00:00",
+  "completed_at_beijing": "2026-11-07T18:45:39.050418+08:00",
+  "final_checkpoint_independently_sha256_verified": true,
+  "eight_task_provenance_documents_and_full_limits_verified": true,
+  "downstream_documents": 21465,
+  "task_source_hashes": {
+    "arc_easy/results.json": "605f03923756a77e282e101cfe0fd8f76427bfe4c74c2a08856c436d92c6117a",
+    "arc_easy/provenance.json": "2b3105112e7857feda0d827f044a2ac5501ecc7e6c22e41709125e23bccd2390",
+    "arc_challenge/results.json": "2ed5016d80461082de0619e03a223ce6f3f999561f58421c42e06366901c0e09",
+    "arc_challenge/provenance.json": "a927245cd9072add5ea320f259aa8cc0fb61357db42587a8baf918dbd04f4580",
+    "boolq/results.json": "bdb60f8e17b7e2ec821ee1d9db6db15254a2fd9e701fa05f5ec1a5f861cf86b9",
+    "boolq/provenance.json": "0e8e4788a3e02a9402255174d63b30cf6124fecdd3889a4718b5be6604e7b3fc",
+    "hellaswag/results.json": "72526a47df5fb6fad37a023eee5ad9f549520bdfcaf674ff57e076e834f217eb",
+    "hellaswag/provenance.json": "69b6a00de792c533a30f712a6dd3c1a03f04934c0f26f49d5d078055df81c352",
+    "openbookqa/results.json": "7f7bd19d28a9cc5352f87c869dbdd1b73344d6a5dffbc4a406689aa09affd755",
+    "openbookqa/provenance.json": "057a5a5b1def9bcd165ff2868bc9243d1b2b7b9b362e9d8ee72bfe627f77dc59",
+    "piqa/results.json": "6b256ae0de53301e30d0693359dbb4287928bafb4ccf139f9ee7ae05f71db0d5",
+    "piqa/provenance.json": "606b0814855d76c5c023ffdf9c48227b895c9cac0100e7df0e600e5b1ffcb74a",
+    "winogrande/results.json": "fac1cd91fac2147364bba137722b90951cf4fa8a65945afbe57fd82a7f3db162",
+    "winogrande/provenance.json": "10a5eef25390b34cd7e295e79f7746ed6c59713cb19d6887da2d4b81bb72d603",
+    "sciq/results.json": "ae3b1c4d21da467184d3b338b16c813d6ab4ccb795672af7282515da5c2407fe",
+    "sciq/provenance.json": "058dcf0985abde9dc284dff3b292aa9fab0711455f2c287622d7ea1c1be114f8"
+  },
+  "checkpoint_health_evidence": "swa-160m-baseline-40000-checkpoint.json",
+  "retained_checkpoint_count": 8,
+  "training_setting_changes": false,
+  "goal_complete": false,
+  "note": "This arm is complete. The full goal requires baseline, A and B, 24 full tasks, the final comparison figures and publication."
+}

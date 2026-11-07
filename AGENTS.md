@@ -2,6 +2,7 @@
 
 ## 2026-11-07 训练设置不可变与自动故障恢复（用户硬约束）
 
+- **SWA baseline已完成，禁止重跑**：北京时间2026-11-07 18:45完成40000步及8项完整下游，最终val loss3.180143118、宏平均46.3682088%。最终SHA `7e7090838efc84f13b18ff4926d0df090ebb1650eead456c585e9e5d5c7aeb38`，8份checkpoint全部保留并重新hash，21465条样本/逐样本得分/全量零样本来源独立核验通过。证据 `docs/evidence/swa-160m-baseline-completed-20261107.json` 与 `swa-160m-baseline-40000-checkpoint.json`。全程5次正常AMP重试、0次非有限前向/恢复，160个定期验证点无回升。控制器已自动进入同cohort的 **A-training**，八卡真实进程已核实；B完整训练和A/B全部下游、三组图表/汇总/最终发布仍待完成，Goal保持active。不得将baseline完成误报为整个Goal完成。
 - 用户明确要求写入 skill：修复、加速、恢复不能改变任何训练 setting 参数，尤其不得改 LR/优化器、精度、batch、数据/顺序、seed、步数、验证和每5000步保存策略。baseline 为共同基座，A/B 仅限声明的融合结构差异。执行本项目相关工作时必须读取 [yoco-reproduction skill](.agents/skills/yoco-reproduction/SKILL.md)。
 - 用户要求自动检测 NaN/Inf、持续 loss 异常和停滞，保留故障现场、校验最近健康完整 checkpoint，自动回退并重跑相同数据，不需要用户人工巡检；正常 AMP overflow 和单 batch 噪声不能误报。禁止自动降 LR、改精度、跳过 batch、清 optimizer/RNG/scaler 或无限重启。
 - `tools/watch_swa_training.py` 为外部监督器，附着已有 cohort 而不重启健康作业；`guard-contract.json` 锁定冻结配置/代码/data hash。重复故障输出只读诊断并由 active Goal 继续定位兼容修复，不冒称任何未知代码 bug 均已自动修好。

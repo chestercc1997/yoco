@@ -1,6 +1,20 @@
 # YOCO-SWA 160M：baseline、方法 A、方法 B
 
-2026-11-07 用户授权在本机 8×A100 完整训练三组，并开启持续 Goal：每组 40000 步、八项完整下游测试，再导出原始曲线、图表与汇总。新实验为 **滑动窗口 self-decoder**；此前完成的 gRet160M 三组和 gRet400M A 原样保留。当前尚无最终 SWA 指标。
+2026-11-07 用户授权在本机 8×A100 完整训练三组，并开启持续 Goal：每组 40000 步、八项完整下游测试，再导出原始曲线、图表与汇总。新实验为 **滑动窗口 self-decoder**；此前完成的 gRet160M 三组和 gRet400M A 原样保留。
+
+## 当前结果
+
+截至北京时间2026-11-07 18:45，baseline已完成40000步及八项完整零样本评测，方法A已在同一cohort八卡接续训练，B待后续阶段。三组对比和最终图表尚未完成，Goal保持进行。
+
+| 组别 | 完整训练/下游 | 最终验证loss | 八项宏平均 |
+| --- | --- | ---: | ---: |
+| baseline | 40000步、8/8项完成 | 3.180143 | 46.3682% |
+| A / learned_kv | 八卡训练中 | 待完成 | 待完成 |
+| B / conditional_kv | 待运行 | 待完成 | 待完成 |
+
+[baseline完成证据](evidence/swa-160m-baseline-completed-20261107.json)已独立核对21465条样本、逐样本得分均值、零样本/全量设置、数据锁、任务YAML和最终checkpoint来源。八项分别为ARC-E46.7172%、ARC-C24.3174%、BoolQ61.9878%、HellaSwag31.1193%、OpenBookQA28.8000%、PIQA62.6224%、WinoGrande49.8816%、SciQ65.5000%；BoolQ/WinoGrande使用acc，其余使用acc_norm。
+
+[第40000步完整状态](evidence/swa-160m-baseline-40000-checkpoint.json)的405个模型/optimizer张量均有限，101组optimizer step均40000，配置及scaler超参数未改，八卡RNG完整；全部8份每5000步checkpoint的SHA均重新核验一致。40000个成功更新、160个定期验证点齐全，验证loss持续下降，最大回升为0；全程5次原AMP策略溢出重试、0次非有限前向、0次checkpoint回退。四组退避事件的八卡状态均同步，重试更新均以有限loss/grad norm完成，最终scaler growth tracker962符合最后退避后的成功更新数。所有数值为本次单seed结果。
 
 ## 结构和共同基座
 
