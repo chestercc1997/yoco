@@ -66,6 +66,8 @@ python tools/run_swa_ab.py --run-dir runs/yoco-swa-160m-ab-8gpu-20261107
 
 按用户最新要求，[复现 skill](../.agents/skills/yoco-reproduction/SKILL.md)将“任何训练 setting 参数都不能改动”作为硬约束。已注册到本机全局 skill 发现目录，仓库保存可审阅版本。不能通过降低 LR、改精度/AMP 策略、改 batch/grad clip、缩减预算或验证、跳过失败 batch、清 optimizer/RNG/scaler 来隐藏故障。
 
+实际训练首次AMP梯度溢出发生在成功完成28043步之后、尝试28044步时。[八卡现场核验](evidence/swa-160m-baseline-first-amp-backoff.json)确认：八个rank同步按原backoff因子0.5将scale从2097152退至1048576，growth tracker全部归零，同一28044步重试成功，loss=3.226188660、裁剪前grad norm=0.446501911均有限。配置与scaler超参数未改，没有checkpoint回退。相同步号及未改动的stateless sampler证明数据索引重用；未另外捕获token字节作比对。此处记录梯度溢出重试，前向loss未出现NaN/Inf；后续完整训练与下游仍需完成。
+
 [外部监督器](../tools/watch_swa_training.py)已附着正在训练的 cohort，tmux `yoco-swa-160m-guard`；没有重启健康的训练作业。它每10秒检查日志：
 
 - 任一卡的非有限前向、非有限验证 loss、worker 退出或训练停滞600秒，触发故障处理。
