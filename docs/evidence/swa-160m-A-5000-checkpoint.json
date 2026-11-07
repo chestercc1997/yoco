@@ -1,0 +1,82 @@
+{
+  "path": "/root/yoco/runs/yoco-swa-160m-ab-8gpu-20261107/A/checkpoint_00005000.pt",
+  "step": 5000,
+  "sha256": "f39975d980a379c7222559e50a02e6a713b47936d9f05691c73b3a41a0b92f49",
+  "fingerprint": "d1ae05a1dceab42c10eae8e9e2e1dc45fee02c79bdb0b342372f1bec2d39e73c",
+  "finite_tensors_checked": 409,
+  "full_optimizer_scaler_eight_rank_rng": true,
+  "checkpoint_health_verified": true,
+  "training_setting_changes": false,
+  "config_matches_frozen_release": true,
+  "model_parameter_dtype": "float32",
+  "training_precision": "fp16_mixed_fp32_params",
+  "optimizer_hyperparameters_match": true,
+  "optimizer_parameter_states": 102,
+  "all_optimizer_steps": 5000,
+  "learning_rate": 0.00013249211356466874,
+  "seed": 42,
+  "global_batch_tokens": 262144,
+  "checkpoint_every": 5000,
+  "retention_all": true,
+  "accepted_training_points": 5000,
+  "scheduled_validation_points": 20,
+  "validation_loss": 3.737168550491333,
+  "maximum_validation_regression": 0,
+  "nonfinite_forward_events": 0,
+  "overflow_retries": 0,
+  "scaler_hyperparameters": {
+    "growth_factor": 2.0,
+    "backoff_factor": 0.5,
+    "growth_interval": 2000
+  },
+  "partial_only": true,
+  "note": "Verified A update 5000 checkpoint. All three full 40000-step runs, full downstream tasks, final comparison and publication must be checked separately.",
+  "scaler_state_at_checkpoint": {
+    "scale": 512.0,
+    "growth_factor": 2.0,
+    "backoff_factor": 0.5,
+    "growth_interval": 2000,
+    "_growth_tracker": 1000
+  },
+  "arm": "A",
+  "fusion_control_audit": {
+    "mode": "learned_kv",
+    "parameter": "memory_fusion.logits",
+    "source_layers": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "temperature": 1.0,
+    "initialization_sha256": "433f54a5b15504a657a0dbea758e6e677eb8cc8eb8f5d6a22baec490c844c0a7",
+    "initial_logits": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "checkpoint_logits": [
+      -0.40308403968811035,
+      -0.37147265672683716,
+      -0.35288679599761963,
+      -0.15817467868328094,
+      0.2168920487165451,
+      0.4402868449687958
+    ],
+    "checkpoint_softmax_weights": [
+      0.11703883856534958,
+      0.12079770117998123,
+      0.1230638176202774,
+      0.14951775968074799,
+      0.21756157279014587,
+      0.2720203101634979
+    ],
+    "moved_from_initialization": true,
+    "finite_positive_normalized_weights": true
+  }
+}
