@@ -1,0 +1,65 @@
+{
+  "path": "/root/yoco/runs/yoco-swa-160m-ab-8gpu-20261107/A/checkpoint_00020000.pt",
+  "step": 20000,
+  "sha256": "52293990002fe5301ff4a40eb78df4df3a9433513b5fb441e1a412b98bc5a1eb",
+  "fingerprint": "d1ae05a1dceab42c10eae8e9e2e1dc45fee02c79bdb0b342372f1bec2d39e73c",
+  "finite_tensors_checked": 409,
+  "full_optimizer_scaler_eight_rank_rng": true,
+  "checkpoint_health_verified": true,
+  "training_setting_changes": false,
+  "config_matches_frozen_release": true,
+  "model_parameter_dtype": "float32",
+  "training_precision": "fp16_mixed_fp32_params",
+  "optimizer_hyperparameters_match": true,
+  "optimizer_parameter_states": 102,
+  "all_optimizer_steps": 20000,
+  "learning_rate": 7.570977917981071e-05,
+  "seed": 42,
+  "global_batch_tokens": 262144,
+  "checkpoint_every": 5000,
+  "retention_all": true,
+  "accepted_training_points": 20000,
+  "scheduled_validation_points": 80,
+  "validation_loss": 3.292289972305298,
+  "maximum_validation_regression": 0,
+  "nonfinite_forward_events": 0,
+  "overflow_retries": 0,
+  "scaler_hyperparameters": {
+    "growth_factor": 2.0,
+    "backoff_factor": 0.5,
+    "growth_interval": 2000
+  },
+  "partial_only": true,
+  "note": "Verified A update 20000 checkpoint. All three full 40000-step runs, full downstream tasks, final comparison and publication must be checked separately.",
+  "scaler_state_at_checkpoint": {
+    "scale": 131072.0,
+    "growth_factor": 2.0,
+    "backoff_factor": 0.5,
+    "growth_interval": 2000,
+    "_growth_tracker": 0
+  },
+  "arm": "A",
+  "retained_checkpoint_count": 4,
+  "retained_checkpoints_sha256_verified": [
+    {
+      "step": 5000,
+      "file": "checkpoint_00005000.pt",
+      "sha256": "f39975d980a379c7222559e50a02e6a713b47936d9f05691c73b3a41a0b92f49"
+    },
+    {
+      "step": 10000,
+      "file": "checkpoint_00010000.pt",
+      "sha256": "c94d2ff6e550127f176e42c72e906018aa7e048d45cebb60a288bdc9956bb59b"
+    },
+    {
+      "step": 15000,
+      "file": "checkpoint_00015000.pt",
+      "sha256": "1332d27b85e7713531d59b60d2c8c6c22a3dc2135369bf1a05258822bb907028"
+    },
+    {
+      "step": 20000,
+      "file": "checkpoint_00020000.pt",
+      "sha256": "52293990002fe5301ff4a40eb78df4df3a9433513b5fb441e1a412b98bc5a1eb"
+    }
+  ]
+}
