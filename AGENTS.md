@@ -9,6 +9,7 @@
 - SWA 三组真实八卡恢复、按位加载、连续/重复及 eval smoke 已全部通过；当前 `runs/setup/swa-160m-active.json` 指向 `runs/yoco-swa-160m-ab-8gpu-20261107`，控制器已于UTC04:14启动 baseline 正式阶段。先读 pipeline/guard 状态，不重复启动。Goal 仍 active，须完成三个40000步、24项全量评测、七张图与汇总后发布。
 - baseline首个5000步checkpoint已保存并独立核验，SHA `57843c1aba08b1649ce322f4c4bd2b91e32b7018e4934b20be7c82d91fdbc5af`；405张量有限、101个optimizer step均5000、hyperparams符合冻结设置，scaler与八卡RNG完整。阶段证据 `docs/evidence/swa-160m-baseline-5000-checkpoint.json`；运行内健康报告在 `baseline/checkpoint-health/00005000.json`，不要把诊断报告命名成可被trainer glob误扫的 `checkpoint_*.json`。当前训练继续，不能因阶段核验通过报告整个Goal完成。
 - baseline第10000步checkpoint同样已独立核验，SHA `d6991db01a71294aa514a2e23d1d754bd7266e4d2d17da10cd1ba1340c69ec9f`，405张量有限、101组optimizer step均10000、配置及scaler超参数保持原值。证据 `docs/evidence/swa-160m-baseline-10000-checkpoint.json`；val loss3.477878332，前40个定期验证点无回升，尚无NaN/Inf、overflow或恢复。原八卡训练仍继续，不重新启动；这个四分之一节点不是Goal完成。
+- 最新已核验baseline第15000步checkpoint，SHA `84025b6b9dc2f2fec5619bfdf22ce727e23ca8a3ab720b5b9aa145a3d9c363a5`；405张量有限、101组optimizer step均15000、冻结配置与scaler参数未变，val loss3.362773657，前60个定期验证点无回升。证据 `docs/evidence/swa-160m-baseline-15000-checkpoint.json`。5000/10000/15000均保留；八卡作业继续，Goal保持active。
 
 ## 2026-11-07 YOCO-SWA 160M baseline/A/B 完整 Goal（当前目标）
 
