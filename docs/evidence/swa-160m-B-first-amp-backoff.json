@@ -1,0 +1,112 @@
+{
+  "passed": true,
+  "arm": "B",
+  "last_successful_update": 28586,
+  "attempted_update_retried": 28587,
+  "eight_rank_synchronized_backoff": true,
+  "growth_tracker_reset_to_zero": true,
+  "same_update_retried_and_completed": true,
+  "next_update_loss_and_gradient_finite": true,
+  "checkpoint_rollback": false,
+  "manual_training_setting_changes": false,
+  "frozen_config_contract_verified": true,
+  "scaler_hyperparameters_unchanged": {
+    "growth_factor": 2.0,
+    "backoff_factor": 0.5,
+    "growth_interval": 2000
+  },
+  "trainer_sha256": "47991278fafdbf4bb588521adf47b8ee28de2ec94bac954b0ae9c22b90f49b02",
+  "data_order_evidence": "The unchanged stateless sampler derives indices from the last successful update, microbatch and rank; the rejected attempt does not increment the update. This is code-derived, not a separately captured token-byte comparison.",
+  "ranks": [
+    {
+      "rank": 0,
+      "event_time": "2026-11-07T22:35:48.721307+00:00",
+      "previous_scale": 2097152.0,
+      "backoff_scale": 1048576.0,
+      "growth_tracker_after_backoff": 0,
+      "rejected_attempts": 1,
+      "next_successful_update": 28587,
+      "next_loss": 3.234086751937866,
+      "next_grad_norm": 0.38710325956344604
+    },
+    {
+      "rank": 1,
+      "event_time": "2026-11-07T22:35:48.721290+00:00",
+      "previous_scale": 2097152.0,
+      "backoff_scale": 1048576.0,
+      "growth_tracker_after_backoff": 0,
+      "rejected_attempts": 1,
+      "next_successful_update": 28587,
+      "next_loss": 3.234086751937866,
+      "next_grad_norm": 0.38710325956344604
+    },
+    {
+      "rank": 2,
+      "event_time": "2026-11-07T22:35:48.721299+00:00",
+      "previous_scale": 2097152.0,
+      "backoff_scale": 1048576.0,
+      "growth_tracker_after_backoff": 0,
+      "rejected_attempts": 1,
+      "next_successful_update": 28587,
+      "next_loss": 3.234086751937866,
+      "next_grad_norm": 0.38710325956344604
+    },
+    {
+      "rank": 3,
+      "event_time": "2026-11-07T22:35:48.721303+00:00",
+      "previous_scale": 2097152.0,
+      "backoff_scale": 1048576.0,
+      "growth_tracker_after_backoff": 0,
+      "rejected_attempts": 1,
+      "next_successful_update": 28587,
+      "next_loss": 3.234086751937866,
+      "next_grad_norm": 0.38710325956344604
+    },
+    {
+      "rank": 4,
+      "event_time": "2026-11-07T22:35:48.721329+00:00",
+      "previous_scale": 2097152.0,
+      "backoff_scale": 1048576.0,
+      "growth_tracker_after_backoff": 0,
+      "rejected_attempts": 1,
+      "next_successful_update": 28587,
+      "next_loss": 3.234086751937866,
+      "next_grad_norm": 0.38710325956344604
+    },
+    {
+      "rank": 5,
+      "event_time": "2026-11-07T22:35:48.721341+00:00",
+      "previous_scale": 2097152.0,
+      "backoff_scale": 1048576.0,
+      "growth_tracker_after_backoff": 0,
+      "rejected_attempts": 1,
+      "next_successful_update": 28587,
+      "next_loss": 3.234086751937866,
+      "next_grad_norm": 0.38710325956344604
+    },
+    {
+      "rank": 6,
+      "event_time": "2026-11-07T22:35:48.721295+00:00",
+      "previous_scale": 2097152.0,
+      "backoff_scale": 1048576.0,
+      "growth_tracker_after_backoff": 0,
+      "rejected_attempts": 1,
+      "next_successful_update": 28587,
+      "next_loss": 3.234086751937866,
+      "next_grad_norm": 0.38710325956344604
+    },
+    {
+      "rank": 7,
+      "event_time": "2026-11-07T22:35:48.723429+00:00",
+      "previous_scale": 2097152.0,
+      "backoff_scale": 1048576.0,
+      "growth_tracker_after_backoff": 0,
+      "rejected_attempts": 1,
+      "next_successful_update": 28587,
+      "next_loss": 3.234086751937866,
+      "next_grad_norm": 0.38710325956344604
+    }
+  ],
+  "partial_only": true,
+  "note": "An AMP gradient overflow retry, not a nonfinite forward loss or a checkpoint rollback. Complete training/evaluation and convergence still need the full run."
+}
