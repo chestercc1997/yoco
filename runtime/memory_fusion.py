@@ -33,8 +33,11 @@ class FusionConfig:
             raise ValueError('source_layers are one-based self-decoder layer indices')
         if list(layers) != sorted(set(layers)) or layers[-1] != depth:
             raise ValueError('source_layers must be unique, ascending, and include the final self layer')
-        if model_args.n_layers % 2 or model_args.sliding_window is not None:
-            raise ValueError('Fusion v1 requires even-depth YOCO-gRet')
+        if model_args.n_layers % 2:
+            raise ValueError('Depth fusion requires even-depth YOCO')
+        if model_args.sliding_window is not None and (
+                type(model_args.sliding_window) is not int or model_args.sliding_window<1):
+            raise ValueError('sliding_window must be a positive integer or None')
         temperature = value.get('temperature', 1.0)
         if isinstance(temperature, bool) or not isinstance(temperature, (int, float)) or not math.isfinite(temperature) or temperature <= 0:
             raise ValueError('temperature must be finite and positive')

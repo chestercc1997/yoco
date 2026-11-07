@@ -1,8 +1,21 @@
 # 400M 方法 A 八卡训练
 
-2026 年 11 月 5 日，400M 方法 A 已在本机 8×A100 80GB PCIe 上开始完整训练，目标为 40000 步及八项下游评测。当前尚无最终指标；[启动时状态](evidence/400m-A-launch.json)是发布时的快照，实时状态在本机 `runs/setup/400m-A-active.json`。160M 已完成结果继续保存在[原三组报告](../evaluation/ab_baseline_20261104/README.md)，两种规模的结果分开记录。
+400M 方法 A 已在本机 8×A100 80GB PCIe 上完成 **40000 步及八项完整下游评测**，北京时间 2026 年 11 月 7 日 04:37 结束。最终验证 loss **2.918183804**，八项宏平均 **48.5269685%**。最终 checkpoint SHA256 已独立重新计算，八项评测的 checkpoint、完整文档数及结果均核验通过，见[完成证据](evidence/400m-A-completed-20261107.json)。每 5000 步的八份正式 checkpoint 分别保存在恢复链的三个 run 中，全部保留。
 
-## 当前：retention 溢出修复，从第 20000 步续训
+| 任务 | accuracy / acc_norm (%) |
+| --- | ---: |
+| ARC-Easy | 48.4848 |
+| ARC-Challenge | 26.7918 |
+| BoolQ | 62.1713 |
+| HellaSwag | 36.4370 |
+| OpenBookQA | 31.8000 |
+| PIQA | 65.2339 |
+| WinoGrande | 51.6969 |
+| SciQ | 65.6000 |
+
+最终/最佳验证 loss 相同，正式恢复链的验证 loss 最大回升为 0，记录 11 次 AMP 溢出重试；retention 修复后的正式 run 没有非有限前向事件。旧失败尾段不计入最终训练曲线。该规模仅训练 A，没有 400M baseline/B 对照；160M gRet 结果保存在[原三组报告](../evaluation/ab_baseline_20261104/README.md)。
+
+## retention 溢出修复与第 20000 步恢复记录
 
 第二次作业在 24935/rank0/microbatch1 发生前向 NaN，已保存模型与输入现场。该故障在未编译和按层编译的 FP16 路径均可复现，关闭 FP16 reduced-precision reduction 也无法消除；全 FP32 仅作为诊断参照时正常。[现场对照](evidence/400m-A-retention-fix/before.json)显示，第一个异常在 self layer 1 的 retention 输出、RMSNorm 输入处。q/k/v、chunk 内项及 FP32 recurrent states 均有限，但跨块矩阵乘法被 autocast 写成 FP16，69 个值溢出；加和后有 94 个非有限值，随后归一化扩散成 NaN。详见[逐运算定位](evidence/400m-A-retention-fix/retention-operation-check.json)。这次有实际现场支持，不将其倒推为已证明第一次 14311 故障的唯一原因。
 
@@ -14,7 +27,7 @@
 
 当前作业为 `runs/yoco-400m-A-8gpu-retentionfix-20261106`，来源为前一作业的完整第 20000 步 checkpoint。真实数据八卡恢复、连续及独立重复运行、eval smoke 已通过，随后从受检 20004 步正式继续到 40000。额外执行了[恢复前精确加载核对](evidence/400m-A-retention-fix/exact-restore.json)：每个 rank 核对 891 个张量，模型、optimizer、scaler 和 RNG 全部逐项一致，且没有进行任何前向或 optimizer update。训练后不要求 GPU AMP 运算逐位相同；[恢复对照](evidence/400m-A-retention-fix/resume-check.json)记录独立重复误差、2 倍误差范围、硬上限及旧阈值被重复运行超出的情况。模型恢复后相对 L2 为 5.98e-6，连续重复自身 1.34e-5；最大 loss 差异仍受 5e-5 限制。精确加载核对与训练后舍入变异分开记录，不通过改训练精度来通过检查。
 
-实时状态仍从 ACTIVE 查询；新结果递归接续前两次 run 的前 20000 步，排除各次失败尾段。每 5000 步正式 checkpoint 全部保留，完成后仍自动做八项下游；以下首次恢复记录为历史证据。
+最终结果递归接续前两次 run 的前 20000 步，排除各次失败尾段。八项下游已全部完成；以下为恢复时保存的历史证据。
 
 ## 首次 AMP 计数修复（历史）
 

@@ -5,19 +5,26 @@ trees into one reproducible project. It contains model and training code,
 evaluation and inference benchmarks, pinned dataset metadata, measured tables,
 and figures. Checkpoints and training data are intentionally excluded.
 
-## Current 400M A training
+## Current SWA 160M baseline / A / B experiment
 
-Method A is now training at **400.59M parameters on 8×A100**, with the same data,
-FP16 mixed precision with FP32 parameters, global batch and 40,000-update schedule. The model has
-24 layers and 12 global K/V mixture weights. The current run resumed from update
-20,000 after reproducing and fixing a retention overflow: cross-chunk FP32 state
-accumulation must stay FP32 until RMSNorm, then return to the FP16 activation
-interface. Eight-rank checkpoint restoration is audited bit for bit before any
-forward pass. Data, global FP16 mixed precision, batch, schedule and the
-5,000-update checkpoint cadence are unchanged. Compilation is currently disabled:
-its gradient difference at the captured failure exceeded the original acceptance
-criterion. Final training and downstream scores are pending.
-See the [400M A configuration, numerical checks and run record](docs/PLAN_A_400M_8GPU.md).
+The new cohort uses YOCO's **sliding-window self-decoder**, with the paper's
+1,024-token window, followed by the shared global K/V cross-decoder. Baseline,
+learned K/V fusion (A), and conditional K/V fusion (B) share bitwise-equal backbone
+initializations and the existing FineWeb-Edu/tokenizer/FP16 training recipe.
+Each arm runs on 8×A100 for 40,000 updates and all eight downstream tasks;
+every 5,000-update checkpoint is retained. The controller first checks real-data
+eight-rank checkpoint restoration for all three arms. Final SWA results are pending.
+See [configuration, checks and live-status commands](docs/SWA_160M_AB.md).
+
+## Completed 400M A training
+
+Method A at **400.59M parameters on 8×A100** completed 40,000 updates and eight
+full downstream tasks on November 7, 2026: validation loss **2.918184**,
+eight-task macro average **48.5270%**. The final checkpoint SHA256 and all eight
+evaluation provenance records were verified independently. This run resumed after
+the documented retention arithmetic repair, with compilation disabled; its
+post-repair segment recorded no nonfinite forward events. Baseline/B were not
+trained at this size. See the [completed run and repair record](docs/PLAN_A_400M_8GPU.md).
 
 ## Completed 160M A/B experiment
 

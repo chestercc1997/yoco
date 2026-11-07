@@ -16,7 +16,7 @@ def main():
     p.add_argument('--release',type=Path,required=True)
     p.add_argument('--config',type=Path,required=True)
     p.add_argument('--checkpoint',type=Path,required=True)
-    p.add_argument('--model-repair',type=Path,required=True)
+    p.add_argument('--model-repair',type=Path)
     p.add_argument('--run-dir',type=Path,required=True)
     args=p.parse_args()
     sys.path.insert(0,str(args.release.resolve()))
@@ -73,7 +73,8 @@ def main():
         raise SystemExit(0)
     trainer.log=audited_log
     sys.argv=['runtime.train','--config',str(args.config),'--run-dir',str(args.run_dir),
-              '--resume-from',str(args.checkpoint),'--model-repair',str(args.model_repair)]
+              '--resume-from',str(args.checkpoint)]
+    if args.model_repair:sys.argv+=['--model-repair',str(args.model_repair)]
     trainer.main()
 
 

@@ -1,5 +1,13 @@
 # 用户执行约束（2026-10-29）
 
+## 2026-11-07 YOCO-SWA 160M baseline/A/B 完整 Goal（当前目标）
+
+- 用户明确要求“另外一种模式160m，包括方法A、B以及base，开启goal模式”，已创建 active Goal，须持续完成三组完整训练、各八项下游、曲线汇总并同步 GitHub。不要只跑 pilot，不要在只启动后台任务后把 Goal 标为 complete。
+- 新目标是 **YOCO-SWA**，官方论文窗口 1024；沿用既有 160M 档 dim768、12层、FFN2304、tied embeddings、数据/tokenizer/seed42 与全部训练超参数。SWA self heads=12，attention/KV heads=12。该结构实际参数量会重新核算，不能宣称与 gRet166.7M 完全相同。
+- 三组各 8×A100，串行 baseline→A→B；相同 FP16 mixed/FP32 参数、microbatch4、accum4、全局262144tokens、序列2048、40000步、每250步2048条验证、每5000步保存全部保留。三组使用共同 **SWA** baseline 初始化，不加载 gRet/400M 训练权重。A/B仍为6来源 learned_kv / conditional_kv，不用旧hidden-state static/token实现替代。
+- 配置为 `configs/yoco_160m_swa_{baseline,A,B}_8gpu.json`。当前已添加 SWA 融合支持与 default max_batch_size=0 的窗口缓存分配修复，下一步必须做共同基座、退化极限、窗口边界、因果性、增量缓存等价与梯度检查，再冻结新 release、八卡真实数据恢复检查后正式跑。初期不启用未验证编译，不改全局训练精度。
+- 400M A **已经完成** 40000步及8项完整下游，PIPELINE_SUCCESS存在，最终SHA已独立核验：`5eb2be389bd252d7463ce734761ff69e288196f0b4a99edad2708b874a027839`。最终val loss2.918183804，下游macro48.5269685%，北京时间11月7日04:37结束。运行目录 `runs/yoco-400m-A-8gpu-retentionfix-20261106`，禁止重启。最终证据 `docs/evidence/400m-A-completed-20261107.json`。此前 gRet160M三组同样保留，不混入SWA结果。
+
 ## 2026-11-06 第二次 NaN 的可复现修复与第 20000 步恢复（最新）
 
 - 用户再次明确要求修复后从上一个正常 checkpoint 续训。上一修复 run `runs/yoco-400m-A-8gpu-repaired-20261106` 已在完成 24934 步后、24935/rank0/microbatch1 出现前向 NaN 而停止，不能再称其仍在训练或已完成；下游未开始。真实故障现场在该 run 的 `nonfinite_forward_00024935_rank0.pt`，不需要重放几千步。

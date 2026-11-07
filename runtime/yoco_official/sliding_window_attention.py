@@ -19,6 +19,8 @@ class SlidingWindowAttention(nn.Module):
         self.embed_dim = args.dim
         self.num_heads = args.n_self_heads // args.model_parallel_size
         self.window_size = args.sliding_window
+        if type(self.window_size) is not int or self.window_size<1:
+            raise ValueError('Sliding-window attention needs a positive integer window')
 
         self.head_dim = args.dim // args.n_self_heads
 
@@ -49,8 +51,9 @@ class SlidingWindowAttention(nn.Module):
         k = apply_rotary_emb(k, *rel_pos, interleaved=True)
         if incremental_state is not None:
             if "prev_key" not in incremental_state:
-                incremental_state["prev_key"] = torch.empty(self.args.max_batch_size, self.window_size, self.num_heads, self.head_dim, device=x.device, dtype=x.dtype)
-                incremental_state["prev_value"] = torch.empty(self.args.max_batch_size, self.window_size, self.num_heads, self.head_dim, device=x.device, dtype=x.dtype)
+                capacity = max(bsz, self.args.max_batch_size)
+                incremental_state["prev_key"] = torch.empty(capacity, self.window_size, self.num_heads, self.head_dim, device=x.device, dtype=x.dtype)
+                incremental_state["prev_value"] = torch.empty(capacity, self.window_size, self.num_heads, self.head_dim, device=x.device, dtype=x.dtype)
 
             key = torch.cat([incremental_state["prev_key"][:bsz, :start_pos], k], dim=1)
             value = torch.cat([incremental_state["prev_value"][:bsz, :start_pos], v], dim=1)

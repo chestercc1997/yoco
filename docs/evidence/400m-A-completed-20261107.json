@@ -1,0 +1,75 @@
+{
+  "complete": true,
+  "step": 40000,
+  "checkpoint": "/root/yoco/runs/yoco-400m-A-8gpu-retentionfix-20261106/checkpoint_00040000.pt",
+  "sha256": "5eb2be389bd252d7463ce734761ff69e288196f0b4a99edad2708b874a027839",
+  "world_size": 8,
+  "method": "A",
+  "parameters": 400590860,
+  "global_batch_tokens": 262144,
+  "total_training_tokens": 10485760000,
+  "tasks": [
+    {
+      "task": "arc_easy",
+      "metric": "acc_norm,none",
+      "score": 0.48484848484848486,
+      "documents": 2376
+    },
+    {
+      "task": "arc_challenge",
+      "metric": "acc_norm,none",
+      "score": 0.26791808873720135,
+      "documents": 1172
+    },
+    {
+      "task": "boolq",
+      "metric": "acc,none",
+      "score": 0.6217125382262997,
+      "documents": 3270
+    },
+    {
+      "task": "hellaswag",
+      "metric": "acc_norm,none",
+      "score": 0.36436964748058154,
+      "documents": 10042
+    },
+    {
+      "task": "openbookqa",
+      "metric": "acc_norm,none",
+      "score": 0.318,
+      "documents": 500
+    },
+    {
+      "task": "piqa",
+      "metric": "acc_norm,none",
+      "score": 0.6523394994559304,
+      "documents": 1838
+    },
+    {
+      "task": "winogrande",
+      "metric": "acc,none",
+      "score": 0.5169692186266772,
+      "documents": 1267
+    },
+    {
+      "task": "sciq",
+      "metric": "acc_norm,none",
+      "score": 0.656,
+      "documents": 1000
+    }
+  ],
+  "macro_accuracy": 0.4852696846718969,
+  "completed_at": "2026-11-06T20:37:39.045171+00:00",
+  "training_review": {
+    "final_validation_loss": 2.9181838035583496,
+    "best_validation_loss": 2.9181838035583496,
+    "maximum_validation_regression": 0.0,
+    "overflow_retries": 11,
+    "maximum_gradient_norm": 33.67215347290039,
+    "convergence_warning": false,
+    "note": "Pipeline completion proves training/evaluation completion; assess convergence separately."
+  },
+  "final_checkpoint_independently_sha256_verified": true,
+  "eight_task_provenance_documents_and_full_limits_verified": true,
+  "completed_at_beijing": "2026-11-07 04:37:39 +08:00"
+}

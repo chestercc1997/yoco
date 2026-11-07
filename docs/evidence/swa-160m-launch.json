@@ -1,0 +1,67 @@
+{
+  "state": "A-check-resume",
+  "run_dir": "/root/yoco/runs/yoco-swa-160m-ab-8gpu-20261107",
+  "pid": 1941321,
+  "started_at": "2026-11-07T04:04:41.808484+00:00",
+  "stages": {
+    "offline-data": {
+      "state": "passed",
+      "log": "/root/yoco/runs/yoco-swa-160m-ab-8gpu-20261107/offline-data.log"
+    },
+    "baseline-check-first": {
+      "state": "passed",
+      "log": "/root/yoco/runs/yoco-swa-160m-ab-8gpu-20261107/baseline-check-first.log"
+    },
+    "baseline-check-resume": {
+      "state": "passed",
+      "log": "/root/yoco/runs/yoco-swa-160m-ab-8gpu-20261107/baseline-check-resume.log"
+    },
+    "baseline-check-direct": {
+      "state": "passed",
+      "log": "/root/yoco/runs/yoco-swa-160m-ab-8gpu-20261107/baseline-check-direct.log"
+    },
+    "baseline-check-repeat": {
+      "state": "passed",
+      "log": "/root/yoco/runs/yoco-swa-160m-ab-8gpu-20261107/baseline-check-repeat.log"
+    },
+    "baseline-exact-restore": {
+      "state": "passed",
+      "log": "/root/yoco/runs/yoco-swa-160m-ab-8gpu-20261107/baseline-exact-restore.log"
+    },
+    "baseline-eight-gpu-check": {
+      "state": "passed",
+      "proof": "/root/yoco/runs/yoco-swa-160m-ab-8gpu-20261107/baseline/resume-verification.json"
+    },
+    "baseline-eval-smoke": {
+      "state": "passed",
+      "log": "/root/yoco/runs/yoco-swa-160m-ab-8gpu-20261107/baseline-eval-smoke.log"
+    },
+    "A-check-first": {
+      "state": "passed",
+      "log": "/root/yoco/runs/yoco-swa-160m-ab-8gpu-20261107/A-check-first.log"
+    },
+    "A-check-resume": {
+      "state": "running",
+      "log": "/root/yoco/runs/yoco-swa-160m-ab-8gpu-20261107/A-check-resume.log"
+    }
+  },
+  "architecture": "YOCO-SWA",
+  "world_size": 8,
+  "arms": [
+    "baseline",
+    "A",
+    "B"
+  ],
+  "target_steps_per_arm": 40000,
+  "devices": [
+    "NVIDIA A100 80GB PCIe",
+    "NVIDIA A100 80GB PCIe",
+    "NVIDIA A100 80GB PCIe",
+    "NVIDIA A100 80GB PCIe",
+    "NVIDIA A100 80GB PCIe",
+    "NVIDIA A100 80GB PCIe",
+    "NVIDIA A100 80GB PCIe",
+    "NVIDIA A100 80GB PCIe"
+  ],
+  "updated_at": "2026-11-07T04:08:36.171153+00:00"
+}
