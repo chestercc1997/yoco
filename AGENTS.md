@@ -7,6 +7,7 @@
 - `tools/watch_swa_training.py` 为外部监督器，附着已有 cohort 而不重启健康作业；`guard-contract.json` 锁定冻结配置/代码/data hash。重复故障输出只读诊断并由 active Goal 继续定位兼容修复，不冒称任何未知代码 bug 均已自动修好。
 - 监督器已运行（tmux `yoco-swa-160m-guard`），状态 `runs/yoco-swa-160m-ab-8gpu-20261107/guard-state.json`；当前恢复次数为0。重载仅使用 `--replace-existing` 替换本 cohort 的监督器，保留训练控制器/worker；不能把重载监控误做重启训练。8项注入检查通过（含控制器退出后的 orphan worker 清理），`owned-processes.json` 保存 PID/start-time 归属，不能因控制器已退出而漏掉遗留 worker。skill 的仓库版本与本机全局发现路径 `/root/.codex/skills/yoco-reproduction` 同步（symlink）。
 - SWA 三组真实八卡恢复、按位加载、连续/重复及 eval smoke 已全部通过；当前 `runs/setup/swa-160m-active.json` 指向 `runs/yoco-swa-160m-ab-8gpu-20261107`，控制器已于UTC04:14启动 baseline 正式阶段。先读 pipeline/guard 状态，不重复启动。Goal 仍 active，须完成三个40000步、24项全量评测、七张图与汇总后发布。
+- baseline首个5000步checkpoint已保存并独立核验，SHA `57843c1aba08b1649ce322f4c4bd2b91e32b7018e4934b20be7c82d91fdbc5af`；405张量有限、101个optimizer step均5000、hyperparams符合冻结设置，scaler与八卡RNG完整。阶段证据 `docs/evidence/swa-160m-baseline-5000-checkpoint.json`；运行内健康报告在 `baseline/checkpoint-health/00005000.json`，不要把诊断报告命名成可被trainer glob误扫的 `checkpoint_*.json`。当前训练继续，不能因阶段核验通过报告整个Goal完成。
 
 ## 2026-11-07 YOCO-SWA 160M baseline/A/B 完整 Goal（当前目标）
 
