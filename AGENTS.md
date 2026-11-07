@@ -14,6 +14,7 @@
 - 最新已核验baseline第25000步checkpoint，SHA `dcb3d2977ca12bfa38824de4d9bceb9520f1cb5a06b4a7741eb4fdf2fe089741`；405张量有限、101组optimizer step均25000、冻结设置不变，val loss3.250399351，前100个定期验证点无回升。证据 `docs/evidence/swa-160m-baseline-25000-checkpoint.json`。五份正式checkpoint全部保留，baseline仍在八卡训练；A/B及下游尚未完成，Goal继续active。
 - 首次AMP梯度溢出在最后成功28043步后、尝试28044步时触发；八卡同步scale2097152→1048576、growth tracker归零，28044重试成功且loss/grad norm有限。未改训练设置、没有checkpoint回退，前向loss无NaN/Inf。证据 `docs/evidence/swa-160m-baseline-first-amp-backoff.json`；后续报告必须保留overflow重试计数，不能继续泛称完全没有Inf或任何数值事件。原配方正常AMP机制已处理此事件，继续观察，不重启训练。
 - 最新已核验baseline第30000步checkpoint，SHA `183ea1f5b3efe1a4bfc93f151057284b75b6b7aacfe47bb6ce283af5b5629ab1`；405张量有限、101组optimizer step均30000，val loss3.217280626，前120个定期验证点无回升，累计1次AMP重试、0次非有限前向/恢复。scaler保存的growth tracker1957与已核验退避后的成功更新数一致，配置未变。证据 `docs/evidence/swa-160m-baseline-30000-checkpoint.json`。六份正式checkpoint保留，原八卡作业继续至40000，Goal仍active。
+- 最新已核验baseline第35000步checkpoint，SHA `e174c5abbd67e8cb2d5496936d782e121f07d3915c506684baa315bcbe64d283`；405张量有限、101组optimizer step均35000，val loss3.193810701，前140个定期验证点无回升，累计4次AMP梯度溢出重试、0次非有限前向/恢复。八卡退避一致，各重试更新完成且loss/grad norm有限；保存的growth tracker378符合最后退避后的成功更新数，冻结训练设置未改。证据 `docs/evidence/swa-160m-baseline-35000-checkpoint.json`。七份正式checkpoint保留，原八卡训练继续，三组训练和下游尚未全部完成，Goal保持active。
 
 ## 2026-11-07 YOCO-SWA 160M baseline/A/B 完整 Goal（当前目标）
 

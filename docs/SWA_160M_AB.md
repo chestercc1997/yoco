@@ -50,6 +50,8 @@ baseline半程第20000步完成[独立核验](evidence/swa-160m-baseline-20000-c
 
 第30000步完成[独立核验](evidence/swa-160m-baseline-30000-checkpoint.json)：405个张量有限、101组optimizer step均30000，配置、optimizer/scaler超参数与八卡RNG保持原设置。前30000个更新及120个定期验证点齐全，验证loss=3.217280626，无验证loss回升、无非有限前向loss；累计1次AMP梯度溢出重试，未发生checkpoint回退。保存的scaler scale=1048576、growth tracker=1957，与28044重试成功后至30000的1957次成功更新及原2000次增长周期一致。六份正式checkpoint均保留，baseline继续至40000，三组全量任务尚未完成。
 
+第35000步完成[独立核验](evidence/swa-160m-baseline-35000-checkpoint.json)：405个张量有限、101组optimizer step均35000，实际配置、optimizer/scaler超参数与冻结配方一致。前35000个更新及140个定期验证点齐全，验证loss=3.193810701，无验证loss回升、无非有限前向loss。累计4次AMP梯度溢出重试，分别发生在28044、31669及34623步（最后一步重试前退避两次）；八卡退避状态一致，三个更新均以有限loss和grad norm完成，未发生checkpoint回退。保存的scale=524288、growth tracker=378，与最后退避后的成功更新数一致。七份正式checkpoint均保留，baseline继续至40000，三组训练和全量下游尚未全部完成。
+
 ```bash
 cat runs/setup/swa-160m-active.json
 cat runs/yoco-swa-160m-ab-8gpu-20261107/pipeline-status.json

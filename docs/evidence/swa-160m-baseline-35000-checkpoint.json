@@ -1,0 +1,74 @@
+{
+  "path": "/root/yoco/runs/yoco-swa-160m-ab-8gpu-20261107/baseline/checkpoint_00035000.pt",
+  "step": 35000,
+  "sha256": "e174c5abbd67e8cb2d5496936d782e121f07d3915c506684baa315bcbe64d283",
+  "fingerprint": "ec3239d44776277deb8a64a636a34d5db866a0f9581ee8eded66283ed8e514a5",
+  "finite_tensors_checked": 405,
+  "full_optimizer_scaler_eight_rank_rng": true,
+  "checkpoint_health_verified": true,
+  "training_setting_changes": false,
+  "config_matches_frozen_release": true,
+  "model_parameter_dtype": "float32",
+  "training_precision": "fp16_mixed_fp32_params",
+  "optimizer_hyperparameters_match": true,
+  "optimizer_parameter_states": 101,
+  "all_optimizer_steps": 35000,
+  "learning_rate": 1.8927444794952677e-05,
+  "seed": 42,
+  "global_batch_tokens": 262144,
+  "checkpoint_every": 5000,
+  "retention_all": true,
+  "accepted_training_points": 35000,
+  "scheduled_validation_points": 140,
+  "validation_loss": 3.1938107013702393,
+  "maximum_validation_regression": 0,
+  "nonfinite_forward_events": 0,
+  "overflow_retries": 4,
+  "scaler_hyperparameters": {
+    "growth_factor": 2.0,
+    "backoff_factor": 0.5,
+    "growth_interval": 2000
+  },
+  "partial_only": true,
+  "note": "Verified baseline update 35000 checkpoint. All three full 40000-step runs, full downstream tasks, final comparison and publication must be checked separately.",
+  "scaler_state_at_checkpoint": {
+    "scale": 524288.0,
+    "growth_factor": 2.0,
+    "backoff_factor": 0.5,
+    "growth_interval": 2000,
+    "_growth_tracker": 378
+  },
+  "arm": "baseline",
+  "scaler_state_consistent_with_logged_backoff": true,
+  "successful_updates_since_logged_backoff": 378,
+  "amp_backoff_audit": {
+    "passed": true,
+    "world_size": 8,
+    "rejected_attempts": 4,
+    "all_ranks_synchronized": true,
+    "all_retry_groups_completed_with_finite_loss_and_norm": true,
+    "groups": [
+      {
+        "retried_update": 28044,
+        "rejected_attempts": 1,
+        "backoff_scale": 1048576.0,
+        "completed_loss": 3.2261886596679688,
+        "completed_grad_norm": 0.4465019106864929
+      },
+      {
+        "retried_update": 31669,
+        "rejected_attempts": 1,
+        "backoff_scale": 1048576.0,
+        "completed_loss": 3.166440963745117,
+        "completed_grad_norm": 0.4008789658546448
+      },
+      {
+        "retried_update": 34623,
+        "rejected_attempts": 2,
+        "backoff_scale": 524288.0,
+        "completed_loss": 3.2087738513946533,
+        "completed_grad_norm": 0.424989253282547
+      }
+    ]
+  }
+}
