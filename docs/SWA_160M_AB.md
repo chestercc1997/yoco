@@ -4,13 +4,13 @@
 
 ## 当前结果
 
-baseline于北京时间2026-11-07 18:45完成40000步及八项完整零样本评测；方法A于2026-11-08 01:39完成相同完整流程。两组每5000步的各8份checkpoint均已核验，B已在同一cohort八卡接续训练，每5000步的三份checkpoint（至15000步）通过核验。三组对比和最终图表尚未完成，Goal保持进行。
+baseline于北京时间2026-11-07 18:45完成40000步及八项完整零样本评测；方法A于2026-11-08 01:39完成相同完整流程。两组每5000步的各8份checkpoint均已核验，B已在同一cohort八卡接续训练，每5000步的四份checkpoint（至20000步）通过核验。三组对比和最终图表尚未完成，Goal保持进行。
 
 | 组别 | 完整训练/下游 | 最终验证loss | 八项宏平均 |
 | --- | --- | ---: | ---: |
 | baseline | 40000步、8/8项完成 | 3.180143 | 46.3682% |
 | A / learned_kv | 40000步、8/8项完成 | 3.176147 | 46.0355% |
-| B / conditional_kv | 八卡训练中；15000步已核验 | 待完成 | 待完成 |
+| B / conditional_kv | 八卡训练中；20000步已核验 | 待完成 | 待完成 |
 
 [baseline完成证据](evidence/swa-160m-baseline-completed-20261107.json)已独立核对21465条样本、逐样本得分均值、零样本/全量设置、数据锁、任务YAML和最终checkpoint来源。八项分别为ARC-E46.7172%、ARC-C24.3174%、BoolQ61.9878%、HellaSwag31.1193%、OpenBookQA28.8000%、PIQA62.6224%、WinoGrande49.8816%、SciQ65.5000%；BoolQ/WinoGrande使用acc，其余使用acc_norm。
 
@@ -33,6 +33,8 @@ A的验证loss较baseline低0.003996，但八项宏平均低0.3327个百分点�
 | 八项宏平均 | 46.3682 | 46.0355 | -0.3327 |
 
 以下checkpoint记录为对应训练步的历史核验快照；各阶段“继续训练”的描述不改变上方两组已经完成的当前状态。
+
+方法B的[第20000步checkpoint](evidence/swa-160m-B-20000-checkpoint.json)通过独立核验：413个模型/optimizer张量有限、103组optimizer step均20000，学习率符合原线性衰减计划，冻结配置及optimizer/scaler超参数保持原值，八卡RNG完整保存。前20000个成功更新和80个定期验证点齐全，验证loss=3.291630507，无验证loss回升、overflow重试、非有限前向或checkpoint回退。每5000步的四份正式checkpoint全部保留并重新核对SHA一致。八卡从受检第4步到20000步的每卡19996次正式更新，其记录的scale均符合原增长及退避策略，最终scale=131072、growth tracker=0。B仅完成自身训练计划的一半，原八卡作业继续至40000；完整下游和三组最终图表尚未完成。
 
 方法B的[第15000步checkpoint](evidence/swa-160m-B-15000-checkpoint.json)通过独立核验：413个模型/optimizer张量有限、103组optimizer step均15000，冻结配置及optimizer/scaler超参数保持原值，八卡RNG完整保存。前15000个成功更新和60个定期验证点齐全，验证loss=3.358592510，无验证loss回升、overflow重试、非有限前向或checkpoint回退。每5000步的三份正式checkpoint全部保留并重新核对SHA一致。原八卡B作业继续至40000，完整下游和三组最终图表尚未完成。
 

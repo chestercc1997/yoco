@@ -1,0 +1,127 @@
+{
+  "path": "/root/yoco/runs/yoco-swa-160m-ab-8gpu-20261107/B/checkpoint_00020000.pt",
+  "step": 20000,
+  "sha256": "097d2c15b801210cc6cfee95a5ba0d22dd8f9f1af2c6aa7835c6a403989f27c9",
+  "fingerprint": "24d6fdd031ba27a3d754f345178156ce61f67fbea6e420248d5a6b3f24f979c0",
+  "finite_tensors_checked": 413,
+  "full_optimizer_scaler_eight_rank_rng": true,
+  "checkpoint_health_verified": true,
+  "training_setting_changes": false,
+  "config_matches_frozen_release": true,
+  "model_parameter_dtype": "float32",
+  "training_precision": "fp16_mixed_fp32_params",
+  "optimizer_hyperparameters_match": true,
+  "optimizer_parameter_states": 103,
+  "all_optimizer_steps": 20000,
+  "learning_rate": 7.570977917981071e-05,
+  "seed": 42,
+  "global_batch_tokens": 262144,
+  "checkpoint_every": 5000,
+  "retention_all": true,
+  "accepted_training_points": 20000,
+  "scheduled_validation_points": 80,
+  "validation_loss": 3.291630506515503,
+  "maximum_validation_regression": 0,
+  "nonfinite_forward_events": 0,
+  "overflow_retries": 0,
+  "scaler_hyperparameters": {
+    "growth_factor": 2.0,
+    "backoff_factor": 0.5,
+    "growth_interval": 2000
+  },
+  "partial_only": true,
+  "note": "Verified B update 20000 checkpoint. All three full 40000-step runs, full downstream tasks, final comparison and publication must be checked separately.",
+  "scaler_state_at_checkpoint": {
+    "scale": 131072.0,
+    "growth_factor": 2.0,
+    "backoff_factor": 0.5,
+    "growth_interval": 2000,
+    "_growth_tracker": 0
+  },
+  "arm": "B",
+  "retained_checkpoint_count": 4,
+  "retained_checkpoints_sha256_verified": [
+    {
+      "step": 5000,
+      "file": "checkpoint_00005000.pt",
+      "sha256": "cd43ca4fbbf8678b0356b5328d7c66f5e919113e4f086005e235ec94ea529494"
+    },
+    {
+      "step": 10000,
+      "file": "checkpoint_00010000.pt",
+      "sha256": "784fe37e69ff2bf5134551e32a98d5dbe9b638b4118fb6454caf9e84f44614fb"
+    },
+    {
+      "step": 15000,
+      "file": "checkpoint_00015000.pt",
+      "sha256": "eb0555323773e82ff86ed58f8aad95730ea7db8ce5deda6f33bad68af6c09f55"
+    },
+    {
+      "step": 20000,
+      "file": "checkpoint_00020000.pt",
+      "sha256": "097d2c15b801210cc6cfee95a5ba0d22dd8f9f1af2c6aa7835c6a403989f27c9"
+    }
+  ],
+  "scaler_timeline_audit": {
+    "passed": true,
+    "world_size": 8,
+    "source_checkpoint_step": 4,
+    "through_update": 20000,
+    "successful_updates_checked_per_rank": 19996,
+    "source_scaler_state": {
+      "scale": 128.0,
+      "growth_factor": 2.0,
+      "backoff_factor": 0.5,
+      "growth_interval": 2000,
+      "_growth_tracker": 4
+    },
+    "all_ranks_have_identical_scale_evolution": true,
+    "all_logged_training_scales_match_original_growth_and_backoff_policy": true,
+    "training_setting_changes": false,
+    "final_scale": 131072.0,
+    "final_growth_tracker": 0,
+    "overflow_attempts": 0,
+    "growth_events": [
+      {
+        "update": 2000,
+        "scale": 256.0
+      },
+      {
+        "update": 4000,
+        "scale": 512.0
+      },
+      {
+        "update": 6000,
+        "scale": 1024.0
+      },
+      {
+        "update": 8000,
+        "scale": 2048.0
+      },
+      {
+        "update": 10000,
+        "scale": 4096.0
+      },
+      {
+        "update": 12000,
+        "scale": 8192.0
+      },
+      {
+        "update": 14000,
+        "scale": 16384.0
+      },
+      {
+        "update": 16000,
+        "scale": 32768.0
+      },
+      {
+        "update": 18000,
+        "scale": 65536.0
+      },
+      {
+        "update": 20000,
+        "scale": 131072.0
+      }
+    ]
+  }
+}
