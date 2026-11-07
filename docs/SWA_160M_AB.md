@@ -56,15 +56,16 @@ python tools/run_swa_ab.py --run-dir runs/yoco-swa-160m-ab-8gpu-20261107
 
 按用户最新要求，[复现 skill](../.agents/skills/yoco-reproduction/SKILL.md)将“任何训练 setting 参数都不能改动”作为硬约束。已注册到本机全局 skill 发现目录，仓库保存可审阅版本。不能通过降低 LR、改精度/AMP 策略、改 batch/grad clip、缩减预算或验证、跳过失败 batch、清 optimizer/RNG/scaler 来隐藏故障。
 
-[外部监督器](../tools/watch_swa_training.py)已附着正在训练的 cohort，当前 tmux `yoco-swa-160m-guard-v2`；没有重启健康的训练作业。它每10秒检查日志：
+[外部监督器](../tools/watch_swa_training.py)已附着正在训练的 cohort，tmux `yoco-swa-160m-guard`；没有重启健康的训练作业。它每10秒检查日志：
 
 - 任一卡的非有限前向、非有限验证 loss、worker 退出或训练停滞600秒，触发故障处理。
 - 验证 loss 连续3次比历史最佳高出 `max(0.15, 5% × best)`，触发持续退化处理。单 batch spike、单个验证波动或正常 AMP overflow 不触发回退。这些值是监测策略，未写入或改变训练配置。
 - 等待训练器完成故障快照，终止本 cohort 的进程树；校验最新健康 checkpoint 的 SHA/fingerprint、模型/optimizer 有限性、scaler 和八卡 RNG。从最近健康完整 checkpoint 重跑所有后续 batch；不足5000步时使用已验收的第4步完整状态，不额外改变正式保存频率。
+- `owned-processes.json` 持续记录控制器及其 worker 的 PID/start-time；控制器意外退出后，仍会清理已记录的遗留 worker。信号发送前再次核对 start-time，避免 PID 重用影响其他进程。重载监督器继续沿用归属记录，不重启训练。
 - 失败日志、异常 checkpoint 与现场均保存在各组 `recovery-attempts/`，正式曲线只保留恢复点之前的有效前缀及重跑结果。discarded suffix 的训练耗时单独导出，不能隐藏重跑代价。
 - 每组最多自动恢复2次。再次失败会输出[只读 FP16/FP32 前向诊断](../tools/diagnose_training_failure.py)，标识首个非有限叶模块，由 active Goal 继续定位并验证兼容原 setting 的实现修复。没有通用算法能保证修好任意未知代码 bug；这里不会盲目改参数或无限重启，也不要求用户人工巡检。
 
-每次启动/恢复前，`guard-contract.json` 校验冻结配置、源代码、数据 manifest 与根目录配置完全一致。不一致时拒绝启动。完整失败证据保留，旧 release 不作原位修改。注入损坏 checksum、非有限权重、持续/瞬时 loss、LR 偷改、日志回退、优化器/RNG 恢复与仅终止所属进程的7项检查已通过，见 `tests/test_training_guard.py`。
+每次启动/恢复前，`guard-contract.json` 校验冻结配置、源代码、数据 manifest 与根目录配置完全一致。不一致时拒绝启动。完整失败证据保留，旧 release 不作原位修改。损坏 checksum、非有限权重、持续/瞬时 loss、LR 偷改、日志回退、优化器/RNG 恢复、仅终止所属进程及控制器退出后清理遗留 worker 的8项检查已通过，见 `tests/test_training_guard.py`。
 
 ```bash
 cat runs/yoco-swa-160m-ab-8gpu-20261107/guard-state.json

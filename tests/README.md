@@ -20,7 +20,9 @@ and the original conditional implementation.
 and sustained validation regressions, an unauthorized learning-rate change,
 and worker termination. It checks complete-state selection, archived failure
 evidence, idempotent rollback, exact optimizer/scaler/RNG preservation, and
-refusal to change the frozen reproduction recipe.
+refusal to change the frozen reproduction recipe. An orphan-worker case kills
+the controller first, verifies that its recorded child is still cleaned up,
+and confirms an unrelated process remains alive.
 
 The HPC3 allocation additionally tests actual four-rank mixed-precision training
 and checkpoint resume for both A/B before formal training. Passing implementation

@@ -7,13 +7,14 @@ import random
 import subprocess
 import sys
 import tempfile
+import time
 import unittest
 from unittest.mock import patch
 
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
 import numpy as np
 import torch
-from tools.watch_swa_training import checkpoint_healthy,events,process_identity,recover,same_process,select_checkpoint,sha,stop_tree,unhealthy,verify_contract,write
+from tools.watch_swa_training import checkpoint_healthy,events,owned_tree,process_identity,recover,same_process,select_checkpoint,sha,stop_tree,unhealthy,verify_contract,write
 
 
 class GuardTests(unittest.TestCase):
@@ -120,6 +121,30 @@ class GuardTests(unittest.TestCase):
         identity=process_identity(worker.pid);self.assertTrue(same_process(identity))
         stop_tree(identity);worker.wait(timeout=5);self.assertFalse(same_process(identity))
         self.assertIsNotNone(process_identity(__import__('os').getpid()))
+
+    def test_orphaned_worker_is_stopped_after_controller_dies(self):
+        child_pid=self.root/'child.pid'
+        script=('import pathlib,signal,subprocess,sys; '
+                'child=subprocess.Popen([sys.executable,"-c","import time; time.sleep(60)"]); '
+                f'pathlib.Path({str(child_pid)!r}).write_text(str(child.pid)); signal.pause()')
+        parent=subprocess.Popen([sys.executable,'-c',script],start_new_session=True)
+        unrelated=subprocess.Popen([sys.executable,'-c','import time; time.sleep(60)'],start_new_session=True)
+        worker=None
+        try:
+            deadline=time.monotonic()+5
+            while not child_pid.exists() and time.monotonic()<deadline:time.sleep(.02)
+            self.assertTrue(child_pid.exists())
+            identity=process_identity(parent.pid);known=owned_tree(identity)
+            worker=process_identity(int(child_pid.read_text()))
+            self.assertIn(worker['pid'],[item['pid'] for item in known])
+            parent.terminate();parent.wait(timeout=5)
+            self.assertFalse(same_process(identity));self.assertTrue(same_process(worker))
+            stop_tree(identity,known)
+            self.assertFalse(same_process(worker));self.assertIsNone(unrelated.poll())
+        finally:
+            if parent.poll() is None:parent.kill();parent.wait(timeout=5)
+            if worker and same_process(worker):stop_tree(worker)
+            unrelated.terminate();unrelated.wait(timeout=5)
 
 
 if __name__=='__main__':unittest.main()

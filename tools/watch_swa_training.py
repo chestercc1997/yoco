@@ -179,15 +179,27 @@ def same_process(identity):
     return actual is not None and actual['start_ticks']==identity['start_ticks']
 
 
-def stop_tree(identity):
+def owned_tree(identity,known=()):
+    """Retain previously observed children even after their parent is reaped."""
+    identities={item['pid']:item for item in known if same_process(item)}
+    if same_process(identity):identities[identity['pid']]=identity
+    processes=[]
+    for path in Path('/proc').iterdir():
+        if path.name.isdigit():
+            item=process_identity(int(path.name))
+            if item:processes.append(item)
+    while True:
+        before=len(identities)
+        for item in processes:
+            if item['ppid'] in identities:identities[item['pid']]=item
+        if len(identities)==before:break
+    return list(identities.values())
+
+
+def stop_tree(identity,known=()):
     # PID/start-time checks prevent signals reaching an unrelated reused PID.
-    if not same_process(identity):return
-    identities={identity['pid']:identity}
-    for _ in range(4):
-        for path in Path('/proc').iterdir():
-            if not path.name.isdigit():continue
-            child=process_identity(int(path.name))
-            if child and child['ppid'] in identities:identities[child['pid']]=child
+    # A dead controller does not imply its GPU workers have exited.
+    identities={item['pid']:item for item in owned_tree(identity,known)}
     for sig,seconds in ((signal.SIGTERM,20),(signal.SIGKILL,5)):
         for pid,item in identities.items():
             if same_process(item):
@@ -237,7 +249,9 @@ def main():
                 assert process_identity(pipeline['pid']) is None,'Incomplete rollback with a live controller needs diagnosis'
                 record=recover(run,arm,record['issue'],record['attempt'])
             state['recoveries'].append(record)
-    child=None;attached=None;failure_seen=None
+    child=None;attached=None;failure_seen=None;owned=[]
+    ownership_path=run/'owned-processes.json'
+    previous_ownership=read(ownership_path) if ownership_path.exists() else None
     def update(status,**fields):
         state.update(state=status,updated_at=now(),**fields);write(run/'guard-state.json',state)
     def launch():
@@ -267,6 +281,14 @@ def main():
                         assert attached is not None
                         update('monitoring',controller_pid=child.pid);time.sleep(args.poll_seconds);continue
             alive=same_process(attached)
+            if previous_ownership and previous_ownership['controller']['pid']==attached['pid']:
+                prior=previous_ownership['controller']
+                if (not alive or prior['start_ticks']==attached['start_ticks']):
+                    if not alive:attached=prior
+                    owned=previous_ownership['processes']
+                previous_ownership=None
+            owned=owned_tree(attached,owned)
+            write(ownership_path,{'controller':attached,'processes':owned,'observed_at':now()})
             if alive and pipeline.get('pid')!=attached['pid']:
                 # Preparing/verifying a frozen release precedes publishing its PID.
                 time.sleep(args.poll_seconds);continue
@@ -300,7 +322,7 @@ def main():
                         if failure_seen is None:failure_seen=time.monotonic()
                         if time.monotonic()-failure_seen<120:
                             time.sleep(args.poll_seconds);continue
-                    stop_tree(attached)
+                    stop_tree(attached,owned)
                     if child:child.wait(timeout=10)
                     history=[r for r in state['recoveries'] if r['arm']==arm]
                     if len(history)>=args.max_recoveries_per_arm:
@@ -317,7 +339,7 @@ def main():
                     verify_contract(run)
                     recovery=recover(run,arm,issue,len(history)+1)
                     state['recoveries'].append(recovery);update('restarting',arm=arm,recovery=recovery)
-                    child=launch();attached=process_identity(child.pid);failure_seen=None
+                    child=launch();attached=process_identity(child.pid);failure_seen=None;owned=[]
                     assert attached is not None
                     update('monitoring',controller_pid=child.pid)
                 else:

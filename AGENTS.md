@@ -5,7 +5,7 @@
 - 用户明确要求写入 skill：修复、加速、恢复不能改变任何训练 setting 参数，尤其不得改 LR/优化器、精度、batch、数据/顺序、seed、步数、验证和每5000步保存策略。baseline 为共同基座，A/B 仅限声明的融合结构差异。执行本项目相关工作时必须读取 [yoco-reproduction skill](.agents/skills/yoco-reproduction/SKILL.md)。
 - 用户要求自动检测 NaN/Inf、持续 loss 异常和停滞，保留故障现场、校验最近健康完整 checkpoint，自动回退并重跑相同数据，不需要用户人工巡检；正常 AMP overflow 和单 batch 噪声不能误报。禁止自动降 LR、改精度、跳过 batch、清 optimizer/RNG/scaler 或无限重启。
 - `tools/watch_swa_training.py` 为外部监督器，附着已有 cohort 而不重启健康作业；`guard-contract.json` 锁定冻结配置/代码/data hash。重复故障输出只读诊断并由 active Goal 继续定位兼容修复，不冒称任何未知代码 bug 均已自动修好。
-- 监督器已运行（tmux `yoco-swa-160m-guard-v2`），状态 `runs/yoco-swa-160m-ab-8gpu-20261107/guard-state.json`；当前恢复次数为0。重载仅使用 `--replace-existing` 替换本 cohort 的监督器，保留训练控制器/worker；不能把重载监控误做重启训练。7项注入检查通过，skill 的仓库版本与本机全局发现路径 `/root/.codex/skills/yoco-reproduction` 同步（symlink）。
+- 监督器已运行（tmux `yoco-swa-160m-guard`），状态 `runs/yoco-swa-160m-ab-8gpu-20261107/guard-state.json`；当前恢复次数为0。重载仅使用 `--replace-existing` 替换本 cohort 的监督器，保留训练控制器/worker；不能把重载监控误做重启训练。8项注入检查通过（含控制器退出后的 orphan worker 清理），`owned-processes.json` 保存 PID/start-time 归属，不能因控制器已退出而漏掉遗留 worker。skill 的仓库版本与本机全局发现路径 `/root/.codex/skills/yoco-reproduction` 同步（symlink）。
 - SWA 三组真实八卡恢复、按位加载、连续/重复及 eval smoke 已全部通过；当前 `runs/setup/swa-160m-active.json` 指向 `runs/yoco-swa-160m-ab-8gpu-20261107`，控制器已于UTC04:14启动 baseline 正式阶段。先读 pipeline/guard 状态，不重复启动。Goal 仍 active，须完成三个40000步、24项全量评测、七张图与汇总后发布。
 
 ## 2026-11-07 YOCO-SWA 160M baseline/A/B 完整 Goal（当前目标）

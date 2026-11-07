@@ -1,0 +1,76 @@
+{
+  "passed": true,
+  "checked_at": "2026-11-07 04:35:11 UTC",
+  "eight_actual_gpu_workers_match_recorded_cohort": true,
+  "controller_pid": 1941321,
+  "gpu_worker_pids": [
+    2164762,
+    2164763,
+    2164765,
+    2164768,
+    2164769,
+    2164772,
+    2164773,
+    2164776
+  ],
+  "owned_processes": {
+    "controller": {
+      "pid": 1941321,
+      "ppid": 1941313,
+      "start_ticks": "129329364"
+    },
+    "processes": [
+      {
+        "pid": 1941321,
+        "ppid": 1941313,
+        "start_ticks": "129329364"
+      },
+      {
+        "pid": 2163426,
+        "ppid": 1941321,
+        "start_ticks": "129385825"
+      },
+      {
+        "pid": 2164762,
+        "ppid": 2163426,
+        "start_ticks": "129386140"
+      },
+      {
+        "pid": 2164763,
+        "ppid": 2163426,
+        "start_ticks": "129386140"
+      },
+      {
+        "pid": 2164765,
+        "ppid": 2163426,
+        "start_ticks": "129386140"
+      },
+      {
+        "pid": 2164768,
+        "ppid": 2163426,
+        "start_ticks": "129386140"
+      },
+      {
+        "pid": 2164769,
+        "ppid": 2163426,
+        "start_ticks": "129386140"
+      },
+      {
+        "pid": 2164772,
+        "ppid": 2163426,
+        "start_ticks": "129386140"
+      },
+      {
+        "pid": 2164773,
+        "ppid": 2163426,
+        "start_ticks": "129386140"
+      },
+      {
+        "pid": 2164776,
+        "ppid": 2163426,
+        "start_ticks": "129386140"
+      }
+    ],
+    "observed_at": "2026-11-07T04:35:04.857978+00:00"
+  }
+}
