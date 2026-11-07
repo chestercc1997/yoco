@@ -36,7 +36,7 @@
 
 当前 cohort：`runs/yoco-swa-160m-ab-8gpu-20261107`；tmux：`yoco-swa-160m-8gpu`。
 
-baseline 已通过真实八卡恢复对照、恢复前按位核验及下游接口测试，A/B 核验由同一控制器继续执行。[baseline 恢复证据](evidence/swa-160m-baseline-resume-check.json)与[启动状态](evidence/swa-160m-launch.json)为发布时快照，不是最终结果。
+baseline、A、B **均已通过**真实八卡恢复对照、恢复前按位核验及下游接口测试；baseline 已于北京时间12:14进入完整训练。[baseline](evidence/swa-160m-baseline-resume-check.json)、[A](evidence/swa-160m-A-resume-check.json)、[B](evidence/swa-160m-B-resume-check.json)恢复证据与[启动状态](evidence/swa-160m-launch.json)为发布时快照，不是最终结果。
 
 ```bash
 cat runs/setup/swa-160m-active.json
@@ -51,6 +51,29 @@ python tools/run_swa_ab.py --run-dir runs/yoco-swa-160m-ab-8gpu-20261107
 ```
 
 非有限前向会保存诊断现场并停止，不自动忽略 batch。`pipeline-status.json` 是实时状态，本文和 GitHub 证据是发布时快照。训练与评测全部完成后，每组及 cohort 均生成 `PIPELINE_SUCCESS`；Goal 还须完成收敛审查、三组图表/汇总和 GitHub 发布才算完成。
+
+## 自动检测与恢复：训练设置完全锁定
+
+按用户最新要求，[复现 skill](../.agents/skills/yoco-reproduction/SKILL.md)将“任何训练 setting 参数都不能改动”作为硬约束。已注册到本机全局 skill 发现目录，仓库保存可审阅版本。不能通过降低 LR、改精度/AMP 策略、改 batch/grad clip、缩减预算或验证、跳过失败 batch、清 optimizer/RNG/scaler 来隐藏故障。
+
+[外部监督器](../tools/watch_swa_training.py)已附着正在训练的 cohort，当前 tmux `yoco-swa-160m-guard-v2`；没有重启健康的训练作业。它每10秒检查日志：
+
+- 任一卡的非有限前向、非有限验证 loss、worker 退出或训练停滞600秒，触发故障处理。
+- 验证 loss 连续3次比历史最佳高出 `max(0.15, 5% × best)`，触发持续退化处理。单 batch spike、单个验证波动或正常 AMP overflow 不触发回退。这些值是监测策略，未写入或改变训练配置。
+- 等待训练器完成故障快照，终止本 cohort 的进程树；校验最新健康 checkpoint 的 SHA/fingerprint、模型/optimizer 有限性、scaler 和八卡 RNG。从最近健康完整 checkpoint 重跑所有后续 batch；不足5000步时使用已验收的第4步完整状态，不额外改变正式保存频率。
+- 失败日志、异常 checkpoint 与现场均保存在各组 `recovery-attempts/`，正式曲线只保留恢复点之前的有效前缀及重跑结果。discarded suffix 的训练耗时单独导出，不能隐藏重跑代价。
+- 每组最多自动恢复2次。再次失败会输出[只读 FP16/FP32 前向诊断](../tools/diagnose_training_failure.py)，标识首个非有限叶模块，由 active Goal 继续定位并验证兼容原 setting 的实现修复。没有通用算法能保证修好任意未知代码 bug；这里不会盲目改参数或无限重启，也不要求用户人工巡检。
+
+每次启动/恢复前，`guard-contract.json` 校验冻结配置、源代码、数据 manifest 与根目录配置完全一致。不一致时拒绝启动。完整失败证据保留，旧 release 不作原位修改。注入损坏 checksum、非有限权重、持续/瞬时 loss、LR 偷改、日志回退、优化器/RNG 恢复与仅终止所属进程的7项检查已通过，见 `tests/test_training_guard.py`。
+
+```bash
+cat runs/yoco-swa-160m-ab-8gpu-20261107/guard-state.json
+cat runs/yoco-swa-160m-ab-8gpu-20261107/guard-contract.json
+# 仅在确认原监督器已停止后重启；同 cohort 独占锁会拒绝重复实例
+python tools/watch_swa_training.py --run-dir runs/yoco-swa-160m-ab-8gpu-20261107
+```
+
+`monitoring` 表示已附着；`recoveries` 记录实际回退；`needs_goal_diagnosis` 表示有界恢复耗尽或评测/核验故障，需要持续 Goal 处理，不能宣称完整训练已完成。
 
 全部完成后用[导出器](../tools/export_swa_ab.py)重新核验三组最终 checkpoint SHA、每任务完整样本数、分数、相同文档/prompt/target hash 与相同评测设置，再输出 120000 个原始训练点、480 个定期验证点、八项得分和七张 PNG/PDF/SVG 图。导出器拒绝未完成的 cohort。
 

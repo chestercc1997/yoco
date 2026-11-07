@@ -1,0 +1,10 @@
+{
+  "config_sha256": {
+    "baseline": "fab29a1089914d88b49d1afd4285a7f857ed3789c18313199cae654887890bb3",
+    "A": "44b3ac90593012ca24f1513470223501e8ed519d999b89e803ed9491e49838f2",
+    "B": "bdcfd101a30453af358231c7662e3e64b0a3dbb22cbaf1aca6b90109e04ec93f"
+  },
+  "release_manifest_sha256": "f2813c5219b4219e6c0b0fd55d6800dd1c07278a5cc128a116568be9b6256039",
+  "data_manifest_sha256": "090868c9e65f7042d8126c420803eabcbb7381d552912956e4c802477d53f0ba",
+  "no_training_setting_changes": true
+}

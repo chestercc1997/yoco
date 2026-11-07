@@ -1,5 +1,5 @@
 {
-  "state": "A-check-resume",
+  "state": "baseline-training",
   "run_dir": "/root/yoco/runs/yoco-swa-160m-ab-8gpu-20261107",
   "pid": 1941321,
   "started_at": "2026-11-07T04:04:41.808484+00:00",
@@ -41,8 +41,60 @@
       "log": "/root/yoco/runs/yoco-swa-160m-ab-8gpu-20261107/A-check-first.log"
     },
     "A-check-resume": {
-      "state": "running",
+      "state": "passed",
       "log": "/root/yoco/runs/yoco-swa-160m-ab-8gpu-20261107/A-check-resume.log"
+    },
+    "A-check-direct": {
+      "state": "passed",
+      "log": "/root/yoco/runs/yoco-swa-160m-ab-8gpu-20261107/A-check-direct.log"
+    },
+    "A-check-repeat": {
+      "state": "passed",
+      "log": "/root/yoco/runs/yoco-swa-160m-ab-8gpu-20261107/A-check-repeat.log"
+    },
+    "A-exact-restore": {
+      "state": "passed",
+      "log": "/root/yoco/runs/yoco-swa-160m-ab-8gpu-20261107/A-exact-restore.log"
+    },
+    "A-eight-gpu-check": {
+      "state": "passed",
+      "proof": "/root/yoco/runs/yoco-swa-160m-ab-8gpu-20261107/A/resume-verification.json"
+    },
+    "A-eval-smoke": {
+      "state": "passed",
+      "log": "/root/yoco/runs/yoco-swa-160m-ab-8gpu-20261107/A-eval-smoke.log"
+    },
+    "B-check-first": {
+      "state": "passed",
+      "log": "/root/yoco/runs/yoco-swa-160m-ab-8gpu-20261107/B-check-first.log"
+    },
+    "B-check-resume": {
+      "state": "passed",
+      "log": "/root/yoco/runs/yoco-swa-160m-ab-8gpu-20261107/B-check-resume.log"
+    },
+    "B-check-direct": {
+      "state": "passed",
+      "log": "/root/yoco/runs/yoco-swa-160m-ab-8gpu-20261107/B-check-direct.log"
+    },
+    "B-check-repeat": {
+      "state": "passed",
+      "log": "/root/yoco/runs/yoco-swa-160m-ab-8gpu-20261107/B-check-repeat.log"
+    },
+    "B-exact-restore": {
+      "state": "passed",
+      "log": "/root/yoco/runs/yoco-swa-160m-ab-8gpu-20261107/B-exact-restore.log"
+    },
+    "B-eight-gpu-check": {
+      "state": "passed",
+      "proof": "/root/yoco/runs/yoco-swa-160m-ab-8gpu-20261107/B/resume-verification.json"
+    },
+    "B-eval-smoke": {
+      "state": "passed",
+      "log": "/root/yoco/runs/yoco-swa-160m-ab-8gpu-20261107/B-eval-smoke.log"
+    },
+    "baseline-training": {
+      "state": "running",
+      "log": "/root/yoco/runs/yoco-swa-160m-ab-8gpu-20261107/baseline-training.log"
     }
   },
   "architecture": "YOCO-SWA",
@@ -63,5 +115,5 @@
     "NVIDIA A100 80GB PCIe",
     "NVIDIA A100 80GB PCIe"
   ],
-  "updated_at": "2026-11-07T04:08:36.171153+00:00"
+  "updated_at": "2026-11-07T04:14:04.355977+00:00"
 }

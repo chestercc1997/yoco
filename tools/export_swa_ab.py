@@ -73,6 +73,17 @@ def main():
             'trunk_6nd_pflop_days':6*(params-embed)*tokens/8.64e19,
             'output_inclusive_6nd_pflop_days':6*params*tokens/8.64e19,
             'extra_repeated_kv_projection_proxy_pflop_days':extra,'review':summary['training_review']}
+        recoveries=[];discarded_seconds=0.
+        for journal in sorted((folder/'recovery-attempts').glob('*/recovery.json')):
+            recovery=read(journal);recoveries.append(recovery)
+            hashes[f'{arm}/recovery-attempts/{journal.parent.name}/recovery.json']=sha(journal)
+            archived=journal.parent/'rank0.jsonl'
+            if archived.exists():
+                discarded_seconds+=sum(e['seconds'] for e in map(json.loads,archived.read_text().splitlines())
+                    if e['event']=='train' and e['step']>recovery['source']['step'])
+        training[arm]['automatic_recoveries']=recoveries
+        training[arm]['discarded_suffix_active_seconds']=discarded_seconds
+        training[arm]['recorded_training_gpu_hours_including_discarded']=(seconds+discarded_seconds)*8/3600
         for step,e in sorted(updates.items()):
             trainrows.append({'arm':arm,'step':step,'tokens':e['tokens'],'loss':e['loss'],'lr':e['lr'],
                 'grad_norm':e['grad_norm'],'scale':e['scale'],'seconds':e['seconds']})
@@ -110,7 +121,7 @@ def main():
              'training':training,'macro':macro,'downstream':down,'sources':sources,'task_provenance':task_provenance,
              'limitations':['Single seed; differences are descriptive, not a generalization claim.',
                 '6ND and repeated-projection corrections are compute proxies, not measured device FLOPs.',
-                'Active step timing excludes validation, checkpoint I/O, setup, and evaluation.']}
+                'Committed step timing excludes validation, checkpoint I/O, setup, and evaluation; discarded suffix seconds are reported separately.']}
     out.mkdir(parents=True,exist_ok=True);(out/'figures').mkdir(exist_ok=True)
     write(out/'summary.json',summary);write(out/'source_hashes.json',hashes);write(out/'model-preflight.json',preflight)
     csvwrite(out/'training_curves.csv',trainrows);csvwrite(out/'validation_curves.csv',valrows);csvwrite(out/'downstream.csv',down)
@@ -140,6 +151,9 @@ def main():
             rows=[r for r in trainrows if r['arm']==arm];x=np.array([r['step'] for r in rows]);y=np.array([r[field] for r in rows])
             for ax in axes:ax.plot(x,y,color=colors[arm],alpha=.55,lw=.35,label=arm)
         axes[0].set_title('All raw updates');axes[1].set_title('Late training');axes[1].set_xlim(30000,40000)
+        late_values=[r[field] for r in trainrows if r['step']>=30000]
+        low,high=min(late_values),max(late_values);pad=max((high-low)*.05,1e-5)
+        axes[1].set_ylim(low-pad,high+pad)
         for ax in axes:ax.set_xlabel('Updates');ax.set_ylabel(ylabel);ax.grid(alpha=.2)
         axes[0].legend();save(fig,name)
     fig,axes=plt.subplots(1,2,figsize=(12,4),constrained_layout=True)

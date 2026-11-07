@@ -16,6 +16,14 @@ every 5,000-update checkpoint is retained. The controller first checks real-data
 eight-rank checkpoint restoration for all three arms. Final SWA results are pending.
 See [configuration, checks and live-status commands](docs/SWA_160M_AB.md).
 
+The [reproduction skill](.agents/skills/yoco-reproduction/SKILL.md) makes the
+training recipe immutable during fixes, acceleration and recovery. The active
+supervisor detects nonfinite losses or sustained validation regression, archives
+failed evidence, and replays from a verified full checkpoint with identical
+settings and data order. Repeated failures enter bounded diagnosis under the
+ongoing Goal; learning rates, precision and other training settings are never
+automatically adjusted.
+
 ## Completed 400M A training
 
 Method A at **400.59M parameters on 8×A100** completed 40,000 updates and eight

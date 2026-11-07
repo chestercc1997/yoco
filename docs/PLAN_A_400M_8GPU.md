@@ -21,7 +21,7 @@
 
 修复让跨块状态矩阵乘法与最终加和在既有 FP32 state dtype 中完成，经过原 RMSNorm 后再转换为 `v.dtype`。数学定义、参数、norm epsilon、数据与训练超参数不变；整体仍是 FP16 mixed / FP32 parameters。这里确实修正了局部中间结果的 dtype，不能宣称每个中间算子的精度都和旧错误路径一致，也没有改成全 FP32 或 BF16 训练。
 
-[故障现场复测](evidence/400m-A-retention-fix/after.json)的 logits 和 loss 均有限；[独立闭式回归](evidence/400m-A-retention-fix/synthetic-regression.json)构造最终结果 110592，旧代码溢出，修复后有限，归一化输出仍为 FP16，正常范围输出逐项相同。[完整 128 序列 batch 的反向检查](evidence/400m-A-retention-fix/fixed-full-gradient.json)没有非有限梯度；native FP16 平均 loss=2.9898578，FP32 诊断参考=2.9898505。但二者梯度相对 L2 仍约 0.308，不能用 loss 接近宣称与全 FP32 梯度等同或最终精度已验证。当前保留用户要求的 AMP 配方，最终效果仍需完整训练和下游评测。
+[故障现场复测](evidence/400m-A-retention-fix/after.json)的 logits 和 loss 均有限；[独立闭式回归](evidence/400m-A-retention-fix/synthetic-regression.json)构造最终结果 110592，旧代码溢出，修复后有限，归一化输出仍为 FP16，正常范围输出逐项相同。[完整 128 序列 batch 的反向检查](evidence/400m-A-retention-fix/fixed-full-gradient.json)没有非有限梯度；native FP16 平均 loss=2.9898578，FP32 诊断参考=2.9898505。但二者梯度相对 L2 仍约 0.308，不能用 loss 接近宣称与全 FP32 梯度等同。这是启动前的数值检查；完整训练和下游的最终效果见本文顶部。
 
 本次修复后的 compiled/native 梯度相对 L2 差异约 1.1076%，超过原 0.5% 标准，因此**关闭 compile**。仍保留 fused AdamW 和关闭 activation recomputation，其他执行选项不变。模型源文件变化限定为 `backend.py` 与 `gate_retention.py`，修改前后 hash 和来源 checkpoint SHA256 被写入[修复 manifest](evidence/400m-A-retention-fix/model-repair.json)，训练器拒绝未声明的模型源文件变化。
 
