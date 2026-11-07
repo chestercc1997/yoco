@@ -128,7 +128,7 @@ def main():
              'training':training,'macro':macro,'downstream':down,'sources':sources,'task_provenance':task_provenance,
              'limitations':['Single seed; differences are descriptive, not a generalization claim.',
                 '6ND and repeated-projection corrections are compute proxies, not measured device FLOPs.',
-                'Committed step timing excludes validation, checkpoint I/O, setup, and evaluation; discarded suffix seconds are reported separately.']}
+                'Successful-update timing excludes AMP overflow retries, validation, checkpoint I/O, setup, and evaluation; discarded successful suffix seconds are reported separately.']}
     out.mkdir(parents=True,exist_ok=True);(out/'figures').mkdir(exist_ok=True)
     write(out/'summary.json',summary);write(out/'source_hashes.json',hashes);write(out/'model-preflight.json',preflight)
     csvwrite(out/'training_curves.csv',trainrows);csvwrite(out/'validation_curves.csv',valrows);csvwrite(out/'downstream.csv',down)
@@ -176,7 +176,7 @@ def main():
     ax.set_xticks(x,[r['task'].replace('_','\n') for r in down]+['macro']);ax.set_ylabel('Accuracy (%)');ax.set_ylim(0,100)
     ax.set_title('Full zero-shot evaluation; acc_norm except BoolQ / WinoGrande');ax.legend(ncol=3);ax.grid(axis='y',alpha=.2);save(fig,'04_downstream')
     fig,axes=plt.subplots(1,3,figsize=(12,4),constrained_layout=True)
-    for ax,field,title in zip(axes,('tokens_per_second','active_gpu_hours','peak_rank0_memory_gib'),('Active tokens / second','Active training GPU-hours','Peak rank0 memory (GiB)')):
+    for ax,field,title in zip(axes,('tokens_per_second','active_gpu_hours','peak_rank0_memory_gib'),('Successful updates: tokens / second','GPU-hours for successful updates','Peak rank0 memory (GiB)')):
         ax.bar(ARMS,[training[a][field] for a in ARMS],color=[colors[a] for a in ARMS]);ax.set_title(title);ax.grid(axis='y',alpha=.2)
     save(fig,'06_execution_cost')
     fig,ax=plt.subplots(figsize=(7,4),constrained_layout=True)
@@ -187,7 +187,7 @@ def main():
     ax.grid(alpha=.2);ax.legend();save(fig,'07_loss_compute_proxy')
     table='\n'.join(f"| {a} | {training[a]['parameters']} | {training[a]['validation_loss']:.6f} | {macro[a]*100:.4f} |" for a in ARMS)
     figures=['01_quality_summary','02_training_loss','03_validation_loss','04_downstream','05_gradient_norm','06_execution_cost','07_loss_compute_proxy']
-    (out/'README.md').write_text('# YOCO-SWA 160M baseline / A / B\n\nAll three arms completed 40000 updates and eight full zero-shot tasks on 8×A100 each, with bitwise-equal common backbone initialization. Window1024; FP16 mixed / FP32 parameters; 10485760000 tokens per arm; seed42.\n\n| Arm | Parameters | Validation loss | Eight-task macro (%) |\n| --- | ---: | ---: | ---: |\n'+table+'\n\n[Numeric summary](summary.json) · [Raw training curves](training_curves.csv) · [Scheduled validation curves](validation_curves.csv) · [Task scores](downstream.csv) · [Source hashes](source_hashes.json)\n\n'+'\n'.join(f'![{name}](figures/{name}.png)\n\n[PDF](figures/{name}.pdf) · [SVG](figures/{name}.svg)\n' for name in figures)+'\nSingle seed: differences are descriptive. Active step timings exclude validation and checkpoint I/O. 6ND is a proxy, not measured FLOPs. Published tables contain numeric evidence; private task texts and logs remain local.\n')
+    (out/'README.md').write_text('# YOCO-SWA 160M baseline / A / B\n\nAll three arms completed 40000 updates and eight full zero-shot tasks on 8×A100 each, with bitwise-equal common backbone initialization. Window1024; FP16 mixed / FP32 parameters; 10485760000 tokens per arm; seed42.\n\n| Arm | Parameters | Validation loss | Eight-task macro (%) |\n| --- | ---: | ---: | ---: |\n'+table+'\n\n[Numeric summary](summary.json) · [Raw training curves](training_curves.csv) · [Scheduled validation curves](validation_curves.csv) · [Task scores](downstream.csv) · [Source hashes](source_hashes.json)\n\n'+'\n'.join(f'![{name}](figures/{name}.png)\n\n[PDF](figures/{name}.pdf) · [SVG](figures/{name}.svg)\n' for name in figures)+'\nSingle seed: differences are descriptive. Only successful updates are timed; AMP retries, validation, checkpoint I/O, setup and evaluation are excluded. Discarded successful suffix timings are reported separately. 6ND is a proxy, not measured FLOPs. Published tables contain numeric evidence; private task texts and logs remain local.\n')
     print(f'Verified and exported three complete SWA arms and seven figures to {out}')
 
 
