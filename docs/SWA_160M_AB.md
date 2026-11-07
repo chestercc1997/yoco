@@ -96,6 +96,8 @@ python tools/run_swa_ab.py --run-dir runs/yoco-swa-160m-ab-8gpu-20261107
 
 实际训练首次AMP梯度溢出发生在成功完成28043步之后、尝试28044步时。[八卡现场核验](evidence/swa-160m-baseline-first-amp-backoff.json)确认：八个rank同步按原backoff因子0.5将scale从2097152退至1048576，growth tracker全部归零，同一28044步重试成功，loss=3.226188660、裁剪前grad norm=0.446501911均有限。配置与scaler超参数未改，没有checkpoint回退。相同步号及未改动的stateless sampler证明数据索引重用；未另外捕获token字节作比对。此处记录梯度溢出重试，前向loss未出现NaN/Inf；后续完整训练与下游仍需完成。
 
+方法A首次AMP梯度溢出发生在完成27565步后、尝试27566步时。[A的八卡现场核验](evidence/swa-160m-A-first-amp-backoff.json)确认：八卡同步按原策略将scale从1048576降至524288，growth tracker全部归零；同一27566步重试成功，loss=3.237055779、裁剪前grad norm=0.434896529均有限。未改训练设置、没有checkpoint回退，前向loss始终有限。此后报告需保留A的overflow计数；第25000步证据中的0次仅覆盖该历史节点之前，不能据此宣称完整A作业从未溢出。相同数据索引的结论来自未改动的stateless sampler和相同步号，未另外捕获token字节作比对。
+
 [外部监督器](../tools/watch_swa_training.py)已附着正在训练的 cohort，tmux `yoco-swa-160m-guard`；没有重启健康的训练作业。它每10秒检查日志：
 
 - 任一卡的非有限前向、非有限验证 loss、worker 退出或训练停滞600秒，触发故障处理。
