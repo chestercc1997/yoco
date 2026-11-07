@@ -2,6 +2,7 @@
 
 ## 2026-11-07 训练设置不可变与自动故障恢复（用户硬约束）
 
+- **SWA A第25000步checkpoint已核验**：SHA `7b65c165c1d8da74b863f6ff70c7d907ba307198d317a1c1cd170c72d5775f6c`，409张量有限、102组optimizer step均25000，冻结配置及optimizer/scaler超参数保持原值，八卡RNG完整保存。val loss3.246068954，前100个定期验证点无回升，0次overflow/非有限前向/恢复；每5000步的五份正式checkpoint均保留且重新SHA核验一致。证据 `docs/evidence/swa-160m-A-25000-checkpoint.json`。原八卡A作业继续至40000；baseline不重跑，B及A/B下游、三组最终图表仍待完成，Goal保持active。
 - **SWA A第20000步checkpoint已核验**：SHA `52293990002fe5301ff4a40eb78df4df3a9433513b5fb441e1a412b98bc5a1eb`，409张量有限、102组optimizer step均20000，学习率符合原线性衰减计划，冻结配置、optimizer/scaler超参数及八卡RNG保持原设置。val loss3.292289972，前80个定期验证点无回升，0次overflow/非有限前向/恢复；每5000步的四份正式checkpoint均保留且重新SHA核验一致。证据 `docs/evidence/swa-160m-A-20000-checkpoint.json`。A仅完成自身计划一半，原八卡作业继续至40000；baseline不重跑，B及A/B下游、三组最终图表仍待完成，Goal保持active。
 - **SWA A第15000步checkpoint已核验**：SHA `1332d27b85e7713531d59b60d2c8c6c22a3dc2135369bf1a05258822bb907028`，409张量有限、102组optimizer step均15000，冻结配置、optimizer/scaler超参数及八卡RNG保持原设置。val loss3.359063148，前60个定期验证点无回升，0次overflow/非有限前向/恢复；5000/10000/15000三份正式checkpoint均保留且重新SHA核验一致。证据 `docs/evidence/swa-160m-A-15000-checkpoint.json`。原八卡A作业继续至40000，baseline不重跑，B及A/B下游、三组最终图表仍待完成，Goal保持active。
 - **SWA A第10000步checkpoint已核验**：SHA `c94d2ff6e550127f176e42c72e906018aa7e048d45cebb60a288bdc9956bb59b`，409张量有限、102组optimizer step均10000，学习率符合冻结线性衰减计划，配置、scaler超参数及八卡RNG保持原设置。val loss3.474439144，前40个定期验证点无回升，0次overflow/非有限前向/恢复；5000/10000两份正式checkpoint保留且重新SHA核验一致。证据 `docs/evidence/swa-160m-A-10000-checkpoint.json`。同cohort原八卡A作业继续至40000，baseline不重跑，B及A/B下游、三组最终图表仍待完成，Goal保持active。
