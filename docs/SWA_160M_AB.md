@@ -40,6 +40,8 @@ baseline、A、B **均已通过**真实八卡恢复对照、恢复前按位核�
 
 首个正式第5000步 checkpoint 已于北京时间13:01保存，随后完成[独立完整性核验](evidence/swa-160m-baseline-5000-checkpoint.json)：SHA一致，405个模型/optimizer张量有限，101个optimizer state的step均为5000，实际LR和betas/eps/weight decay符合原配置，参数仍为FP32、训练仍为FP16 mixed，scaler与八卡RNG完整。前5000个更新和20个定期验证点齐全，该步验证loss=3.736929893，迄此未记录NaN/Inf、overflow重试或验证loss回升。训练继续至40000；这是阶段检查，三组最终指标和下游仍待完整流程完成。
 
+第10000步也已保存并完成[同样的独立核验](evidence/swa-160m-baseline-10000-checkpoint.json)：405个张量有限，101组optimizer step均为10000，学习率符合原线性衰减计划，scaler的growth/backoff/interval保持2.0/0.5/2000，配置与冻结release一致。前10000个更新和40个定期验证点齐全，验证loss=3.477878332，迄此没有NaN/Inf、overflow重试或验证loss回升。baseline仅完成自身计划的四分之一；A/B完整训练和全部下游仍待后续阶段，不将此作最终结果。
+
 ```bash
 cat runs/setup/swa-160m-active.json
 cat runs/yoco-swa-160m-ab-8gpu-20261107/pipeline-status.json
