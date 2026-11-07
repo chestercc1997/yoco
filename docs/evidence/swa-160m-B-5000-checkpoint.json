@@ -1,0 +1,91 @@
+{
+  "path": "/root/yoco/runs/yoco-swa-160m-ab-8gpu-20261107/B/checkpoint_00005000.pt",
+  "step": 5000,
+  "sha256": "cd43ca4fbbf8678b0356b5328d7c66f5e919113e4f086005e235ec94ea529494",
+  "fingerprint": "24d6fdd031ba27a3d754f345178156ce61f67fbea6e420248d5a6b3f24f979c0",
+  "finite_tensors_checked": 413,
+  "full_optimizer_scaler_eight_rank_rng": true,
+  "checkpoint_health_verified": true,
+  "training_setting_changes": false,
+  "config_matches_frozen_release": true,
+  "model_parameter_dtype": "float32",
+  "training_precision": "fp16_mixed_fp32_params",
+  "optimizer_hyperparameters_match": true,
+  "optimizer_parameter_states": 103,
+  "all_optimizer_steps": 5000,
+  "learning_rate": 0.00013249211356466874,
+  "seed": 42,
+  "global_batch_tokens": 262144,
+  "checkpoint_every": 5000,
+  "retention_all": true,
+  "accepted_training_points": 5000,
+  "scheduled_validation_points": 20,
+  "validation_loss": 3.7396748065948486,
+  "maximum_validation_regression": 0,
+  "nonfinite_forward_events": 0,
+  "overflow_retries": 0,
+  "scaler_hyperparameters": {
+    "growth_factor": 2.0,
+    "backoff_factor": 0.5,
+    "growth_interval": 2000
+  },
+  "partial_only": true,
+  "note": "Verified B update 5000 checkpoint. All three full 40000-step runs, full downstream tasks, final comparison and publication must be checked separately.",
+  "scaler_state_at_checkpoint": {
+    "scale": 512.0,
+    "growth_factor": 2.0,
+    "backoff_factor": 0.5,
+    "growth_interval": 2000,
+    "_growth_tracker": 1000
+  },
+  "arm": "B",
+  "fusion_control_audit": {
+    "mode": "conditional_kv",
+    "source_layers": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "temperature": 1.0,
+    "initialization_sha256": "99dd58b788fccaed7879aadee28d6766acc8cbdad922c30215e89bc4dda8c246",
+    "controls": {
+      "memory_fusion.score": {
+        "shape": [
+          768
+        ],
+        "l2_norm": 3.824510335922241,
+        "maximum_absolute_value": 0.274657279253006,
+        "moved_from_zero_initialization": true
+      },
+      "memory_fusion.layer_bias": {
+        "shape": [
+          6
+        ],
+        "l2_norm": 0.5290097594261169,
+        "maximum_absolute_value": 0.27397680282592773,
+        "moved_from_zero_initialization": true,
+        "values": [
+          -0.24582141637802124,
+          -0.2306451052427292,
+          -0.24790361523628235,
+          -0.16254523396492004,
+          -0.05731947347521782,
+          0.27397680282592773
+        ]
+      }
+    },
+    "all_controls_finite_and_moved_from_initialization": true,
+    "note": "The trained score vector and layer biases define input-dependent token routing; they are model weights, not adjusted training settings. A single global softmax vector does not describe this method."
+  },
+  "retained_checkpoint_count": 1,
+  "retained_checkpoints_sha256_verified": [
+    {
+      "step": 5000,
+      "file": "checkpoint_00005000.pt",
+      "sha256": "cd43ca4fbbf8678b0356b5328d7c66f5e919113e4f086005e235ec94ea529494"
+    }
+  ]
+}

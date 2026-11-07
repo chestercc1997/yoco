@@ -4,13 +4,13 @@
 
 ## 当前结果
 
-baseline于北京时间2026-11-07 18:45完成40000步及八项完整零样本评测；方法A于2026-11-08 01:39完成相同完整流程。两组每5000步的各8份checkpoint均已核验，B已在同一cohort八卡接续训练。三组对比和最终图表尚未完成，Goal保持进行。
+baseline于北京时间2026-11-07 18:45完成40000步及八项完整零样本评测；方法A于2026-11-08 01:39完成相同完整流程。两组每5000步的各8份checkpoint均已核验，B已在同一cohort八卡接续训练，首个5000步checkpoint通过核验。三组对比和最终图表尚未完成，Goal保持进行。
 
 | 组别 | 完整训练/下游 | 最终验证loss | 八项宏平均 |
 | --- | --- | ---: | ---: |
 | baseline | 40000步、8/8项完成 | 3.180143 | 46.3682% |
 | A / learned_kv | 40000步、8/8项完成 | 3.176147 | 46.0355% |
-| B / conditional_kv | 八卡训练中 | 待完成 | 待完成 |
+| B / conditional_kv | 八卡训练中；5000步已核验 | 待完成 | 待完成 |
 
 [baseline完成证据](evidence/swa-160m-baseline-completed-20261107.json)已独立核对21465条样本、逐样本得分均值、零样本/全量设置、数据锁、任务YAML和最终checkpoint来源。八项分别为ARC-E46.7172%、ARC-C24.3174%、BoolQ61.9878%、HellaSwag31.1193%、OpenBookQA28.8000%、PIQA62.6224%、WinoGrande49.8816%、SciQ65.5000%；BoolQ/WinoGrande使用acc，其余使用acc_norm。
 
@@ -33,6 +33,8 @@ A的验证loss较baseline低0.003996，但八项宏平均低0.3327个百分点�
 | 八项宏平均 | 46.3682 | 46.0355 | -0.3327 |
 
 以下checkpoint记录为对应训练步的历史核验快照；各阶段“继续训练”的描述不改变上方两组已经完成的当前状态。
+
+方法B的[第5000步checkpoint](evidence/swa-160m-B-5000-checkpoint.json)通过独立核验：413个模型/optimizer张量有限、103组optimizer step均5000，冻结配置及optimizer/scaler超参数保持原值，八卡RNG完整保存。前5000个成功更新和20个定期验证点齐全，该步验证loss=3.739674807，无验证loss回升、overflow重试、非有限前向或checkpoint回退，首份正式checkpoint的SHA复核一致。条件融合的768维score与6个layer_bias均从零初值学到有限非零值，score的L2范数3.82451、bias的L2范数0.52901；这是模型权重的正常学习，temperature=1及训练设置未改。B采用逐token条件权重，不能用单个全局softmax向量代表其路由。原八卡B作业继续至40000步，完整下游与三组图表尚未完成。
 
 方法A的[第5000步checkpoint](evidence/swa-160m-A-5000-checkpoint.json)已独立核验：409个模型/optimizer张量有限，102组optimizer step均5000，训练设置与冻结release一致，scaler和八卡RNG完整。前5000个成功更新、20个定期验证点齐全，该步验证loss=3.737168550，无验证loss回升、overflow重试、非有限前向或checkpoint回退。六个融合logits已从零初始化学到非零值，对应第1–6层的softmax权重约为0.11704、0.12080、0.12306、0.14952、0.21756、0.27202，均有限、为正且归一化；这是模型权重的正常学习，temperature等训练设置未改。A继续训练至40000步，尚不能据此判断最终优劣。
 
