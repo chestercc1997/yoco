@@ -150,6 +150,8 @@ python tools/watch_swa_training.py --run-dir runs/yoco-swa-160m-ab-8gpu-20261107
 
 全部完成后用[导出器](../tools/export_swa_ab.py)重新核验三组每5000步保留的全部24份 checkpoint SHA（含最终 checkpoint）、每任务完整样本数、分数、相同文档/prompt/target hash 与相同评测设置，再输出 120000 个原始训练点、480 个定期验证点、八项得分和七张 PNG/PDF/SVG 图。导出器拒绝未完成的 cohort。
 
+最终 `source_hashes.json` 还会保留冻结 release 清单及其中配置、实现、初始化和评测锁的 hash，以及各组 resolved config、恢复核验、完成状态、summary、全部24份 checkpoint 及其元数据的 hash。导出时重新核对训练数据 manifest 与冻结清单一致；这只补充报告来源记录，不改训练代码或设置。
+
 资源图的时间来自成功更新日志的 `seconds`，不含AMP溢出失败尝试、验证、checkpoint写盘、准备和评测时间，不能当作整个作业的GPU占用时长；回退后丢弃的成功更新耗时另列。溢出重试次数会保留，但现有日志没有逐次失败尝试的精确活动耗时。该说明仅明确计时范围，未修改运行中的训练或日志代码。
 
 ```bash

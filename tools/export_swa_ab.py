@@ -43,9 +43,16 @@ def main():
     for c in configs.values():
         for key in ('model','training','data','seed','tied_embeddings','execution'):assert c[key]==configs['baseline'][key],key
     assert configs['baseline']['model']['sliding_window']==1024
-    training={};trainrows=[];valrows=[];sources={};hashes={};per_doc={};down=[]
+    hashes={'release-manifest.json':sha(run/'release-manifest.json'),'summary.json':sha(run/'summary.json')}
+    hashes.update({f'release/{name}':expected for name,expected in manifest['files'].items()})
+    data_manifest=Path(configs['baseline']['data']['manifest'])
+    hashes[str(data_manifest)]=sha(data_manifest)
+    assert hashes[str(data_manifest)]==manifest['data_manifest_sha256'],'Training data manifest changed'
+    training={};trainrows=[];valrows=[];sources={};per_doc={};down=[]
     for arm in ARMS:
         folder=run/arm;assert (folder/'PIPELINE_SUCCESS').exists()
+        for name in ('summary.json','resolved_config.json','stage_complete.json','resume-verification.json'):
+            hashes[f'{arm}/{name}']=sha(folder/name)
         summary=read(folder/'summary.json');meta=read(folder/'checkpoint_00040000.json')
         assert summary['step']==meta['step']==40000 and sha(folder/meta['file'])==meta['sha256']==summary['sha256']
         retained=[]
@@ -53,6 +60,8 @@ def main():
             checkpoint=folder/f'checkpoint_{step:08d}.pt';saved_meta=read(checkpoint.with_suffix('.json'))
             assert saved_meta['file']==checkpoint.name and saved_meta['step']==step
             assert saved_meta['fingerprint']==meta['fingerprint'] and sha(checkpoint)==saved_meta['sha256']
+            hashes[f'{arm}/{checkpoint.name}']=saved_meta['sha256']
+            hashes[f'{arm}/{checkpoint.with_suffix(".json").name}']=sha(checkpoint.with_suffix('.json'))
             retained.append(saved_meta)
         assert read(folder/'stage_complete.json')=={'step':40000,'formal_complete':True,'synthetic':False}
         resolved=read(folder/'resolved_config.json');assert resolved['config']==configs[arm]
