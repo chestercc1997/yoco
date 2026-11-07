@@ -121,5 +121,99 @@
       "file": "checkpoint_00040000.pt",
       "sha256": "7e7090838efc84f13b18ff4926d0df090ebb1650eead456c585e9e5d5c7aeb38"
     }
-  ]
+  ],
+  "scaler_timeline_audit": {
+    "passed": true,
+    "world_size": 8,
+    "source_checkpoint_step": 4,
+    "through_update": 40000,
+    "successful_updates_checked_per_rank": 39996,
+    "source_scaler_state": {
+      "scale": 128.0,
+      "growth_factor": 2.0,
+      "backoff_factor": 0.5,
+      "growth_interval": 2000,
+      "_growth_tracker": 4
+    },
+    "all_ranks_have_identical_scale_evolution": true,
+    "all_logged_training_scales_match_original_growth_and_backoff_policy": true,
+    "training_setting_changes": false,
+    "final_scale": 1048576.0,
+    "final_growth_tracker": 962,
+    "overflow_attempts": 5,
+    "growth_events": [
+      {
+        "update": 2000,
+        "scale": 256.0
+      },
+      {
+        "update": 4000,
+        "scale": 512.0
+      },
+      {
+        "update": 6000,
+        "scale": 1024.0
+      },
+      {
+        "update": 8000,
+        "scale": 2048.0
+      },
+      {
+        "update": 10000,
+        "scale": 4096.0
+      },
+      {
+        "update": 12000,
+        "scale": 8192.0
+      },
+      {
+        "update": 14000,
+        "scale": 16384.0
+      },
+      {
+        "update": 16000,
+        "scale": 32768.0
+      },
+      {
+        "update": 18000,
+        "scale": 65536.0
+      },
+      {
+        "update": 20000,
+        "scale": 131072.0
+      },
+      {
+        "update": 22000,
+        "scale": 262144.0
+      },
+      {
+        "update": 24000,
+        "scale": 524288.0
+      },
+      {
+        "update": 26000,
+        "scale": 1048576.0
+      },
+      {
+        "update": 28000,
+        "scale": 2097152.0
+      },
+      {
+        "update": 30043,
+        "scale": 2097152.0
+      },
+      {
+        "update": 33668,
+        "scale": 2097152.0
+      },
+      {
+        "update": 36622,
+        "scale": 1048576.0
+      },
+      {
+        "update": 38622,
+        "scale": 2097152.0
+      }
+    ]
+  }
 }
