@@ -48,6 +48,12 @@ def main():
         folder=run/arm;assert (folder/'PIPELINE_SUCCESS').exists()
         summary=read(folder/'summary.json');meta=read(folder/'checkpoint_00040000.json')
         assert summary['step']==meta['step']==40000 and sha(folder/meta['file'])==meta['sha256']==summary['sha256']
+        retained=[]
+        for step in range(5000,40001,5000):
+            checkpoint=folder/f'checkpoint_{step:08d}.pt';saved_meta=read(checkpoint.with_suffix('.json'))
+            assert saved_meta['file']==checkpoint.name and saved_meta['step']==step
+            assert saved_meta['fingerprint']==meta['fingerprint'] and sha(checkpoint)==saved_meta['sha256']
+            retained.append(saved_meta)
         assert read(folder/'stage_complete.json')=={'step':40000,'formal_complete':True,'synthetic':False}
         resolved=read(folder/'resolved_config.json');assert resolved['config']==configs[arm]
         assert meta['fingerprint']==hashlib.sha256(json.dumps(resolved['identity'],sort_keys=True).encode()).hexdigest()
@@ -91,6 +97,7 @@ def main():
             valrows.append({'arm':arm,'step':step,'tokens':step*262144,'validation_loss':e['loss'],
                 'perplexity':e['perplexity'],'trunk_6nd_pflop_days':6*(params-embed)*step*262144/8.64e19})
         sources[arm]={'checkpoint':meta,'initialization_sha256':sha(release/f'initializations/{arm}.pt'),
+                     'retained_checkpoints_sha256_verified':retained,
                      'resume_verification':read(folder/'resume-verification.json')}
         per_doc[arm]={}
     task_provenance={}

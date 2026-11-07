@@ -76,7 +76,7 @@ python tools/watch_swa_training.py --run-dir runs/yoco-swa-160m-ab-8gpu-20261107
 
 `monitoring` 表示已附着；`recoveries` 记录实际回退；`needs_goal_diagnosis` 表示有界恢复耗尽或评测/核验故障，需要持续 Goal 处理，不能宣称完整训练已完成。
 
-全部完成后用[导出器](../tools/export_swa_ab.py)重新核验三组最终 checkpoint SHA、每任务完整样本数、分数、相同文档/prompt/target hash 与相同评测设置，再输出 120000 个原始训练点、480 个定期验证点、八项得分和七张 PNG/PDF/SVG 图。导出器拒绝未完成的 cohort。
+全部完成后用[导出器](../tools/export_swa_ab.py)重新核验三组每5000步保留的全部24份 checkpoint SHA（含最终 checkpoint）、每任务完整样本数、分数、相同文档/prompt/target hash 与相同评测设置，再输出 120000 个原始训练点、480 个定期验证点、八项得分和七张 PNG/PDF/SVG 图。导出器拒绝未完成的 cohort。
 
 ```bash
 python tools/export_swa_ab.py \
