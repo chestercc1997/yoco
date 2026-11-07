@@ -46,6 +46,8 @@ baseline、A、B **均已通过**真实八卡恢复对照、恢复前按位核�
 
 baseline半程第20000步完成[独立核验](evidence/swa-160m-baseline-20000-checkpoint.json)：405个张量有限、101组optimizer step均20000，完整optimizer/scaler/八卡RNG和冻结配置一致。前20000个更新及80个定期验证点齐全，验证loss=3.295583487，迄此无NaN/Inf、overflow重试或验证loss回升。5000/10000/15000/20000四份正式checkpoint均保留；这仅是baseline的半程，baseline后半程、A/B及全部下游继续执行。
 
+第25000步完成[独立核验](evidence/swa-160m-baseline-25000-checkpoint.json)：405个张量有限、101组optimizer step均25000，配置、optimizer/scaler超参数及八卡RNG保持原配方。前25000个更新与100个定期验证点齐全，验证loss=3.250399351，迄此无NaN/Inf、overflow重试或验证loss回升。每5000步的五份正式checkpoint均保留；baseline继续至40000，A/B完整训练与全部下游仍待后续阶段。
+
 ```bash
 cat runs/setup/swa-160m-active.json
 cat runs/yoco-swa-160m-ab-8gpu-20261107/pipeline-status.json

@@ -11,6 +11,7 @@
 - baseline第10000步checkpoint同样已独立核验，SHA `d6991db01a71294aa514a2e23d1d754bd7266e4d2d17da10cd1ba1340c69ec9f`，405张量有限、101组optimizer step均10000、配置及scaler超参数保持原值。证据 `docs/evidence/swa-160m-baseline-10000-checkpoint.json`；val loss3.477878332，前40个定期验证点无回升，尚无NaN/Inf、overflow或恢复。原八卡训练仍继续，不重新启动；这个四分之一节点不是Goal完成。
 - 最新已核验baseline第15000步checkpoint，SHA `84025b6b9dc2f2fec5619bfdf22ce727e23ca8a3ab720b5b9aa145a3d9c363a5`；405张量有限、101组optimizer step均15000、冻结配置与scaler参数未变，val loss3.362773657，前60个定期验证点无回升。证据 `docs/evidence/swa-160m-baseline-15000-checkpoint.json`。5000/10000/15000均保留；八卡作业继续，Goal保持active。
 - 最新已核验baseline第20000步checkpoint，SHA `5501e0b03d0230533158dc634df4f6125300e63bd270fd959a61d957badd5f1e`；405张量有限、101组optimizer step均20000、冻结设置不变，val loss3.295583487，前80个定期验证点无回升。证据 `docs/evidence/swa-160m-baseline-20000-checkpoint.json`。四个每5000步checkpoint全部保留；baseline仅完成半程，原八卡作业继续，整个Goal尚未完成。
+- 最新已核验baseline第25000步checkpoint，SHA `dcb3d2977ca12bfa38824de4d9bceb9520f1cb5a06b4a7741eb4fdf2fe089741`；405张量有限、101组optimizer step均25000、冻结设置不变，val loss3.250399351，前100个定期验证点无回升。证据 `docs/evidence/swa-160m-baseline-25000-checkpoint.json`。五份正式checkpoint全部保留，baseline仍在八卡训练；A/B及下游尚未完成，Goal继续active。
 
 ## 2026-11-07 YOCO-SWA 160M baseline/A/B 完整 Goal（当前目标）
 
