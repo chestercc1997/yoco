@@ -4,12 +4,12 @@
 
 ## 当前结果
 
-baseline于北京时间2026-11-07 18:45完成40000步及八项完整零样本评测。方法A在同一cohort八卡接续训练，5000/10000步checkpoint已核验；B待后续阶段。三组对比和最终图表尚未完成，Goal保持进行。
+baseline于北京时间2026-11-07 18:45完成40000步及八项完整零样本评测。方法A在同一cohort八卡接续训练，5000/10000/15000步checkpoint已核验；B待后续阶段。三组对比和最终图表尚未完成，Goal保持进行。
 
 | 组别 | 完整训练/下游 | 最终验证loss | 八项宏平均 |
 | --- | --- | ---: | ---: |
 | baseline | 40000步、8/8项完成 | 3.180143 | 46.3682% |
-| A / learned_kv | 八卡训练中；10000步已核验 | 待完成 | 待完成 |
+| A / learned_kv | 八卡训练中；15000步已核验 | 待完成 | 待完成 |
 | B / conditional_kv | 待运行 | 待完成 | 待完成 |
 
 [baseline完成证据](evidence/swa-160m-baseline-completed-20261107.json)已独立核对21465条样本、逐样本得分均值、零样本/全量设置、数据锁、任务YAML和最终checkpoint来源。八项分别为ARC-E46.7172%、ARC-C24.3174%、BoolQ61.9878%、HellaSwag31.1193%、OpenBookQA28.8000%、PIQA62.6224%、WinoGrande49.8816%、SciQ65.5000%；BoolQ/WinoGrande使用acc，其余使用acc_norm。
@@ -19,6 +19,8 @@ baseline于北京时间2026-11-07 18:45完成40000步及八项完整零样本评
 方法A的[第5000步checkpoint](evidence/swa-160m-A-5000-checkpoint.json)已独立核验：409个模型/optimizer张量有限，102组optimizer step均5000，训练设置与冻结release一致，scaler和八卡RNG完整。前5000个成功更新、20个定期验证点齐全，该步验证loss=3.737168550，无验证loss回升、overflow重试、非有限前向或checkpoint回退。六个融合logits已从零初始化学到非零值，对应第1–6层的softmax权重约为0.11704、0.12080、0.12306、0.14952、0.21756、0.27202，均有限、为正且归一化；这是模型权重的正常学习，temperature等训练设置未改。A继续训练至40000步，尚不能据此判断最终优劣。
 
 方法A的[第10000步checkpoint](evidence/swa-160m-A-10000-checkpoint.json)同样通过独立核验：409个张量有限、102组optimizer step均10000，学习率符合原线性衰减计划，配置、scaler超参数和八卡RNG保持原设置。前10000个成功更新和40个定期验证点齐全，验证loss=3.474439144，无验证loss回升、overflow重试、非有限前向或checkpoint回退。5000/10000步两份正式checkpoint均保留并重新核对SHA一致。A仅完成自身40000步计划的四分之一，后续完整训练与下游继续执行。
+
+方法A的[第15000步checkpoint](evidence/swa-160m-A-15000-checkpoint.json)通过独立核验：409个张量有限、102组optimizer step均15000，冻结配置、optimizer/scaler超参数和八卡RNG保持原设置。前15000个成功更新和60个定期验证点齐全，验证loss=3.359063148，无验证loss回升、overflow重试、非有限前向或checkpoint回退。5000/10000/15000步三份正式checkpoint全部保留并重新核对SHA一致。A继续训练至40000步，三组完整对比尚未完成。
 
 ## 结构和共同基座
 
