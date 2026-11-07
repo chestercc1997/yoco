@@ -1,0 +1,55 @@
+{
+  "path": "/root/yoco/runs/yoco-swa-160m-ab-8gpu-20261107/B/checkpoint_00010000.pt",
+  "step": 10000,
+  "sha256": "784fe37e69ff2bf5134551e32a98d5dbe9b638b4118fb6454caf9e84f44614fb",
+  "fingerprint": "24d6fdd031ba27a3d754f345178156ce61f67fbea6e420248d5a6b3f24f979c0",
+  "finite_tensors_checked": 413,
+  "full_optimizer_scaler_eight_rank_rng": true,
+  "checkpoint_health_verified": true,
+  "training_setting_changes": false,
+  "config_matches_frozen_release": true,
+  "model_parameter_dtype": "float32",
+  "training_precision": "fp16_mixed_fp32_params",
+  "optimizer_hyperparameters_match": true,
+  "optimizer_parameter_states": 103,
+  "all_optimizer_steps": 10000,
+  "learning_rate": 0.00011356466876971609,
+  "seed": 42,
+  "global_batch_tokens": 262144,
+  "checkpoint_every": 5000,
+  "retention_all": true,
+  "accepted_training_points": 10000,
+  "scheduled_validation_points": 40,
+  "validation_loss": 3.474273204803467,
+  "maximum_validation_regression": 0,
+  "nonfinite_forward_events": 0,
+  "overflow_retries": 0,
+  "scaler_hyperparameters": {
+    "growth_factor": 2.0,
+    "backoff_factor": 0.5,
+    "growth_interval": 2000
+  },
+  "partial_only": true,
+  "note": "Verified B update 10000 checkpoint. All three full 40000-step runs, full downstream tasks, final comparison and publication must be checked separately.",
+  "scaler_state_at_checkpoint": {
+    "scale": 4096.0,
+    "growth_factor": 2.0,
+    "backoff_factor": 0.5,
+    "growth_interval": 2000,
+    "_growth_tracker": 0
+  },
+  "arm": "B",
+  "retained_checkpoint_count": 2,
+  "retained_checkpoints_sha256_verified": [
+    {
+      "step": 5000,
+      "file": "checkpoint_00005000.pt",
+      "sha256": "cd43ca4fbbf8678b0356b5328d7c66f5e919113e4f086005e235ec94ea529494"
+    },
+    {
+      "step": 10000,
+      "file": "checkpoint_00010000.pt",
+      "sha256": "784fe37e69ff2bf5134551e32a98d5dbe9b638b4118fb6454caf9e84f44614fb"
+    }
+  ]
+}
