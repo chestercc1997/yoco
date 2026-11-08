@@ -1,5 +1,11 @@
 # 用户执行约束（2026-10-29）
 
+## 2026-11-09 gRet 400M baseline排队授权（下一任务）
+
+- 用户明确要求把 **400M gated retention baseline** 排在当前gRet 400M B之后。仅在B训练、八项完整评测和自动报告导出成功且GPU空闲后接续；不打断B，不并行抢卡。队列 `runs/setup/gret-400m-training-queue.json`，baseline run `/root/yoco/runs/yoco-gret-400m-baseline-8gpu-20261108T194918Z`。
+- 新配置 `configs/yoco_400m_gret_baseline_8gpu.json` 复用B冻结的model/training/data/seed/execution，仅移除memory_fusion恢复原baseline；同一222张量随机基座初始化、24层/dim1024/FFN2816/self heads4、FP16 mixed/FP32参数、8卡microbatch4/accum4、40000步、验证与每5000步完整保存全部不变。不覆盖旧reference-only配置，不加载已训练A/B权重。
+- CPU准备可以在B运行时完成；八卡恢复核验、baseline正式训练和八项下游只能在队列依赖满足后启动。完成后导出同规格baseline/A/B三组报告，保留A历史编译/修复来源的描述性比较限制，旧SWA和gRet证据不改写。
+
 ## 2026-11-08 gRet 400M 方法B（当前授权）
 
 - **已正式启动**：`runs/setup/400m-B-active.json` 指向 `/root/yoco/runs/yoco-gret-400m-B-8gpu-20261108T073237Z`，tmux `yoco-gret-400m-B`，监督器 `tools/watch_gret_400m_B.py` 管理原控制器 `tools/run_gret_400m_B.py`。CPU共同基座222张量按位相同、旧A初始输出/末来源/因果性差异均0，八卡0→2→4/连续/独立重复/恢复前按位加载及eval smoke均通过；已从受检第4步接续至40000，首100步已完成。启动与恢复证据见 `docs/evidence/gret-400m-B-{launch,resume-check}-20261108.json`。先读实际状态，禁止重复启动；不得将后台启动误报为完整训练/评测/图表发布均已完成。

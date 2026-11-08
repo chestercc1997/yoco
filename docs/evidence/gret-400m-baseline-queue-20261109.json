@@ -1,0 +1,47 @@
+{
+  "recorded_at": "2026-11-08T19:57:39.858997+00:00",
+  "queue_state": "waiting_for_predecessor",
+  "queue_task": {
+    "id": "gret-400m-baseline-20261108T194918Z",
+    "kind": "gret-400m-baseline",
+    "state": "waiting_for_predecessor",
+    "after_run": "/root/yoco/runs/yoco-gret-400m-B-8gpu-20261108T073237Z",
+    "run_dir": "/root/yoco/runs/yoco-gret-400m-baseline-8gpu-20261108T194918Z",
+    "config": "/root/yoco/configs/yoco_400m_gret_baseline_8gpu.json",
+    "prepared": true,
+    "created_at": "2026-11-08T19:49:18.780887+00:00",
+    "dependency": "B PIPELINE_SUCCESS: full training, eight full tasks and automatic report export",
+    "world_size": 8,
+    "max_updates": 40000,
+    "checkpoint_every": 5000,
+    "keep_all_checkpoints": true,
+    "prepared_at": "2026-11-08T19:56:33.003503+00:00",
+    "release_manifest_sha256": "8bc327368e58dedc523778c0a9e0b4bfadf4f38ff836db3d4f2417865f8caef4",
+    "preflight": "/root/yoco/runs/yoco-gret-400m-baseline-8gpu-20261108T194918Z/release/preflight.json",
+    "guard_contract": "/root/yoco/runs/yoco-gret-400m-baseline-8gpu-20261108T194918Z/guard-contract.json",
+    "report_output": "/root/yoco/evaluation/gret_400m_3way_20261108T194918Z"
+  },
+  "queue_heartbeat_at": "2026-11-08T19:57:33.275481+00:00",
+  "last_two_queue_log_entries": [
+    "2026-11-08T19:57:03.215954+00:00 [('gret-400m-baseline-20261108T194918Z', 'waiting_for_predecessor')]",
+    "2026-11-08T19:57:33.275481+00:00 [('gret-400m-baseline-20261108T194918Z', 'waiting_for_predecessor')]"
+  ],
+  "tmux_session": "yoco-gret-400m-queue",
+  "dependency_gate_closed": true,
+  "baseline_gpu_pipeline_started": false,
+  "B_status": {
+    "step": 29083,
+    "training_loss": 2.942849636077881,
+    "validation_step": 29000,
+    "validation_loss": 2.9606575965881348,
+    "guard_state": "monitoring",
+    "recoveries": [],
+    "complete": false
+  },
+  "baseline_cpu_preflight_passed": true,
+  "baseline_recovery_contract_verified": true,
+  "B_contract_unchanged": true,
+  "meaningful_cpu_tests_passed": 6,
+  "guard_contract_sha256": "7a8df03f231d8e088b77db42a95ca9a67e9710cc41be953552a7815ed5a2753c",
+  "limitations": "Queue is running locally in tmux, not an operating-system reboot service. Eight-GPU baseline checks remain pending until B finishes. Rendered report review/publication follows future pipeline completion."
+}

@@ -55,6 +55,13 @@ full 40,000-update training is now running, followed by eight full downstream ta
 All 5,000-step checkpoints are retained. Existing A and SWA runs are preserved.
 See [settings, automatic recovery and progress commands](docs/PLAN_B_400M_8GPU.md).
 
+The user has queued a **400M gated-retention baseline as the next task**.
+A persistent local queue waits for B's full training, eight evaluations and report
+export to succeed and for all eight GPUs to become idle. The baseline retains
+the frozen B recipe and the shared random backbone initialization; only the
+fusion module is removed. CPU preparation is complete; GPU checks and training
+wait for B. See [the queue, settings and three-way report workflow](docs/GRET_400M_BASELINE_QUEUE.md).
+
 ## Completed 400M A training
 
 Method A at **400.59M parameters on 8×A100** completed 40,000 updates and eight
