@@ -1,0 +1,78 @@
+{
+  "passed": true,
+  "architecture": "YOCO-gRet",
+  "baseline_parameters": 400590848,
+  "B_parameters": 400591884,
+  "extra_parameters": 1036,
+  "common_state_tensors_verified": 222,
+  "common_weights_bitwise_equal": true,
+  "common_weights_match_original_A_initialization": true,
+  "model": {
+    "dim": 1024,
+    "n_layers": 24,
+    "hidden_dim": 2816,
+    "n_self_heads": 4,
+    "n_attn_heads": 16,
+    "n_attn_kv_heads": 16,
+    "vocab_size": 100288,
+    "max_seq_len": 2048,
+    "model_parallel_size": 1,
+    "rope_theta": 10000.0,
+    "norm_eps": 1e-05
+  },
+  "memory_fusion": {
+    "mode": "conditional_kv",
+    "source_layers": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12
+    ],
+    "temperature": 1.0
+  },
+  "training_and_data_match_completed_A": true,
+  "execution_matches_completed_A_final_native_segment": true,
+  "precision": "fp16_mixed_fp32_params",
+  "initial_weights": [
+    0.08333333333333333,
+    0.08333333333333333,
+    0.08333333333333333,
+    0.08333333333333333,
+    0.08333333333333333,
+    0.08333333333333333,
+    0.08333333333333333,
+    0.08333333333333333,
+    0.08333333333333333,
+    0.08333333333333333,
+    0.08333333333333333,
+    0.08333333333333333
+  ],
+  "old_A_initial_forward_max_abs": 0.0,
+  "last_source_limit_max_abs": 0.0,
+  "causality_prefix_max_abs": 0.0,
+  "full_size_control_gradients": {
+    "score": 0.003655201056972146,
+    "layer_bias": 0.007736466825008392
+  },
+  "all_gradients_finite": true,
+  "source_A_run": "/root/yoco/runs/yoco-400m-A-8gpu-retentionfix-20261106",
+  "source_A_initialization": "/root/yoco/runs/setup/yoco-400m-A-initialization.pt",
+  "source_A_initialization_sha256": "2cdfc71b1cac69cbcd74199d4fc522db9b084a4e6a001ce367533b1c00e8b4e3",
+  "initialization": "/root/yoco/runs/setup/yoco-400m-B-initialization.pt",
+  "initialization_sha256": "6675e4a1cbcc4a50a1029f46ef6fca0e86827b387c05945838caf06d2b6aad94",
+  "reference_output_sha256": "267264e256a80df31bfecafe63c193ee55e031ecf53a14eaf9596c065a97a596",
+  "repaired_runtime_sha256": {
+    "runtime/train.py": "47991278fafdbf4bb588521adf47b8ee28de2ec94bac954b0ae9c22b90f49b02",
+    "runtime/yoco_official/backend.py": "d8c025c5bd4e06e3f4d2977daaf636efb11beccc767d052c20b773e793973065",
+    "runtime/yoco_official/gate_retention.py": "e317190116956b878c7cef85c2874d4e8dadaa962cb07311711544dd4f1c4259"
+  },
+  "note": "New gRet 400M B pretraining from the shared random initialization; historical A has an earlier compiled/repaired execution lineage."
+}

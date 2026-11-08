@@ -44,6 +44,17 @@ diagnosis. This completed cohort required no rollback and must not be restarted.
 The corpus is the repository's approved FineWeb recipe; paper comparisons require
 separate corpus and parameter-budget matching.
 
+## gRet 400M method B pipeline
+
+The newly authorized experiment trains **gated-retention 400M B** on 8×A100,
+using the completed 400M A's backbone initialization, data and training recipe.
+B has 400,591,884 parameters and 12 conditional K/V sources. CPU backbone,
+old-A initial output, last-source and causality checks passed. Real-data eight-GPU
+restoration, continuous/repeated training and exact state loading checks passed;
+full 40,000-update training is now running, followed by eight full downstream tasks.
+All 5,000-step checkpoints are retained. Existing A and SWA runs are preserved.
+See [settings, automatic recovery and progress commands](docs/PLAN_B_400M_8GPU.md).
+
 ## Completed 400M A training
 
 Method A at **400.59M parameters on 8×A100** completed 40,000 updates and eight
@@ -51,8 +62,8 @@ full downstream tasks on November 7, 2026: validation loss **2.918184**,
 eight-task macro average **48.5270%**. The final checkpoint SHA256 and all eight
 evaluation provenance records were verified independently. This run resumed after
 the documented retention arithmetic repair, with compilation disabled; its
-post-repair segment recorded no nonfinite forward events. Baseline/B were not
-trained at this size. See the [completed run and repair record](docs/PLAN_A_400M_8GPU.md).
+post-repair segment recorded no nonfinite forward events. That run trained A;
+the newly authorized B pipeline is tracked above. See the [completed run and repair record](docs/PLAN_A_400M_8GPU.md).
 
 ## Completed gRet 160M A/B experiment
 

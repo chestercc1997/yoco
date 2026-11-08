@@ -1,5 +1,14 @@
 # 用户执行约束（2026-10-29）
 
+## 2026-11-08 gRet 400M 方法B（当前授权）
+
+- **已正式启动**：`runs/setup/400m-B-active.json` 指向 `/root/yoco/runs/yoco-gret-400m-B-8gpu-20261108T073237Z`，tmux `yoco-gret-400m-B`，监督器 `tools/watch_gret_400m_B.py` 管理原控制器 `tools/run_gret_400m_B.py`。CPU共同基座222张量按位相同、旧A初始输出/末来源/因果性差异均0，八卡0→2→4/连续/独立重复/恢复前按位加载及eval smoke均通过；已从受检第4步接续至40000，首100步已完成。启动与恢复证据见 `docs/evidence/gret-400m-B-{launch,resume-check}-20261108.json`。先读实际状态，禁止重复启动；不得将后台启动误报为完整训练/评测/图表发布均已完成。
+- 用户已明确纠正：本轮是之前的 gated retention / gRet 版本400M方法B，**不是SWA**。仅完整训练B及八项完整下游，导出曲线/图表/汇总并同步GitHub；baseline/A只做共同基座与配方参照，不额外重训。
+- 配置 `configs/yoco_400m_plan_B_8gpu.json` 克隆已完成400M A最终健康run的model/training/data/seed/execution：24层、dim1024、FFN2816、self heads4、attention/KV heads16、FP16 mixed/FP32参数、8卡microbatch4/accum4、262144tokens/步、40000步；验证与每5000步保存全部保留均不改。B为前12层来源的conditional_kv，score向量1024维及12个bias零初始化、temperature固定1。
+- 复用 `runs/setup/yoco-400m-A-initialization.pt` 的222个公共基座张量，建立B的新初始化，不加载已训练A的40000步权重。先验证与A旧冻结代码的初始输出、末来源退化、因果性和梯度，再做真实数据八卡0→2→4/连续/重复及恢复前完整按位核验，通过后正式训练。
+- 使用已修复的gRet跨块FP32状态累积到原RMSNorm后再恢复FP16接口，以及正确的AMP退避计数归零；全局精度/AMP策略不变，compile继续关闭。不可编辑旧A/SWA release。原A前缀存在历史编译/修复来源，未来A/B结果仅作描述性比较，不宣称全程执行路径完全相同。
+- 准备记录 `runs/setup/400m-B-preparation.json`，run为 `/root/yoco/runs/yoco-gret-400m-B-8gpu-20261108T073237Z`。先查实际ACTIVE、状态和GPU，禁止重复启动。完成训练、8项全量评测和图表发布后才能报告完整完成。
+
 ## 2026-11-07 训练设置不可变与自动故障恢复（用户硬约束）
 
 - **SWA baseline/A/B三组完整训练、24项下游及最终图表已完成，禁止重跑**：B于北京时间2026-11-08 08:43完成40000步及8项全量评测，最终SHA `09e6fe16bdedd26891b2c2964483add9205f005b858553bd9047312bdb51979e`，val loss3.175975800、宏平均46.3869306%。baseline/A/B宏平均依次46.3682088%/46.0354905%/46.3869306%；B较baseline仅+0.0187个百分点，A为−0.3327个百分点，单seed不能宣称稳定整体提升。三组配置未改、共同初始化102张量按位相同、每组8份checkpoint及21465条评测样本均核验；每组5次正常AMP拒绝尝试，0次非有限前向/回退，完整八卡scaler时序通过。报告 `evaluation/swa_160m_ab_20261107` 含120000行训练点、480行验证点和七组PNG/PDF/SVG；七张PNG逐张查看、七份PDF独立解析、SVG及数值核验通过，证据 `docs/evidence/swa-160m-final-review-20261108.json`。root/三组PIPELINE_SUCCESS齐全，监督器为training_and_evaluation_complete，recoveries为空。最终Goal验收须包含GitHub发布确认；旧gRet160M和400M A证据继续原样保留。

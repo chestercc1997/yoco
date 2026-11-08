@@ -1,0 +1,39 @@
+{
+  "recorded_at": "2026-11-08T07:55:32.004570+00:00",
+  "run_dir": "/root/yoco/runs/yoco-gret-400m-B-8gpu-20261108T073237Z",
+  "architecture": "YOCO-gRet",
+  "method": "B",
+  "parameters": 400591884,
+  "world_size": 8,
+  "target_steps": 40000,
+  "completed_steps_at_snapshot": 228,
+  "latest_train_loss": 6.509346008300781,
+  "real_data_eight_gpu_restore_passed": true,
+  "exact_pre_forward_model_optimizer_scaler_rng_restore": true,
+  "original_resume_tolerances_passed": true,
+  "max_resume_loss_difference": 7.62939453125e-06,
+  "training_setting_changes": false,
+  "global_batch_tokens": 262144,
+  "precision": "fp16_mixed_fp32_params",
+  "checkpoint_every": 5000,
+  "keep_all_checkpoints": true,
+  "native_recent_median_step_seconds": 1.4649196290411055,
+  "remaining_active_training_hours_estimate": 16.184106523950792,
+  "timing_scope": "Initial native successful-update measurement; full-pipeline budget includes validation, checkpoint I/O, and full downstream evaluation.",
+  "overflow_retries_at_snapshot": 0,
+  "nonfinite_forward_events_at_snapshot": 0,
+  "guard_state": "monitoring",
+  "recoveries_at_snapshot": 0,
+  "guard_contract": {
+    "architecture": "YOCO-gRet",
+    "config_sha256": {
+      "B": "2a5fd8347ee2470ef288e426df1e6cb069b3b670975ff877b45cedcbe5b2fcd1"
+    },
+    "reference_A_config_sha256": "905a64dcd9c22dafa21e362e441036fdd441d49baf874b8e72a88e6f6fc766c0",
+    "release_manifest_sha256": "2b367612fcb28ac40fb19b87c202efbc01a246902a4d3084f50c4864b583ca88",
+    "data_manifest_sha256": "090868c9e65f7042d8126c420803eabcbb7381d552912956e4c802477d53f0ba",
+    "no_training_setting_changes": true
+  },
+  "partial_only": true,
+  "note": "The gRet B full pipeline is running; 40000 updates, eight full tasks, rendered figure review and publication are still required. Existing A/SWA runs are not restarted."
+}

@@ -1,0 +1,10 @@
+{
+  "architecture": "YOCO-gRet",
+  "config_sha256": {
+    "B": "2a5fd8347ee2470ef288e426df1e6cb069b3b670975ff877b45cedcbe5b2fcd1"
+  },
+  "reference_A_config_sha256": "905a64dcd9c22dafa21e362e441036fdd441d49baf874b8e72a88e6f6fc766c0",
+  "release_manifest_sha256": "2b367612fcb28ac40fb19b87c202efbc01a246902a4d3084f50c4864b583ca88",
+  "data_manifest_sha256": "090868c9e65f7042d8126c420803eabcbb7381d552912956e4c802477d53f0ba",
+  "no_training_setting_changes": true
+}
