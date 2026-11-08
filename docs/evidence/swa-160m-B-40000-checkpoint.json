@@ -1,0 +1,219 @@
+{
+  "path": "/root/yoco/runs/yoco-swa-160m-ab-8gpu-20261107/B/checkpoint_00040000.pt",
+  "step": 40000,
+  "sha256": "09e6fe16bdedd26891b2c2964483add9205f005b858553bd9047312bdb51979e",
+  "fingerprint": "24d6fdd031ba27a3d754f345178156ce61f67fbea6e420248d5a6b3f24f979c0",
+  "finite_tensors_checked": 413,
+  "full_optimizer_scaler_eight_rank_rng": true,
+  "checkpoint_health_verified": true,
+  "training_setting_changes": false,
+  "config_matches_frozen_release": true,
+  "model_parameter_dtype": "float32",
+  "training_precision": "fp16_mixed_fp32_params",
+  "optimizer_hyperparameters_match": true,
+  "optimizer_parameter_states": 103,
+  "all_optimizer_steps": 40000,
+  "learning_rate": 0.0,
+  "seed": 42,
+  "global_batch_tokens": 262144,
+  "checkpoint_every": 5000,
+  "retention_all": true,
+  "accepted_training_points": 40000,
+  "scheduled_validation_points": 160,
+  "validation_loss": 3.175975799560547,
+  "maximum_validation_regression": 0,
+  "nonfinite_forward_events": 0,
+  "overflow_retries": 5,
+  "scaler_hyperparameters": {
+    "growth_factor": 2.0,
+    "backoff_factor": 0.5,
+    "growth_interval": 2000
+  },
+  "partial_only": true,
+  "note": "Verified B update 40000 checkpoint. All three full 40000-step runs, full downstream tasks, final comparison and publication must be checked separately.",
+  "scaler_state_at_checkpoint": {
+    "scale": 1048576.0,
+    "growth_factor": 2.0,
+    "backoff_factor": 0.5,
+    "growth_interval": 2000,
+    "_growth_tracker": 1292
+  },
+  "arm": "B",
+  "scaler_state_consistent_with_logged_backoff": true,
+  "successful_updates_since_logged_backoff": 3292,
+  "amp_backoff_audit": {
+    "passed": true,
+    "world_size": 8,
+    "rejected_attempts": 5,
+    "all_ranks_synchronized": true,
+    "all_retry_groups_completed_with_finite_loss_and_norm": true,
+    "groups": [
+      {
+        "retried_update": 28587,
+        "rejected_attempts": 1,
+        "backoff_scale": 1048576.0,
+        "completed_loss": 3.234086751937866,
+        "completed_grad_norm": 0.38710325956344604
+      },
+      {
+        "retried_update": 32268,
+        "rejected_attempts": 1,
+        "backoff_scale": 1048576.0,
+        "completed_loss": 3.2726058959960938,
+        "completed_grad_norm": 0.37693145871162415
+      },
+      {
+        "retried_update": 34510,
+        "rejected_attempts": 1,
+        "backoff_scale": 1048576.0,
+        "completed_loss": 3.146470069885254,
+        "completed_grad_norm": 0.4110276401042938
+      },
+      {
+        "retried_update": 36709,
+        "rejected_attempts": 2,
+        "backoff_scale": 524288.0,
+        "completed_loss": 3.1549289226531982,
+        "completed_grad_norm": 0.4484070837497711
+      }
+    ]
+  },
+  "retained_checkpoint_count": 8,
+  "retained_checkpoints_sha256_verified": [
+    {
+      "step": 5000,
+      "file": "checkpoint_00005000.pt",
+      "sha256": "cd43ca4fbbf8678b0356b5328d7c66f5e919113e4f086005e235ec94ea529494"
+    },
+    {
+      "step": 10000,
+      "file": "checkpoint_00010000.pt",
+      "sha256": "784fe37e69ff2bf5134551e32a98d5dbe9b638b4118fb6454caf9e84f44614fb"
+    },
+    {
+      "step": 15000,
+      "file": "checkpoint_00015000.pt",
+      "sha256": "eb0555323773e82ff86ed58f8aad95730ea7db8ce5deda6f33bad68af6c09f55"
+    },
+    {
+      "step": 20000,
+      "file": "checkpoint_00020000.pt",
+      "sha256": "097d2c15b801210cc6cfee95a5ba0d22dd8f9f1af2c6aa7835c6a403989f27c9"
+    },
+    {
+      "step": 25000,
+      "file": "checkpoint_00025000.pt",
+      "sha256": "57876477a735edbcec0fd5f261020d22ee8b42b0b2bf4725b88a1f6bc69a4e3f"
+    },
+    {
+      "step": 30000,
+      "file": "checkpoint_00030000.pt",
+      "sha256": "9f08225044228a2fc1558e15d65b16e61e6eea0cfdda1f1f473191a19f763635"
+    },
+    {
+      "step": 35000,
+      "file": "checkpoint_00035000.pt",
+      "sha256": "ffe33e93c9d8317724d008309aa814287c5fa5df0fabcd9c3fcde9ac5098713c"
+    },
+    {
+      "step": 40000,
+      "file": "checkpoint_00040000.pt",
+      "sha256": "09e6fe16bdedd26891b2c2964483add9205f005b858553bd9047312bdb51979e"
+    }
+  ],
+  "training_complete": true,
+  "scaler_timeline_audit": {
+    "passed": true,
+    "world_size": 8,
+    "source_checkpoint_step": 4,
+    "through_update": 40000,
+    "successful_updates_checked_per_rank": 39996,
+    "source_scaler_state": {
+      "scale": 128.0,
+      "growth_factor": 2.0,
+      "backoff_factor": 0.5,
+      "growth_interval": 2000,
+      "_growth_tracker": 4
+    },
+    "all_ranks_have_identical_scale_evolution": true,
+    "all_logged_training_scales_match_original_growth_and_backoff_policy": true,
+    "training_setting_changes": false,
+    "final_scale": 1048576.0,
+    "final_growth_tracker": 1292,
+    "overflow_attempts": 5,
+    "growth_events": [
+      {
+        "update": 2000,
+        "scale": 256.0
+      },
+      {
+        "update": 4000,
+        "scale": 512.0
+      },
+      {
+        "update": 6000,
+        "scale": 1024.0
+      },
+      {
+        "update": 8000,
+        "scale": 2048.0
+      },
+      {
+        "update": 10000,
+        "scale": 4096.0
+      },
+      {
+        "update": 12000,
+        "scale": 8192.0
+      },
+      {
+        "update": 14000,
+        "scale": 16384.0
+      },
+      {
+        "update": 16000,
+        "scale": 32768.0
+      },
+      {
+        "update": 18000,
+        "scale": 65536.0
+      },
+      {
+        "update": 20000,
+        "scale": 131072.0
+      },
+      {
+        "update": 22000,
+        "scale": 262144.0
+      },
+      {
+        "update": 24000,
+        "scale": 524288.0
+      },
+      {
+        "update": 26000,
+        "scale": 1048576.0
+      },
+      {
+        "update": 28000,
+        "scale": 2097152.0
+      },
+      {
+        "update": 30586,
+        "scale": 2097152.0
+      },
+      {
+        "update": 34267,
+        "scale": 2097152.0
+      },
+      {
+        "update": 36509,
+        "scale": 2097152.0
+      },
+      {
+        "update": 38708,
+        "scale": 1048576.0
+      }
+    ]
+  }
+}

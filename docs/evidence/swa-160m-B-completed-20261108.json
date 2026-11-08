@@ -1,0 +1,161 @@
+{
+  "complete": true,
+  "arm": "B",
+  "architecture": "YOCO-SWA",
+  "step": 40000,
+  "world_size": 8,
+  "parameters": 163156230,
+  "checkpoint": "/root/yoco/runs/yoco-swa-160m-ab-8gpu-20261107/B/checkpoint_00040000.pt",
+  "sha256": "09e6fe16bdedd26891b2c2964483add9205f005b858553bd9047312bdb51979e",
+  "global_batch_tokens": 262144,
+  "total_training_tokens": 10485760000,
+  "tasks": [
+    {
+      "task": "arc_easy",
+      "metric": "acc_norm,none",
+      "score": 0.4612794612794613,
+      "documents": 2376
+    },
+    {
+      "task": "arc_challenge",
+      "metric": "acc_norm,none",
+      "score": 0.2508532423208191,
+      "documents": 1172
+    },
+    {
+      "task": "boolq",
+      "metric": "acc,none",
+      "score": 0.6027522935779817,
+      "documents": 3270
+    },
+    {
+      "task": "hellaswag",
+      "metric": "acc_norm,none",
+      "score": 0.3074088826926907,
+      "documents": 10042
+    },
+    {
+      "task": "openbookqa",
+      "metric": "acc_norm,none",
+      "score": 0.306,
+      "documents": 500
+    },
+    {
+      "task": "piqa",
+      "metric": "acc_norm,none",
+      "score": 0.6131664853101197,
+      "documents": 1838
+    },
+    {
+      "task": "winogrande",
+      "metric": "acc,none",
+      "score": 0.5224940805051302,
+      "documents": 1267
+    },
+    {
+      "task": "sciq",
+      "metric": "acc_norm,none",
+      "score": 0.647,
+      "documents": 1000
+    }
+  ],
+  "macro_accuracy": 0.46386930571077534,
+  "training_review": {
+    "final_validation_loss": 3.175975799560547,
+    "best_validation_loss": 3.175975799560547,
+    "maximum_validation_regression": 0.0,
+    "overflow_retries": 5,
+    "nonfinite_forward_events": 0,
+    "maximum_gradient_norm": 15.545987129211426,
+    "convergence_warning": false,
+    "checkpoints": [
+      {
+        "file": "checkpoint_00005000.pt",
+        "step": 5000,
+        "sha256": "cd43ca4fbbf8678b0356b5328d7c66f5e919113e4f086005e235ec94ea529494",
+        "fingerprint": "24d6fdd031ba27a3d754f345178156ce61f67fbea6e420248d5a6b3f24f979c0"
+      },
+      {
+        "file": "checkpoint_00010000.pt",
+        "step": 10000,
+        "sha256": "784fe37e69ff2bf5134551e32a98d5dbe9b638b4118fb6454caf9e84f44614fb",
+        "fingerprint": "24d6fdd031ba27a3d754f345178156ce61f67fbea6e420248d5a6b3f24f979c0"
+      },
+      {
+        "file": "checkpoint_00015000.pt",
+        "step": 15000,
+        "sha256": "eb0555323773e82ff86ed58f8aad95730ea7db8ce5deda6f33bad68af6c09f55",
+        "fingerprint": "24d6fdd031ba27a3d754f345178156ce61f67fbea6e420248d5a6b3f24f979c0"
+      },
+      {
+        "file": "checkpoint_00020000.pt",
+        "step": 20000,
+        "sha256": "097d2c15b801210cc6cfee95a5ba0d22dd8f9f1af2c6aa7835c6a403989f27c9",
+        "fingerprint": "24d6fdd031ba27a3d754f345178156ce61f67fbea6e420248d5a6b3f24f979c0"
+      },
+      {
+        "file": "checkpoint_00025000.pt",
+        "step": 25000,
+        "sha256": "57876477a735edbcec0fd5f261020d22ee8b42b0b2bf4725b88a1f6bc69a4e3f",
+        "fingerprint": "24d6fdd031ba27a3d754f345178156ce61f67fbea6e420248d5a6b3f24f979c0"
+      },
+      {
+        "file": "checkpoint_00030000.pt",
+        "step": 30000,
+        "sha256": "9f08225044228a2fc1558e15d65b16e61e6eea0cfdda1f1f473191a19f763635",
+        "fingerprint": "24d6fdd031ba27a3d754f345178156ce61f67fbea6e420248d5a6b3f24f979c0"
+      },
+      {
+        "file": "checkpoint_00035000.pt",
+        "step": 35000,
+        "sha256": "ffe33e93c9d8317724d008309aa814287c5fa5df0fabcd9c3fcde9ac5098713c",
+        "fingerprint": "24d6fdd031ba27a3d754f345178156ce61f67fbea6e420248d5a6b3f24f979c0"
+      },
+      {
+        "file": "checkpoint_00040000.pt",
+        "step": 40000,
+        "sha256": "09e6fe16bdedd26891b2c2964483add9205f005b858553bd9047312bdb51979e",
+        "fingerprint": "24d6fdd031ba27a3d754f345178156ce61f67fbea6e420248d5a6b3f24f979c0"
+      }
+    ]
+  },
+  "completed_at": "2026-11-08T00:43:18.857904+00:00",
+  "paired_with_baseline_documents_and_prompts_verified": true,
+  "paired_baseline_result_sha256": {
+    "arc_easy": "605f03923756a77e282e101cfe0fd8f76427bfe4c74c2a08856c436d92c6117a",
+    "arc_challenge": "2ed5016d80461082de0619e03a223ce6f3f999561f58421c42e06366901c0e09",
+    "boolq": "bdb60f8e17b7e2ec821ee1d9db6db15254a2fd9e701fa05f5ec1a5f861cf86b9",
+    "hellaswag": "72526a47df5fb6fad37a023eee5ad9f549520bdfcaf674ff57e076e834f217eb",
+    "openbookqa": "7f7bd19d28a9cc5352f87c869dbdd1b73344d6a5dffbc4a406689aa09affd755",
+    "piqa": "6b256ae0de53301e30d0693359dbb4287928bafb4ccf139f9ee7ae05f71db0d5",
+    "winogrande": "fac1cd91fac2147364bba137722b90951cf4fa8a65945afbe57fd82a7f3db162",
+    "sciq": "ae3b1c4d21da467184d3b338b16c813d6ab4ccb795672af7282515da5c2407fe"
+  },
+  "completed_at_beijing": "2026-11-08T08:43:18.857904+08:00",
+  "final_checkpoint_independently_sha256_verified": true,
+  "eight_task_provenance_documents_and_full_limits_verified": true,
+  "downstream_documents": 21465,
+  "task_source_hashes": {
+    "arc_easy/results.json": "acaf9ed686e310a34c607af4af1493e21226b593778e9b4afec3575fbe870ae3",
+    "arc_easy/provenance.json": "aeeab5259194c00e94ffbefa8d638eded2a8e76987683772a8903092f7aecccc",
+    "arc_challenge/results.json": "d5c83d2ba9f52d04778b993b106adf749129727492382374d3c461fad60ba4eb",
+    "arc_challenge/provenance.json": "a16b0591eb212c26eb9ae9d574a1f8c57b360f53a0029958e0e3ec898e7bd4fc",
+    "boolq/results.json": "63dc999b8ec9617cc73cc67eac9c813ef3654e5777c82bf4526872b0f02a4867",
+    "boolq/provenance.json": "ca4bbbce8c283b291f3b7607b58b2f7d833d926c3a3c714bfab9dbe2717c7b71",
+    "hellaswag/results.json": "27ce8af138f66e49edd8e4c70a3bd02533103f89d4b89590b2c15bf1cae89e11",
+    "hellaswag/provenance.json": "7b5f368360ff94a3fa09d0df75defdf46a03cac9e0c11e2f9b5d10ea720923bd",
+    "openbookqa/results.json": "641345ba7c2b82104bfa79bfcbcff7e7a4d0c3cb2add85d96f0dd6040af7d6ee",
+    "openbookqa/provenance.json": "1d5a2ea321a11765722e3823bb7480505f10ea3e74aadff5131afe0e4ff4fe70",
+    "piqa/results.json": "10df67c4521385de1ade07f949ceb7594b6c4726a4efe5c9f4817bd40e205e05",
+    "piqa/provenance.json": "bfc31f6acc984a124684dafe78d490c775df62ecbf2263b6e2c115a9eb775212",
+    "winogrande/results.json": "1f719e31bedee2996a99cc77767d2ba04e206d2ce05e106053f01135e8506d25",
+    "winogrande/provenance.json": "eec7374d396495a44971b58ca014ff98367d910cf0ea252aa5fd99b58409248b",
+    "sciq/results.json": "126f1e272d9efac3e56f567a53316e9626dcf961f4c17e3d093a34f63d1db754",
+    "sciq/provenance.json": "2dbd482660095e00061231875539e63defc6c39e3e033e07fe08c4898129af4f"
+  },
+  "checkpoint_health_evidence": "swa-160m-B-40000-checkpoint.json",
+  "retained_checkpoint_count": 8,
+  "training_setting_changes": false,
+  "goal_complete": false,
+  "note": "This arm is complete. The full goal requires baseline, A and B, 24 full tasks, the final comparison figures and publication."
+}

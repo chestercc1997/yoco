@@ -1,0 +1,93 @@
+{
+  "passed": true,
+  "architecture": "YOCO-SWA",
+  "official_window": 1024,
+  "official_setting_source": "https://arxiv.org/html/2405.05254v2#S4.SS2",
+  "model": {
+    "dim": 768,
+    "n_layers": 12,
+    "hidden_dim": 2304,
+    "n_self_heads": 12,
+    "n_attn_heads": 12,
+    "n_attn_kv_heads": 12,
+    "vocab_size": 100288,
+    "max_seq_len": 2048,
+    "model_parallel_size": 1,
+    "rope_theta": 10000.0,
+    "norm_eps": 1e-05,
+    "sliding_window": 1024
+  },
+  "parameters": {
+    "baseline": 163155456,
+    "A": 163155462,
+    "B": 163156230
+  },
+  "common_state_tensors": 102,
+  "common_weights_bitwise_equal": true,
+  "training_and_data_match_existing_160m": true,
+  "all_three_execution_settings_equal": true,
+  "uniform_A_B_outputs_bitwise_equal": true,
+  "last_source_limit_max_abs": {
+    "A": 0.0,
+    "B": 0.0
+  },
+  "causality_prefix_max_abs": {
+    "baseline": 0.0,
+    "A": 0.0,
+    "B": 0.0
+  },
+  "full_size_fusion_gradients": {
+    "A": {
+      "logits": 0.0879439041018486
+    },
+    "B": {
+      "score": 0.03137374296784401,
+      "layer_bias": 0.08794388175010681
+    }
+  },
+  "window_boundary_1024_passed": true,
+  "incremental_cache_checks": {
+    "baseline": {
+      "tokenwise_max_abs": 1.430511474609375e-06,
+      "chunkwise_max_abs": 9.5367431640625e-07,
+      "cache_window": 8,
+      "default_max_batch_size_zero_supported": true
+    },
+    "A": {
+      "tokenwise_max_abs": 1.1920928955078125e-06,
+      "chunkwise_max_abs": 9.5367431640625e-07,
+      "cache_window": 8,
+      "default_max_batch_size_zero_supported": true
+    },
+    "B": {
+      "tokenwise_max_abs": 1.1920928955078125e-06,
+      "chunkwise_max_abs": 9.5367431640625e-07,
+      "cache_window": 8,
+      "default_max_batch_size_zero_supported": true
+    }
+  },
+  "initializations": {
+    "baseline": {
+      "path": "/root/yoco/runs/setup/swa-160m-initializations/baseline.pt",
+      "sha256": "9f4378866861287e122ab7add21677697a497bbf71883d82bc999c05d34d3ba4"
+    },
+    "A": {
+      "path": "/root/yoco/runs/setup/swa-160m-initializations/A.pt",
+      "sha256": "433f54a5b15504a657a0dbea758e6e677eb8cc8eb8f5d6a22baec490c844c0a7"
+    },
+    "B": {
+      "path": "/root/yoco/runs/setup/swa-160m-initializations/B.pt",
+      "sha256": "99dd58b788fccaed7879aadee28d6766acc8cbdad922c30215e89bc4dda8c246"
+    }
+  },
+  "precision": "fp16_mixed_fp32_params",
+  "initial_weights": [
+    0.16666666666666666,
+    0.16666666666666666,
+    0.16666666666666666,
+    0.16666666666666666,
+    0.16666666666666666,
+    0.16666666666666666
+  ],
+  "note": "160M tier keeps dim768/12 layers/FFN2304. SWA removes retention gates; report actual parameter counts instead of claiming gRet-identical size."
+}

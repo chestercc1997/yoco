@@ -5,39 +5,44 @@ trees into one reproducible project. It contains model and training code,
 evaluation and inference benchmarks, pinned dataset metadata, measured tables,
 and figures. Checkpoints and training data are intentionally excluded.
 
-## Current SWA 160M baseline / A / B experiment
+## Completed SWA 160M baseline / A / B experiment
 
-The new cohort uses YOCO's **sliding-window self-decoder**, with the paper's
-1,024-token window, followed by the shared global K/V cross-decoder. Baseline,
-learned K/V fusion (A), and conditional K/V fusion (B) share bitwise-equal backbone
-initializations and the existing FineWeb-Edu/tokenizer/FP16 training recipe.
-Each arm runs on 8×A100 for 40,000 updates and all eight downstream tasks;
-every 5,000-update checkpoint is retained. The controller first checks real-data
-eight-rank checkpoint restoration for all three arms. Baseline and A have each
-completed 40,000 updates and all eight full tasks, with all scheduled checkpoints
-retained and independently hashed:
+All three YOCO **sliding-window self-decoder** arms completed 40,000 updates and
+eight full zero-shot tasks each on 8×A100, finishing on November 8, 2026.
+The window is 1,024 tokens; the later cross-decoder reads shared global K/V.
+The 102 common initialization tensors are bitwise equal, and all three use the
+same approved FineWeb-Edu/tokenizer/FP16 mixed recipe and execution settings.
+Each arm consumed 10,485,760,000 tokens and retained all eight scheduled checkpoints.
 
-| Arm | Validation loss | Eight-task macro (%) |
-| --- | ---: | ---: |
-| Baseline | 3.180143 | 46.3682 |
-| A / learned_kv | 3.176147 | 46.0355 |
+| Arm | Parameters | Validation loss | Eight-task macro (%) |
+| --- | ---: | ---: | ---: |
+| baseline | 163,155,456 | 3.180143 | 46.3682 |
+| A / learned_kv | 163,155,462 | 3.176147 | 46.0355 |
+| B / conditional_kv | 163,156,230 | 3.175976 | 46.3869 |
 
-A's validation loss is slightly lower, while its downstream macro is **0.3327
-percentage points lower**. These are descriptive single-seed results; they do
-not establish an overall improvement. Method B is now training on eight GPUs;
-its full evaluation and the final three-arm figures remain pending. See the
-[verified baseline result](docs/evidence/swa-160m-baseline-completed-20261107.json)
-and [verified A result](docs/evidence/swa-160m-A-completed-20261108.json), including
-the full paired document/prompt/target hash checks.
-See [configuration, checks and live-status commands](docs/SWA_160M_AB.md).
+A has slightly lower validation loss and a **0.3327 percentage-point lower**
+downstream macro. B has a **0.0187 percentage-point higher** macro, essentially
+tied with baseline. These descriptive single-seed results do not establish a
+stable overall downstream gain.
 
-The [reproduction skill](.agents/skills/yoco-reproduction/SKILL.md) makes the
-training recipe immutable during fixes, acceleration and recovery. The active
-supervisor detects nonfinite losses or sustained validation regression, archives
-failed evidence, and replays from a verified full checkpoint with identical
-settings and data order. Repeated failures enter bounded diagnosis under the
-ongoing Goal; learning rates, precision and other training settings are never
-automatically adjusted.
+All 24 full evaluations, paired document/prompt/target hashes, and 24 retained
+checkpoint hashes were verified. Validation losses decreased throughout; raw
+batch noise and isolated pre-clip gradient peaks remain visible. Each arm had
+five normal AMP rejected attempts, with no nonfinite forward events or checkpoint
+rollbacks. The training settings were unchanged.
+
+[Final report: seven PNG/PDF/SVG figures and raw CSVs](evaluation/swa_160m_ab_20261107/README.md) ·
+[Design formulas, frozen settings and recovery tools](docs/SWA_160M_AB.md) ·
+[Final verification](docs/evidence/swa-160m-final-review-20261108.json)
+
+![SWA baseline A B quality comparison](evaluation/swa_160m_ab_20261107/figures/01_quality_summary.png)
+
+The [reproduction skill](.agents/skills/yoco-reproduction/SKILL.md) locks the recipe
+during fixes, acceleration and recovery. The supervisor supports bounded recovery
+from a verified full checkpoint with the same data order; repeated failures enter
+diagnosis. This completed cohort required no rollback and must not be restarted.
+The corpus is the repository's approved FineWeb recipe; paper comparisons require
+separate corpus and parameter-budget matching.
 
 ## Completed 400M A training
 
@@ -49,9 +54,9 @@ the documented retention arithmetic repair, with compilation disabled; its
 post-repair segment recorded no nonfinite forward events. Baseline/B were not
 trained at this size. See the [completed run and repair record](docs/PLAN_A_400M_8GPU.md).
 
-## Completed 160M A/B experiment
+## Completed gRet 160M A/B experiment
 
-The current experiment compares two ways to aggregate K/V from all six
+The earlier gRet experiment compares two ways to aggregate K/V from all six
 self-decoder layers, constructing shared memory once before layers 7–12:
 
 | Model | Aggregation weights | Sources |

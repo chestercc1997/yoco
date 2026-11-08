@@ -1,0 +1,287 @@
+{
+  "passed": true,
+  "architecture": "YOCO-SWA",
+  "world_size": 8,
+  "window": 1024,
+  "seed": 42,
+  "common_initialization_tensors_bitwise_equal": 102,
+  "official_window_causality_and_cache_checks_verified": true,
+  "three_real_data_eight_gpu_restoration_checks_verified": true,
+  "training_settings_unchanged": true,
+  "arms": {
+    "baseline": {
+      "steps": 40000,
+      "tokens": 10485760000,
+      "full_tasks": 8,
+      "documents": 21465,
+      "retained_checkpoints": 8,
+      "validation_points": 160,
+      "maximum_validation_regression": 0.0,
+      "amp_rejected_attempts": 5,
+      "nonfinite_forward_events": 0,
+      "automatic_recoveries": 0,
+      "late_pre_clip_gradient_peak": {
+        "step": 35457,
+        "grad_norm": 0.6273733377456665,
+        "accepted_loss": 3.2392868995666504
+      },
+      "checkpoint_sha256": "7e7090838efc84f13b18ff4926d0df090ebb1650eead456c585e9e5d5c7aeb38",
+      "completion_evidence_sha256": "afe05df0e24737fe50c166e1cd5a9233bc7c692eb1f287b27df20f42438d9e52"
+    },
+    "A": {
+      "steps": 40000,
+      "tokens": 10485760000,
+      "full_tasks": 8,
+      "documents": 21465,
+      "retained_checkpoints": 8,
+      "validation_points": 160,
+      "maximum_validation_regression": 0.0,
+      "amp_rejected_attempts": 5,
+      "nonfinite_forward_events": 0,
+      "automatic_recoveries": 0,
+      "late_pre_clip_gradient_peak": {
+        "step": 38286,
+        "grad_norm": 0.9788897633552551,
+        "accepted_loss": 3.1716513633728027
+      },
+      "checkpoint_sha256": "10862041ce74354fc5b1d3d9abf436e6d1e24c22f68ed4cc4fc0ea1c5a35b9b0",
+      "completion_evidence_sha256": "75c985589c27a8eb9e46ba485700e369bb05b886b0046fb9ce235ab9d2870305"
+    },
+    "B": {
+      "steps": 40000,
+      "tokens": 10485760000,
+      "full_tasks": 8,
+      "documents": 21465,
+      "retained_checkpoints": 8,
+      "validation_points": 160,
+      "maximum_validation_regression": 0.0,
+      "amp_rejected_attempts": 5,
+      "nonfinite_forward_events": 0,
+      "automatic_recoveries": 0,
+      "late_pre_clip_gradient_peak": {
+        "step": 38286,
+        "grad_norm": 1.126360297203064,
+        "accepted_loss": 3.1719532012939453
+      },
+      "checkpoint_sha256": "09e6fe16bdedd26891b2c2964483add9205f005b858553bd9047312bdb51979e",
+      "completion_evidence_sha256": "6b6884fea7aab76f5c50d3fe93ee7908bd9d88337037ce742f553f799c0f7be3"
+    }
+  },
+  "total_full_tasks": 24,
+  "total_retained_checkpoints": 24,
+  "raw_training_rows": 120000,
+  "scheduled_validation_rows": 480,
+  "downstream_rows": 8,
+  "figures": [
+    {
+      "name": "01_quality_summary",
+      "rendered_png_visually_reviewed": true,
+      "files": {
+        "png": {
+          "sha256": "903159acc366d1779b6e0d8e2c0e58292fbd02af1a68913bd7c8b0c5c64de7ce",
+          "bytes": 55492
+        },
+        "pdf": {
+          "sha256": "35371a666020d85c5673e2cebfe224a39dfaca38aa6199d35b87f0572f16e2b3",
+          "bytes": 16915
+        },
+        "svg": {
+          "sha256": "a4c805771b5d6e1ae808209d85707b636e4b1b235cd543f4ce246f316e36f2e0",
+          "bytes": 49027
+        }
+      },
+      "png_dimensions": [
+        1938,
+        626
+      ],
+      "pdf_pages": 1,
+      "pdf_parsed_and_text_verified": true,
+      "svg_xml_verified": true
+    },
+    {
+      "name": "02_training_loss",
+      "rendered_png_visually_reviewed": true,
+      "files": {
+        "png": {
+          "sha256": "f1f4d5a42393fd7a4484316a4caeab61175abceb24a97831dcb2fb22d4792be4",
+          "bytes": 135933
+        },
+        "pdf": {
+          "sha256": "2f685680f3252467e1b594128ec530e22a448509e53f3d656c83b225a0cd1050",
+          "bytes": 445900
+        },
+        "svg": {
+          "sha256": "d0c080d88e825055f66d715a48369cc4105f235feb278206bae55fafafdb18cd",
+          "bytes": 1145960
+        }
+      },
+      "png_dimensions": [
+        1938,
+        658
+      ],
+      "pdf_pages": 1,
+      "pdf_parsed_and_text_verified": true,
+      "svg_xml_verified": true
+    },
+    {
+      "name": "03_validation_loss",
+      "rendered_png_visually_reviewed": true,
+      "files": {
+        "png": {
+          "sha256": "b5b55c34e8337b14aaaecff45e212c3062729e890296b0900470cdd142e421dc",
+          "bytes": 100467
+        },
+        "pdf": {
+          "sha256": "96f50e34928a6462642996739db7b12755b308779f1c9c7b117ed1e0411bafad",
+          "bytes": 18272
+        },
+        "svg": {
+          "sha256": "77684df2db50f5a492fc8cc672ff5af6519e22832839044418cd0fae6a9838f4",
+          "bytes": 56816
+        }
+      },
+      "png_dimensions": [
+        1938,
+        658
+      ],
+      "pdf_pages": 1,
+      "pdf_parsed_and_text_verified": true,
+      "svg_xml_verified": true
+    },
+    {
+      "name": "04_downstream",
+      "rendered_png_visually_reviewed": true,
+      "files": {
+        "png": {
+          "sha256": "9562b5aea981487f3376d600c0e3e9967ec4041f11272f3c59403153eb897f1e",
+          "bytes": 50861
+        },
+        "pdf": {
+          "sha256": "2689bd5ac2f74791d8c4e2883afd178ae38373ee20bc306ebcc379b8e80e8ddf",
+          "bytes": 17529
+        },
+        "svg": {
+          "sha256": "f4ae6ed3352b841547b42f5a8dff9842c63d64cb4ebaeab281cfffd7d1d6c218",
+          "bytes": 43505
+        }
+      },
+      "png_dimensions": [
+        1938,
+        738
+      ],
+      "pdf_pages": 1,
+      "pdf_parsed_and_text_verified": true,
+      "svg_xml_verified": true
+    },
+    {
+      "name": "05_gradient_norm",
+      "rendered_png_visually_reviewed": true,
+      "files": {
+        "png": {
+          "sha256": "cc6e8093095d0b38fbe0d14ecc2a13bea8df2ad8d0ce62428c0e0831f3fb1f74",
+          "bytes": 99320
+        },
+        "pdf": {
+          "sha256": "ee6e5f21eeced3f73b770c912054539ad3c86512efe808aced4ea24e08d5fea6",
+          "bytes": 427953
+        },
+        "svg": {
+          "sha256": "d9154ef98f7fabc5328c925c2b6f0572241f624d8cce3e940cc85f9ad5b9c91d",
+          "bytes": 1143346
+        }
+      },
+      "png_dimensions": [
+        1938,
+        658
+      ],
+      "pdf_pages": 1,
+      "pdf_parsed_and_text_verified": true,
+      "svg_xml_verified": true
+    },
+    {
+      "name": "06_execution_cost",
+      "rendered_png_visually_reviewed": true,
+      "files": {
+        "png": {
+          "sha256": "15bc3b6448d0634e9d1907ec66239ac3844417d2f4aa73255253e02c5254aa1e",
+          "bytes": 51591
+        },
+        "pdf": {
+          "sha256": "f2d1bc1fbedabdc669c5adcccb2e3d39d11990550021c6cea795da60210bb868",
+          "bytes": 15679
+        },
+        "svg": {
+          "sha256": "0be4f170b6dcd832e8c19b99cd13405309d06b6aaa0b55012a2279a21ae1ebf7",
+          "bytes": 46459
+        }
+      },
+      "png_dimensions": [
+        1938,
+        658
+      ],
+      "pdf_pages": 1,
+      "pdf_parsed_and_text_verified": true,
+      "svg_xml_verified": true
+    },
+    {
+      "name": "07_loss_compute_proxy",
+      "rendered_png_visually_reviewed": true,
+      "files": {
+        "png": {
+          "sha256": "24f834ec34097e7aeb2b79d1e9617ea349b7129190d9034113c8f71228975254",
+          "bytes": 60910
+        },
+        "pdf": {
+          "sha256": "c76ffda8cd7dfbde3710a93ea71a1fbea091a4035bd4d79226f0a8cd2ca8a9cf",
+          "bytes": 17824
+        },
+        "svg": {
+          "sha256": "62cf98d78813e3b8de4ee49f00b1f7c937d8d84ff3045644ff60d112165ac94a",
+          "bytes": 43640
+        }
+      },
+      "png_dimensions": [
+        1138,
+        658
+      ],
+      "pdf_pages": 1,
+      "pdf_parsed_and_text_verified": true,
+      "svg_xml_verified": true
+    }
+  ],
+  "figure_files": 21,
+  "review_notes": [
+    "All seven rendered PNG figures inspected; labels and legends legible, with no clipping.",
+    "Raw successful-update loss and pre-clip gradient traces retained; isolated gradient peaks remain visible.",
+    "Late plot ranges include the complete displayed raw ranges; no smoothing used to conceal spikes.",
+    "Execution cost explicitly times successful updates only, excluding AMP rejected attempts and other pipeline work.",
+    "6ND is labeled as a proxy excluding repeated K/V and attention operations.",
+    "Single-seed downstream comparison: B nearly ties baseline and A has lower macro accuracy."
+  ],
+  "report_summary_sha256": "4bf72f39ade480d8416a0652a12510a7118a6fca7980b0b044cf5f456ae24d7e",
+  "source_hashes_sha256": "6919f8fb6a1139afc8a02bc13ba32fa324c81719c10888ad2788aa659a3c9f48",
+  "skill_sha256": "3122dfd8aefad08eb2b4c1aa88bf58b57c96beed530cac419a4160e687d51aee",
+  "global_skill_registered": true,
+  "export_command": "python tools/export_swa_ab.py --run-dir runs/yoco-swa-160m-ab-8gpu-20261107 --output evaluation/swa_160m_ab_20261107",
+  "export_exit_code": 0,
+  "scope": "Local completed runs, full evaluations, generated artifacts, and rendered review; GitHub publication is verified separately.",
+  "historical_runs_preserved": [
+    {
+      "run": "yoco-160m-baseline-8gpu-matched-20261104T1519Z",
+      "completed_marker_present": true,
+      "final_checkpoint_sha256_verified": "b4e767e1169299a874cc3115f6dde5ec5a1fccad831c1f2ceab7e143378701d4"
+    },
+    {
+      "run": "yoco-400m-A-8gpu-retentionfix-20261106",
+      "completed_marker_present": true,
+      "final_checkpoint_sha256_verified": "5eb2be389bd252d7463ce734761ff69e288196f0b4a99edad2708b874a027839"
+    }
+  ],
+  "historical_gret_160m_three_arm_report_sha256": "523bedd8704b5e7690b606f65a02602a88679524a551794e7ea48668e591870d",
+  "documentation_sha256": {
+    "README.md": "580fd1c3b36b9ecfbd69c19d13fee0be81458eafd0f407b813ef34d8a0664f6b",
+    "docs/SWA_160M_AB.md": "b903ad231906c9906b164a4e30a9dccd69d6458e45c9c01299d478bd3fc3dcf6",
+    "docs/README.md": "fc0ef84d8bdc605161feb6565d43cdebc8b7c81517243550991821ea834427c7",
+    "evaluation/swa_160m_ab_20261107/README.md": "e075796cb1056668c0b239002879722e09454ebf15db673059a6e0644295695f"
+  }
+}
