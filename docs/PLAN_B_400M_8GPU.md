@@ -1,8 +1,16 @@
 # gRet 400M 方法B：八卡完整训练
 
-2026-11-08用户明确授权运行之前的 **gated retention / gRet** 版本400M方法B。仅新训B至40000步并完成八项全量下游；已完成的400M A作为历史参考，baseline只用于基座核验，不额外启动A或baseline训练。SWA160M三组及原400M A记录保持原样。
+2026-11-08用户授权的gRet 400M方法B已完成40000步及八项完整下游。随后用户另行授权的同规格baseline也已接续完成，现有baseline/A/B完整对照：[三组完整报告](../evaluation/gret_400m_3way_20261108T194918Z/README.md) · [九组综合图表](../evaluation/model_comparison_20261111/README.md)。
 
-当前阶段：CPU模型核验、真实数据八卡恢复/连续/独立重复、恢复前完整状态按位加载及评测接口smoke均已通过，**B已正式训练至228步（发布时快照），目标40000步**。初段成功更新中位耗时约1.465秒，整轮先按17–18小时左右预算；以实时状态和后续实测为准。[启动证据](evidence/gret-400m-B-launch-20261108.json) · [八卡恢复证据](evidence/gret-400m-B-resume-check-20261108.json) · [冻结契约](evidence/gret-400m-B-guard-contract-20261108.json)。
+| 组别 | 最终Valid loss | 下游宏平均% | 相对baseline增幅 |
+| --- | ---: | ---: | ---: |
+| baseline | 3.005298 | 47.7947 | 0.0000% |
+| A | 2.918184 | 48.5270 | +1.5322% |
+| B | 2.913688 | 48.3513 | +1.1646% |
+
+B全程11次正常AMP拒绝尝试、0次非有限前向、0次checkpoint回退；每5000步八份完整checkpoint保留。baseline有真实有限梯度尖峰及验证回升，原始图表保留，没有改动setting掩盖波动。三组最终完整checkpoint和24项评测的发布核验见[证据](evidence/gret-400m-final-review-20261111.json)。
+
+以下保留B的初始化、冻结设置和恢复流程。[原始启动快照](evidence/gret-400m-B-launch-20261108.json)记录的是启动时228步，不代表当前进度。[八卡恢复证据](evidence/gret-400m-B-resume-check-20261108.json) · [冻结契约](evidence/gret-400m-B-guard-contract-20261108.json)。
 
 运行目录：`runs/yoco-gret-400m-B-8gpu-20261108T073237Z`。监督器tmux：`yoco-gret-400m-B`。实时入口：`runs/setup/400m-B-active.json`；先检查实际状态，禁止重复启动。
 
@@ -12,7 +20,7 @@
 
 | 参照/方法 | 参数量 | 新训练 |
 | --- | ---: | --- |
-| 同规格baseline | 400590848 | 只做初始化与结构参照 |
+| 同规格baseline | 400590848 | 后续授权已完成 |
 | 已完成A / learned_kv | 400590860 | 保留原结果 |
 | B / conditional_kv | 400591884 | 本轮完整训练 |
 
@@ -47,9 +55,9 @@ B从前12层候选K/V构造一次共享memory，由每个来源的当前token状
 
 训练结束后自动执行ARC-Easy、ARC-Challenge、BoolQ、HellaSwag、OpenBookQA、PIQA、WinoGrande、SciQ八项完整零样本评测，共21465条文档。随后[导出器](../tools/export_gret_400m_B.py)验证B及历史A的checkpoint和逐样本文档/prompt/target hash、样本数与得分，再输出七组PNG/PDF/SVG、原始训练/验证CSV和逐任务汇总。
 
-报告目录由ACTIVE中的report_output记录，当前为 `evaluation/gret_400m_B_20261108T073237Z`。生成后还须由agent查看图形、复核收敛并发布GitHub，才算完整流程完成。
+B-only历史导出保留在本机 `evaluation/gret_400m_B_20261108T073237Z`。当前发布采用包含已完成baseline的[完整三组报告](../evaluation/gret_400m_3way_20261108T194918Z/README.md)，并通过[九组汇总](../evaluation/model_comparison_20261111/README.md)统一绘图口径。
 
-历史A包含早期编译和修复恢复来源，B全程使用已修复的native路径；两者训练超参数一致，但不能宣称全程执行路径相同，也不能将A/B计时差异单独归因于融合方法。当前没有已训练的400M baseline对照，不能用160M指标替代。
+历史A包含早期编译和修复恢复来源，B全程使用已修复的native路径；两者训练超参数一致，但不能宣称全程执行路径相同，也不能将A/B计时差异单独归因于融合方法。400M baseline已完成，比较采用它的实际40000步指标。
 
 只读进度检查：
 

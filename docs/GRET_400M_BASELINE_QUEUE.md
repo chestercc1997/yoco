@@ -1,10 +1,10 @@
-# 下一任务：400M gRet baseline
+# 400M gRet baseline：队列与完成记录
 
-用户于2026-11-09要求把400M gated retention baseline排在当前400M方法B之后。这里只新增baseline训练，已有A/B和SWA结果保留。
+用户于2026-11-09要求把400M gated retention baseline排在400M方法B之后。已于北京时间2026-11-10 00:27完成40000步、八项完整下游及自动汇总，队列已正常退出，禁止重复启动。最终valid loss3.005297899、宏平均47.7946606%，八份每5000步完整checkpoint全部保留；0次checkpoint回退。见[三组完整结果](../evaluation/gret_400m_3way_20261108T194918Z/README.md)与[九组图表](../evaluation/model_comparison_20261111/README.md)。以下保留原排队机制和复用流程。
 
 ## 自动接续条件
 
-队列已在tmux `yoco-gret-400m-queue`中运行，每30秒检查一次。只有B的根目录和`B/`目录均存在`PIPELINE_SUCCESS`、40000步八卡训练及八项完整评测汇总通过、自动报告导出完成，且八张GPU的显存占用均小于1000MiB时，才启动baseline监督器。不终止B或其他GPU进程。
+原队列在tmux `yoco-gret-400m-queue`中每30秒检查一次，完成后已退出。只有B的根目录和`B/`目录均存在`PIPELINE_SUCCESS`、40000步八卡训练及八项完整评测汇总通过、自动报告导出完成，且八张GPU的显存占用均小于1000MiB时，才启动baseline监督器。不终止B或其他GPU进程。
 
 - B依赖：`runs/yoco-gret-400m-B-8gpu-20261108T073237Z`。
 - baseline目录：`runs/yoco-gret-400m-baseline-8gpu-20261108T194918Z`。
@@ -31,7 +31,7 @@
 
 初始化来自A/B同一随机基座，**不使用训练后的A/B权重**。CPU核验确认222个公共张量逐位相同，参数量正确，旧A冻结代码移除融合后的baseline初始输出差异为0、因果性差异为0，完整模型梯度有限。[初始化证据](evidence/gret-400m-baseline-preflight-20261109.json)保留初始化和修复代码SHA。
 
-当前已完成CPU准备和不可变release冻结，尚未完成baseline八卡检查或正式训练。依赖满足后，复用B经过核验的流程做真实数据0→2→4、连续与独立重复、前向前模型/optimizer/scaler/八卡RNG按位恢复检查及eval smoke；阈值不放宽。受检的4步计入正式40000步。
+CPU准备和不可变release冻结、真实数据八卡0→2→4、连续与独立重复、前向前模型/optimizer/scaler/八卡RNG按位恢复及eval smoke均已通过；之后正式训练至40000步。原阈值未放宽，受检的4步已计入正式预算。
 
 ## 恢复与结果
 
@@ -39,7 +39,7 @@
 
 训练后运行八项完整零样本评测（每组21465条文档），然后`tools/export_gret_400m_baseline.py`汇总baseline/A/B三个完整run、全部24份每5000步checkpoint、训练/验证CSV、逐任务分数和七组PNG/PDF/SVG。输出目录`evaluation/gret_400m_3way_20261108T194918Z`。A保留历史编译/修复前缀，baseline/B全程使用既有修复后的native路径；耗时不能只归因于融合结构差异。单seed差异仅作描述。
 
-自动导出成功后队列状态为`pipeline_complete_review_pending`；图表仍需实际查看及最终GitHub发布，不能把排队、启动或训练单独完成当成整体完成。
+自动导出成功后队列保留终态`pipeline_complete_review_pending`，它表示本地自动流程完成。人工渲染审阅与发布核验另存[最终证据](evidence/model-comparison-final-review-20261111.json)，不改写自动队列的历史状态。
 
 ## 本机查看与恢复队列
 

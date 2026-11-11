@@ -44,23 +44,30 @@ diagnosis. This completed cohort required no rollback and must not be restarted.
 The corpus is the repository's approved FineWeb recipe; paper comparisons require
 separate corpus and parameter-budget matching.
 
-## gRet 400M method B pipeline
+## Nine completed models: curves, compute and downstream
 
-The newly authorized experiment trains **gated-retention 400M B** on 8×A100,
-using the completed 400M A's backbone initialization, data and training recipe.
-B has 400,591,884 parameters and 12 conditional K/V sources. CPU backbone,
-old-A initial output, last-source and causality checks passed. Real-data eight-GPU
-restoration, continuous/repeated training and exact state loading checks passed;
-full 40,000-update training is now running, followed by eight full downstream tasks.
-All 5,000-step checkpoints are retained. Existing A and SWA runs are preserved.
-See [settings, automatic recovery and progress commands](docs/PLAN_B_400M_8GPU.md).
+All nine gRet160M / gRet400M / SWA160M baseline/A/B models completed 40,000
+updates and eight full zero-shot tasks per model. The [combined report](evaluation/model_comparison_20261111/README.md)
+contains raw train/validation plots, downstream accuracy and relative gains, and
+**two common-coefficient compute–loss endpoint plots: six gRet points and three SWA points**.
+Each figure is available as PNG, PDF and SVG, with numeric CSV and source hashes.
+Compute uses the same trunk 6ND proxy with coefficient 6 for all models; it is not measured FLOPs.
 
-The user has queued a **400M gated-retention baseline as the next task**.
-A persistent local queue waits for B's full training, eight evaluations and report
-export to succeed and for all eight GPUs to become idle. The baseline retains
-the frozen B recipe and the shared random backbone initialization; only the
-fusion module is removed. CPU preparation is complete; GPU checks and training
-wait for B. See [the queue, settings and three-way report workflow](docs/GRET_400M_BASELINE_QUEUE.md).
+[Six-point gRet compute–loss](evaluation/model_comparison_20261111/figures/05_compute_loss_gret.png) ·
+[Three-point SWA compute–loss](evaluation/model_comparison_20261111/figures/06_compute_loss_swa.png) ·
+[Downstream macro and relative gain](evaluation/model_comparison_20261111/figures/09_downstream_macro_and_relative_gain.png)
+
+The [complete gRet400M baseline/A/B report](evaluation/gret_400m_3way_20261108T194918Z/README.md)
+retains all 24 checkpoints locally and publishes the raw curves and full evaluation summaries.
+Their final validation losses are 3.005298 / 2.918184 / 2.913688; macro accuracies
+are 47.7947% / 48.5270% / 48.3513%. The baseline finished its full pipeline on
+November 10, 2026 at 00:27 CST. A retains a historical compiled/repaired prefix;
+baseline and B use the repaired native path throughout. Baseline gradient and
+validation excursions remain visible in the raw plots. Results are descriptive, single-seed comparisons.
+
+[400M settings and B recovery workflow](docs/PLAN_B_400M_8GPU.md) ·
+[Baseline queue and completion history](docs/GRET_400M_BASELINE_QUEUE.md) ·
+[Publication checks](docs/evidence/model-comparison-final-review-20261111.json)
 
 ## Completed 400M A training
 
@@ -70,7 +77,7 @@ eight-task macro average **48.5270%**. The final checkpoint SHA256 and all eight
 evaluation provenance records were verified independently. This run resumed after
 the documented retention arithmetic repair, with compilation disabled; its
 post-repair segment recorded no nonfinite forward events. That run trained A;
-the newly authorized B pipeline is tracked above. See the [completed run and repair record](docs/PLAN_A_400M_8GPU.md).
+the completed baseline/B results are tracked above. See the [completed run and repair record](docs/PLAN_A_400M_8GPU.md).
 
 ## Completed gRet 160M A/B experiment
 

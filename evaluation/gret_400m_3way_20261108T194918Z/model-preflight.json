@@ -1,0 +1,31 @@
+{
+  "passed": true,
+  "architecture": "YOCO-gRet",
+  "parameters": {
+    "baseline": 400590848
+  },
+  "common_state_tensors_verified": 222,
+  "common_weights_bitwise_equal": true,
+  "common_weights_match_original_A_initialization": true,
+  "common_weights_match_B_initialization": true,
+  "old_baseline_initial_forward_max_abs": 0.0,
+  "causality_prefix_max_abs": 0.0,
+  "all_gradients_finite": true,
+  "source_A_run": "/root/yoco/runs/yoco-400m-A-8gpu-retentionfix-20261106",
+  "source_B_run": "/root/yoco/runs/yoco-gret-400m-B-8gpu-20261108T073237Z",
+  "source_A_initialization_sha256": "2cdfc71b1cac69cbcd74199d4fc522db9b084a4e6a001ce367533b1c00e8b4e3",
+  "source_B_initialization_sha256": "6675e4a1cbcc4a50a1029f46ef6fca0e86827b387c05945838caf06d2b6aad94",
+  "initializations": {
+    "baseline": {
+      "path": "/root/yoco/runs/setup/yoco-400m-gret-baseline-initialization.pt",
+      "sha256": "991a4a401e28b4aded8da59a6b12fb27e38045ef435d7f62e04274236d6856a6"
+    }
+  },
+  "repaired_runtime_sha256": {
+    "runtime/train.py": "47991278fafdbf4bb588521adf47b8ee28de2ec94bac954b0ae9c22b90f49b02",
+    "runtime/yoco_official/backend.py": "d8c025c5bd4e06e3f4d2977daaf636efb11beccc767d052c20b773e793973065",
+    "runtime/yoco_official/gate_retention.py": "e317190116956b878c7cef85c2874d4e8dadaa962cb07311711544dd4f1c4259"
+  },
+  "created_at": "2026-11-08T19:54:53.680766+00:00",
+  "note": "CPU preparation only. Full eight-GPU restore checks wait for predecessor completion."
+}

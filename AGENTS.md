@@ -1,5 +1,12 @@
 # 用户执行约束（2026-10-29）
 
+## 2026-11-11 九组图表与400M完整发布
+
+- 用户要求将train/valid loss、compute–loss、下游图表按此前160M方式上传GitHub。新汇总 `evaluation/model_comparison_20261111` 覆盖九组；统一trunk 6ND系数6，gRet六个终点、SWA三个终点；保留PNG/PDF/SVG、数值CSV和来源SHA。
+- gRet400M baseline/A/B均已完成40000步及八项完整下游，禁止重跑。baseline于北京时间11月10日00:27完成自动报告，最终checkpoint SHA `6c81a48371c3d5157e7f0188cb97fb26684e373198c0b498822c0b8bafca6f2a`；B最终SHA `be20ce7dff448e07dfae64d5631b2b3364a14ad348a49a5ed56672be4a057c6c`。完整报告 `evaluation/gret_400m_3way_20261108T194918Z`。
+- baseline/A/B最终valid loss依次3.005297899/2.918183804/2.913687944，宏平均47.7946606%/48.5269685%/48.3512785%；A/B较baseline相对增幅1.5322%/1.1646%。baseline有真实有限梯度尖峰和验证回升，12次正常AMP拒绝尝试、0次非有限前向和checkpoint回退，不宣称全程无尖峰。
+- 本轮只制图、核验与发布，不改变任何配置、训练代码或旧冻结release；旧gRet160M/SWA报告保留。发布前须完成渲染与数值审阅；对应证据为 `docs/evidence/model-comparison-final-review-20261111.json` 和 `gret-400m-final-review-20261111.json`。
+
 ## 2026-11-09 gRet 400M baseline排队授权（下一任务）
 
 - 用户明确要求把 **400M gated retention baseline** 排在当前gRet 400M B之后。仅在B训练、八项完整评测和自动报告导出成功且GPU空闲后接续；不打断B，不并行抢卡。队列 `runs/setup/gret-400m-training-queue.json`，baseline run `/root/yoco/runs/yoco-gret-400m-baseline-8gpu-20261108T194918Z`。

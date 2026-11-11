@@ -1,0 +1,288 @@
+{
+  "passed": true,
+  "recorded_at": "2026-11-11T05:24:50.801747+00:00",
+  "models": 9,
+  "completed_updates_per_model": 40000,
+  "training_points_verified": 360000,
+  "validation_points_verified": 1440,
+  "full_task_scores_verified": 72,
+  "documents_per_model": 21465,
+  "training_settings_unchanged": true,
+  "compute_convention": {
+    "coefficient": 6,
+    "N": "total parameters minus one tied embedding/output matrix",
+    "D": 10485760000,
+    "unit": "PFLOP-days",
+    "divisor": 8.64e+19,
+    "measured_flops": false,
+    "gret_endpoint_points": 6,
+    "swa_endpoint_points": 3
+  },
+  "compute_gret_svg_scatter_collections": 6,
+  "compute_swa_svg_scatter_collections": 3,
+  "figures": [
+    {
+      "name": "01_train_loss_gret",
+      "rendered_png_visually_reviewed": true,
+      "png_dimensions": [
+        1938,
+        1170
+      ],
+      "pdf_pages": 1,
+      "pdf_parsed_and_text_verified": true,
+      "svg_xml_verified": true,
+      "scatter_collections": 0,
+      "files": {
+        "png": {
+          "sha256": "9f824745502ef2c1a494dd017f657df7da10caf8a75df80364aee091f09c0313",
+          "bytes": 288358
+        },
+        "pdf": {
+          "sha256": "f670bc82ab973057e77289590406dce90547c46f41069f9ceb15c093956d5640",
+          "bytes": 873894
+        },
+        "svg": {
+          "sha256": "53a89c712f8aeac5894e13ff10531075484737c370c47337053bc1bd6f23edac",
+          "bytes": 2301344
+        }
+      }
+    },
+    {
+      "name": "02_train_loss_swa",
+      "rendered_png_visually_reviewed": true,
+      "png_dimensions": [
+        1938,
+        594
+      ],
+      "pdf_pages": 1,
+      "pdf_parsed_and_text_verified": true,
+      "svg_xml_verified": true,
+      "scatter_collections": 0,
+      "files": {
+        "png": {
+          "sha256": "0a30abd44a9040d3b66b507f9ee905e2ea748cd829640ee133b1645439ea7a6c",
+          "bytes": 136616
+        },
+        "pdf": {
+          "sha256": "c30cc0564d23c968f12188c41b6a621773aeeae88c4aa7d237ef8a8b41eb0581",
+          "bytes": 443480
+        },
+        "svg": {
+          "sha256": "f479c7439a718da3e81bab1c6b0f7748d787c4e63e952e152a15b4e89afe32c4",
+          "bytes": 1156937
+        }
+      }
+    },
+    {
+      "name": "03_valid_loss_gret",
+      "rendered_png_visually_reviewed": true,
+      "png_dimensions": [
+        1938,
+        1170
+      ],
+      "pdf_pages": 1,
+      "pdf_parsed_and_text_verified": true,
+      "svg_xml_verified": true,
+      "scatter_collections": 0,
+      "files": {
+        "png": {
+          "sha256": "023a90812103700e51eba7747d8031fe091bcf4c1268edc467a9c44d0a3d29b5",
+          "bytes": 218479
+        },
+        "pdf": {
+          "sha256": "9c1532ac9b7429cdec32f3eab30797bd332f099d7108296b2483165ccd7418dc",
+          "bytes": 21640
+        },
+        "svg": {
+          "sha256": "6bf15f6e4bbb8cb8513435d8123112cb996f90bc7b8c2bb35944747de80ca1c3",
+          "bytes": 117714
+        }
+      }
+    },
+    {
+      "name": "04_valid_loss_swa",
+      "rendered_png_visually_reviewed": true,
+      "png_dimensions": [
+        1938,
+        594
+      ],
+      "pdf_pages": 1,
+      "pdf_parsed_and_text_verified": true,
+      "svg_xml_verified": true,
+      "scatter_collections": 0,
+      "files": {
+        "png": {
+          "sha256": "a484edb1c937b39f382b1a9e4bca207097f260027134544a82affdf66abd5122",
+          "bytes": 109467
+        },
+        "pdf": {
+          "sha256": "a5624e479c8f7b4a502ca67cdac90a11af07f70a3d4226184ce22fa94253c206",
+          "bytes": 16580
+        },
+        "svg": {
+          "sha256": "74d885cd0ee7487de70963ba16f8d61441afa6e2aa0ad9994ba636cba6eba58d",
+          "bytes": 65990
+        }
+      }
+    },
+    {
+      "name": "05_compute_loss_gret",
+      "rendered_png_visually_reviewed": true,
+      "png_dimensions": [
+        1778,
+        1058
+      ],
+      "pdf_pages": 1,
+      "pdf_parsed_and_text_verified": true,
+      "svg_xml_verified": true,
+      "scatter_collections": 6,
+      "files": {
+        "png": {
+          "sha256": "dc37764037de6bc98b1c354d616379b68a8f189e4c1ba3d05d8ff847fb4aeba9",
+          "bytes": 170178
+        },
+        "pdf": {
+          "sha256": "b90a5374fb3a030f9cc6dfd7f6ad45810c15371616f5416843e7ea2183f9dc98",
+          "bytes": 18448
+        },
+        "svg": {
+          "sha256": "74896fb4e8ec58e0ad3dbaec459c3b7a561c1ff8770d4512058a11302ccbf1ae",
+          "bytes": 92197
+        }
+      }
+    },
+    {
+      "name": "06_compute_loss_swa",
+      "rendered_png_visually_reviewed": true,
+      "png_dimensions": [
+        1778,
+        946
+      ],
+      "pdf_pages": 1,
+      "pdf_parsed_and_text_verified": true,
+      "svg_xml_verified": true,
+      "scatter_collections": 3,
+      "files": {
+        "png": {
+          "sha256": "7d70a0e0e86f55add0417af5d410741824e5b239f82c70ff898670fd3878da98",
+          "bytes": 125146
+        },
+        "pdf": {
+          "sha256": "7848d11a5d3d6ad41e7b54b27900e5f1d2d16aff3492123ac524837f9e8e6840",
+          "bytes": 17676
+        },
+        "svg": {
+          "sha256": "b7839ac3c577e4952e4de37b9b40e0667e9cb37c8fee0699964126db890e4f7f",
+          "bytes": 75994
+        }
+      }
+    },
+    {
+      "name": "07_downstream_gret",
+      "rendered_png_visually_reviewed": true,
+      "png_dimensions": [
+        2258,
+        1298
+      ],
+      "pdf_pages": 1,
+      "pdf_parsed_and_text_verified": true,
+      "svg_xml_verified": true,
+      "scatter_collections": 0,
+      "files": {
+        "png": {
+          "sha256": "c46d027e982d563ff321e01caa8af5cbd3d20a8db2faf5abe03b985b0102859e",
+          "bytes": 122100
+        },
+        "pdf": {
+          "sha256": "62e7739ea57aa8d9dfdea4e7c36548897f1d547ee21e7a2ae50dec1c8109f6d7",
+          "bytes": 17945
+        },
+        "svg": {
+          "sha256": "da847e6b67f4a6c79f5adb7e15b9440e6a3887f4b574cdab41cee0c5b0f2dac0",
+          "bytes": 81875
+        }
+      }
+    },
+    {
+      "name": "08_downstream_swa",
+      "rendered_png_visually_reviewed": true,
+      "png_dimensions": [
+        2258,
+        658
+      ],
+      "pdf_pages": 1,
+      "pdf_parsed_and_text_verified": true,
+      "svg_xml_verified": true,
+      "scatter_collections": 0,
+      "files": {
+        "png": {
+          "sha256": "ebc85791f69422d019025f8012dc30f7dc9fc6a5ea8e310bc37a891a5cf28ac5",
+          "bytes": 69122
+        },
+        "pdf": {
+          "sha256": "b8fe345c491a771ae22dcec6cdd02094b25594353541df8ffc06ee24036abaeb",
+          "bytes": 16570
+        },
+        "svg": {
+          "sha256": "c9ecfe28926b89ac87a7c641c1c16a45d3681393630900d49fad913a6f231405",
+          "bytes": 54977
+        }
+      }
+    },
+    {
+      "name": "09_downstream_macro_and_relative_gain",
+      "rendered_png_visually_reviewed": true,
+      "png_dimensions": [
+        1938,
+        978
+      ],
+      "pdf_pages": 1,
+      "pdf_parsed_and_text_verified": true,
+      "svg_xml_verified": true,
+      "scatter_collections": 9,
+      "files": {
+        "png": {
+          "sha256": "ae83b4942830d8b08f7c73fbf5b23b3dfe9cffc805af7655172ece4bc847530e",
+          "bytes": 157425
+        },
+        "pdf": {
+          "sha256": "2af2c19f02fbe80265b0b38cfe751aa303c4df55c6e41004c9a6fc03ef5de06d",
+          "bytes": 18006
+        },
+        "svg": {
+          "sha256": "a02515d4356b5f953ea4cf2f0410f271cb20581174cdfe6c0e260efecbcbae0e",
+          "bytes": 82711
+        }
+      }
+    }
+  ],
+  "figure_files": 27,
+  "source_sha256": {
+    "evaluation/ab_baseline_20261104/summary.json": "523bedd8704b5e7690b606f65a02602a88679524a551794e7ea48668e591870d",
+    "evaluation/ab_baseline_20261104/training_curves.csv": "050d501379adbc27c59416b357a3db9c2c42237d9ebe1c05227fa8c8836a415d",
+    "evaluation/ab_baseline_20261104/validation_curves.csv": "5647a9075d228d8d88d17d2fcd217a2163c779139ae31a60ea483c7304e6b3ef",
+    "evaluation/ab_baseline_20261104/downstream.csv": "dfbeb39ee6b592194140928553d5487f862eb9889d4efd18370dccbc4dd4500f",
+    "evaluation/gret_400m_3way_20261108T194918Z/summary.json": "9a6bc39d47bab000d8978194b50dd49a27dca0ea2d0c661414120486fe93e714",
+    "evaluation/gret_400m_3way_20261108T194918Z/training_curves.csv": "54e0308c74e60708fccd11620f5117e1f01256d51da5e05413deec586f19858e",
+    "evaluation/gret_400m_3way_20261108T194918Z/validation_curves.csv": "3670e0c327dbbf10dabb69726cf00a57f233d27cca0e6c5351b989dbd0f466dd",
+    "evaluation/gret_400m_3way_20261108T194918Z/downstream.csv": "6b38472b6a5cb2ffc2933d9d12ce675bc0faa1b2fb1c85fdcd1602b0699a2ed0",
+    "evaluation/swa_160m_ab_20261107/summary.json": "4bf72f39ade480d8416a0652a12510a7118a6fca7980b0b044cf5f456ae24d7e",
+    "evaluation/swa_160m_ab_20261107/training_curves.csv": "b72d52667b5a4146e70c6975c9133b8a64030ae7147a45e553a8edfda6fb671f",
+    "evaluation/swa_160m_ab_20261107/validation_curves.csv": "20f7fda6b1b037ab17eebf75984f9da40921ad7470b09302b88c7d57cd962bec",
+    "evaluation/swa_160m_ab_20261107/downstream.csv": "ba878301c3f7f2dd10c51e087370a599aa181d76698a97fa519b9c63ec470ac3"
+  },
+  "report_manifest_sha256": "f4e8519fd0d20130710267c60c9b32dfee6ed91830b614128b7d12bc1b39f785",
+  "gret400m_review_sha256": "f8b099bab86ded80c3fdf83beda719b618786474435f14670e7869ec9797f1b3",
+  "exporter_sha256": "c96bd31bd64ddfd7df7b4252f5028a3cac709e386cb98c056800c57f94bd7e33",
+  "cost_layout_tool_sha256": "7277c3b905c4e00172e6d3788247cca26bc027277dd199a4bb3d668cb61bfe57",
+  "review_notes": [
+    "All 16 published rendered PNG figures reviewed, including the nine new combined and seven 400M figures.",
+    "Final compute plots contain exactly six gRet and three SWA scatter points. Coefficient 6, trunk parameter convention and actual point positions are shared and documented.",
+    "Near-overlapping A/B points remain at their real coordinates, distinguished with a hollow triangle and solid square. Precision tables preserve all endpoint values.",
+    "Raw training loss and finite gradient/validation excursions preserved. No smoothing, omitted raw update points or changed training settings.",
+    "Downstream macro recomputed from all eight full task scores; relative percentage gain recomputed against each corresponding baseline.",
+    "PDFs independently parsed and SVG XML checked. Macro labels staggered and negative-gain labels moved to avoid overlap.",
+    "400M A retains a historical compiled/repaired prefix; old gRet160M A/B are published A800 references. Single-seed results remain descriptive."
+  ],
+  "scope": "Local numerical, source and rendered publication checks. GitHub delivery is verified separately by the actual git push."
+}

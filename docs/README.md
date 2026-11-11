@@ -2,9 +2,12 @@
 
 ## A/B 结果与历史执行计划
 
+- [九组模型完整图表与数值](../evaluation/model_comparison_20261111/README.md)：train/valid loss、统一系数6的gRet六点/SWA三点compute–loss、八项下游及相对baseline增幅。
+- [400M gRet三组完整结果](../evaluation/gret_400m_3way_20261108T194918Z/README.md)：baseline/A/B均完成40000步及八项下游，原始曲线和七组图。
+
 - [SWA 160M baseline / A / B](SWA_160M_AB.md)：三组40000步、24项完整下游均已完成；含设计公式、冻结设置、七张对比图、原始曲线和验收证据。
-- [gRet 400M baseline下一任务](GRET_400M_BASELINE_QUEUE.md)：B完整结束后自动接续，同配方八卡训练与baseline/A/B三组汇总。
-- [gRet 400M 方法B](PLAN_B_400M_8GPU.md)：新授权的12来源conditional K/V完整训练、八卡恢复、自动监督与原配方约束。
+- [gRet 400M baseline队列与完成记录](GRET_400M_BASELINE_QUEUE.md)：已接续完成，同配方八卡训练与baseline/A/B三组汇总。
+- [gRet 400M 方法B](PLAN_B_400M_8GPU.md)：已完成12来源conditional K/V完整训练，保留八卡恢复、自动监督与原配方约束。
 - [400M 方法 A 八卡训练](PLAN_A_400M_8GPU.md)：已完成 40000 步及八项下游，验证 loss 2.918184，宏平均 48.5270%；保留故障修复与恢复证据。
 - [A100 八卡训练加速与复用](BASELINE_A100_ACCELERATION.md)：执行设置、启动与续训命令、速度测量和原始 loss 核查。
 

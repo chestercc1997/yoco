@@ -1,0 +1,741 @@
+{
+  "complete": true,
+  "architecture": "YOCO-gRet",
+  "world_size": 8,
+  "seed": 42,
+  "training": {
+    "baseline": {
+      "parameters": 400590848,
+      "validation_loss": 3.005297899246216,
+      "validation_perplexity": 20.192230450337696,
+      "last100_training_loss": 2.990905225276947,
+      "tokens": 10485760000,
+      "active_training_seconds": 53172.391043293756,
+      "active_gpu_hours": 118.16086898509724,
+      "tokens_per_second": 197203.09345243356,
+      "peak_rank0_memory_gib": 32.28120708465576,
+      "trunk_6nd_pflop_days": 0.2169212006855111,
+      "output_inclusive_6nd_pflop_days": 0.29170135349475557,
+      "extra_repeated_kv_projection_proxy_pflop_days": 0.0,
+      "amp_rejected_attempts_committed_lineage": 12,
+      "review": {
+        "final_validation_loss": 3.005297899246216,
+        "best_validation_loss": 3.005297899246216,
+        "maximum_validation_regression": 0.10631895065307617,
+        "overflow_retries": 12,
+        "nonfinite_forward_events": 0,
+        "maximum_gradient_norm": 1348.6290283203125,
+        "convergence_warning": false,
+        "checkpoints": [
+          {
+            "file": "checkpoint_00005000.pt",
+            "step": 5000,
+            "sha256": "abf9ed9ae7537d2936e0c9febab15bd38cbb52d68c435e8114d853f591aa1110",
+            "fingerprint": "90961bed7ae2c07dfa7ef0313fc384b774673212eb741ab2b1865d4af0c56c29"
+          },
+          {
+            "file": "checkpoint_00010000.pt",
+            "step": 10000,
+            "sha256": "32e9db15d34bf9b2b11ef9155045956e03e57f393f0e1130e865b040c48cb3c8",
+            "fingerprint": "90961bed7ae2c07dfa7ef0313fc384b774673212eb741ab2b1865d4af0c56c29"
+          },
+          {
+            "file": "checkpoint_00015000.pt",
+            "step": 15000,
+            "sha256": "f3339ff94788b45ddcdbc039f5523ca0a62fd9c1abefaf371510988955c84337",
+            "fingerprint": "90961bed7ae2c07dfa7ef0313fc384b774673212eb741ab2b1865d4af0c56c29"
+          },
+          {
+            "file": "checkpoint_00020000.pt",
+            "step": 20000,
+            "sha256": "84741f439180b0c41f337c44ec553a837d514d35b112b83f040ed58c3b025197",
+            "fingerprint": "90961bed7ae2c07dfa7ef0313fc384b774673212eb741ab2b1865d4af0c56c29"
+          },
+          {
+            "file": "checkpoint_00025000.pt",
+            "step": 25000,
+            "sha256": "6a34318a73c4632ed3d9f96f1673b8f0ed35df7ca0bdc242c8c2e1add38f9487",
+            "fingerprint": "90961bed7ae2c07dfa7ef0313fc384b774673212eb741ab2b1865d4af0c56c29"
+          },
+          {
+            "file": "checkpoint_00030000.pt",
+            "step": 30000,
+            "sha256": "411724cc7b0e5dcb7cd5a7731a6de73ed139d42608e5a1c2227bb966e5bc0046",
+            "fingerprint": "90961bed7ae2c07dfa7ef0313fc384b774673212eb741ab2b1865d4af0c56c29"
+          },
+          {
+            "file": "checkpoint_00035000.pt",
+            "step": 35000,
+            "sha256": "24649a38d7e2277824540eee333a54ea12f68d228b34e01c879812bdf0acd461",
+            "fingerprint": "90961bed7ae2c07dfa7ef0313fc384b774673212eb741ab2b1865d4af0c56c29"
+          },
+          {
+            "file": "checkpoint_00040000.pt",
+            "step": 40000,
+            "sha256": "6c81a48371c3d5157e7f0188cb97fb26684e373198c0b498822c0b8bafca6f2a",
+            "fingerprint": "90961bed7ae2c07dfa7ef0313fc384b774673212eb741ab2b1865d4af0c56c29"
+          }
+        ]
+      }
+    },
+    "A": {
+      "parameters": 400590860,
+      "validation_loss": 2.9181838035583496,
+      "validation_perplexity": 18.50764340079704,
+      "last100_training_loss": 2.8994688272476195,
+      "tokens": 10485760000,
+      "active_training_seconds": 47581.51727892016,
+      "active_gpu_hours": 105.73670506426703,
+      "tokens_per_second": 220374.64544337813,
+      "peak_rank0_memory_gib": 33.34388494491577,
+      "trunk_6nd_pflop_days": 0.21692120942364446,
+      "output_inclusive_6nd_pflop_days": 0.2917013622328889,
+      "extra_repeated_kv_projection_proxy_pflop_days": 0.016798094313244444,
+      "amp_rejected_attempts_committed_lineage": 11,
+      "review": {
+        "final_validation_loss": 2.9181838035583496,
+        "best_validation_loss": 2.9181838035583496,
+        "maximum_validation_regression": 0.0,
+        "overflow_retries": 11,
+        "maximum_gradient_norm": 33.67215347290039,
+        "convergence_warning": false,
+        "note": "Pipeline completion proves training/evaluation completion; assess convergence separately."
+      }
+    },
+    "B": {
+      "parameters": 400591884,
+      "validation_loss": 2.9136879444122314,
+      "validation_perplexity": 18.42462240812525,
+      "last100_training_loss": 2.894218122959137,
+      "tokens": 10485760000,
+      "active_training_seconds": 58712.8218600573,
+      "active_gpu_hours": 130.472937466794,
+      "tokens_per_second": 178594.0390498166,
+      "peak_rank0_memory_gib": 33.7196364402771,
+      "trunk_6nd_pflop_days": 0.21692195507768888,
+      "output_inclusive_6nd_pflop_days": 0.29170210788693335,
+      "extra_repeated_kv_projection_proxy_pflop_days": 0.016798094313244444,
+      "amp_rejected_attempts_committed_lineage": 11,
+      "review": {
+        "final_validation_loss": 2.9136879444122314,
+        "best_validation_loss": 2.9136879444122314,
+        "maximum_validation_regression": 0.0,
+        "overflow_retries": 11,
+        "nonfinite_forward_events": 0,
+        "maximum_gradient_norm": 18.81196403503418,
+        "convergence_warning": false,
+        "checkpoints": [
+          {
+            "file": "checkpoint_00005000.pt",
+            "step": 5000,
+            "sha256": "a3ff1d72029f0f1f81db000f2f5448cdf620f79c7a781f48c55f09c1b9a92e53",
+            "fingerprint": "1b5f6ff7020108f7dbaad21ae6344a4e6899540b047e875b84af601078e7840a"
+          },
+          {
+            "file": "checkpoint_00010000.pt",
+            "step": 10000,
+            "sha256": "ba0b0ca406bd5ebc68306350cfcba73c3c267ba53f51c8c71c62e804452e79bc",
+            "fingerprint": "1b5f6ff7020108f7dbaad21ae6344a4e6899540b047e875b84af601078e7840a"
+          },
+          {
+            "file": "checkpoint_00015000.pt",
+            "step": 15000,
+            "sha256": "bbcffd45e1c397e087365dfc20701c7c21e6e88c59c637ef51172072e5d785bd",
+            "fingerprint": "1b5f6ff7020108f7dbaad21ae6344a4e6899540b047e875b84af601078e7840a"
+          },
+          {
+            "file": "checkpoint_00020000.pt",
+            "step": 20000,
+            "sha256": "d33875289e05d0858f08c745f827cb714bb7fa20985ed4ef282ab0c2ccd80d70",
+            "fingerprint": "1b5f6ff7020108f7dbaad21ae6344a4e6899540b047e875b84af601078e7840a"
+          },
+          {
+            "file": "checkpoint_00025000.pt",
+            "step": 25000,
+            "sha256": "717e8c327b98f87c5876e0da9c90c940d90da9a52cb3f9d3383e710cbac391c5",
+            "fingerprint": "1b5f6ff7020108f7dbaad21ae6344a4e6899540b047e875b84af601078e7840a"
+          },
+          {
+            "file": "checkpoint_00030000.pt",
+            "step": 30000,
+            "sha256": "74675256b5db76d4bc437ebe49f25d5f51b12f15e35d6803e905680ba88ec0ad",
+            "fingerprint": "1b5f6ff7020108f7dbaad21ae6344a4e6899540b047e875b84af601078e7840a"
+          },
+          {
+            "file": "checkpoint_00035000.pt",
+            "step": 35000,
+            "sha256": "1c956c0cc5460b4cffaf2d646766aa4c27b6817b928b82466082f8f0be81082a",
+            "fingerprint": "1b5f6ff7020108f7dbaad21ae6344a4e6899540b047e875b84af601078e7840a"
+          },
+          {
+            "file": "checkpoint_00040000.pt",
+            "step": 40000,
+            "sha256": "be20ce7dff448e07dfae64d5631b2b3364a14ad348a49a5ed56672be4a057c6c",
+            "fingerprint": "1b5f6ff7020108f7dbaad21ae6344a4e6899540b047e875b84af601078e7840a"
+          }
+        ]
+      }
+    }
+  },
+  "macro": {
+    "baseline": 0.4779466061280852,
+    "A": 0.4852696846718969,
+    "B": 0.4835127853492758
+  },
+  "downstream": [
+    {
+      "task": "arc_easy",
+      "metric": "acc_norm,none",
+      "documents": 2376,
+      "baseline": 0.4684343434343434,
+      "A": 0.48484848484848486,
+      "B": 0.49452861952861954,
+      "A_delta_pp": 1.6414141414141437,
+      "B_delta_pp": 2.6094276094276116
+    },
+    {
+      "task": "arc_challenge",
+      "metric": "acc_norm,none",
+      "documents": 1172,
+      "baseline": 0.26791808873720135,
+      "A": 0.26791808873720135,
+      "B": 0.2619453924914676,
+      "A_delta_pp": 0.0,
+      "B_delta_pp": -0.5972696245733766
+    },
+    {
+      "task": "boolq",
+      "metric": "acc,none",
+      "documents": 3270,
+      "baseline": 0.6009174311926605,
+      "A": 0.6217125382262997,
+      "B": 0.618348623853211,
+      "A_delta_pp": 2.079510703363918,
+      "B_delta_pp": 1.7431192660550487
+    },
+    {
+      "task": "hellaswag",
+      "metric": "acc_norm,none",
+      "documents": 10042,
+      "baseline": 0.3423620792670783,
+      "A": 0.36436964748058154,
+      "B": 0.3652658832901812,
+      "A_delta_pp": 2.200756821350325,
+      "B_delta_pp": 2.2903804023102934
+    },
+    {
+      "task": "openbookqa",
+      "metric": "acc_norm,none",
+      "documents": 500,
+      "baseline": 0.328,
+      "A": 0.318,
+      "B": 0.326,
+      "A_delta_pp": -1.0000000000000009,
+      "B_delta_pp": -0.20000000000000018
+    },
+    {
+      "task": "piqa",
+      "metric": "acc_norm,none",
+      "documents": 1838,
+      "baseline": 0.6490750816104461,
+      "A": 0.6523394994559304,
+      "B": 0.6447225244831338,
+      "A_delta_pp": 0.32644178454842576,
+      "B_delta_pp": -0.43525571273123065
+    },
+    {
+      "task": "winogrande",
+      "metric": "acc,none",
+      "documents": 1267,
+      "baseline": 0.5098658247829518,
+      "A": 0.5169692186266772,
+      "B": 0.49329123914759276,
+      "A_delta_pp": 0.7103393843725381,
+      "B_delta_pp": -1.6574585635359074
+    },
+    {
+      "task": "sciq",
+      "metric": "acc_norm,none",
+      "documents": 1000,
+      "baseline": 0.657,
+      "A": 0.656,
+      "B": 0.664,
+      "A_delta_pp": -0.10000000000000009,
+      "B_delta_pp": 0.7000000000000006
+    }
+  ],
+  "sources": {
+    "baseline": {
+      "run": "/root/yoco/runs/yoco-gret-400m-baseline-8gpu-20261108T194918Z/baseline",
+      "checkpoint": {
+        "file": "checkpoint_00040000.pt",
+        "step": 40000,
+        "sha256": "6c81a48371c3d5157e7f0188cb97fb26684e373198c0b498822c0b8bafca6f2a",
+        "fingerprint": "90961bed7ae2c07dfa7ef0313fc384b774673212eb741ab2b1865d4af0c56c29"
+      },
+      "all_retained_checkpoints_verified": [
+        {
+          "path": "/root/yoco/runs/yoco-gret-400m-baseline-8gpu-20261108T194918Z/baseline/checkpoint_00005000.pt",
+          "step": 5000,
+          "sha256": "abf9ed9ae7537d2936e0c9febab15bd38cbb52d68c435e8114d853f591aa1110",
+          "fingerprint": "90961bed7ae2c07dfa7ef0313fc384b774673212eb741ab2b1865d4af0c56c29",
+          "finite_tensors_checked": 885,
+          "full_optimizer_scaler_eight_rank_rng": true
+        },
+        {
+          "path": "/root/yoco/runs/yoco-gret-400m-baseline-8gpu-20261108T194918Z/baseline/checkpoint_00010000.pt",
+          "step": 10000,
+          "sha256": "32e9db15d34bf9b2b11ef9155045956e03e57f393f0e1130e865b040c48cb3c8",
+          "fingerprint": "90961bed7ae2c07dfa7ef0313fc384b774673212eb741ab2b1865d4af0c56c29",
+          "finite_tensors_checked": 885,
+          "full_optimizer_scaler_eight_rank_rng": true
+        },
+        {
+          "path": "/root/yoco/runs/yoco-gret-400m-baseline-8gpu-20261108T194918Z/baseline/checkpoint_00015000.pt",
+          "step": 15000,
+          "sha256": "f3339ff94788b45ddcdbc039f5523ca0a62fd9c1abefaf371510988955c84337",
+          "fingerprint": "90961bed7ae2c07dfa7ef0313fc384b774673212eb741ab2b1865d4af0c56c29",
+          "finite_tensors_checked": 885,
+          "full_optimizer_scaler_eight_rank_rng": true
+        },
+        {
+          "path": "/root/yoco/runs/yoco-gret-400m-baseline-8gpu-20261108T194918Z/baseline/checkpoint_00020000.pt",
+          "step": 20000,
+          "sha256": "84741f439180b0c41f337c44ec553a837d514d35b112b83f040ed58c3b025197",
+          "fingerprint": "90961bed7ae2c07dfa7ef0313fc384b774673212eb741ab2b1865d4af0c56c29",
+          "finite_tensors_checked": 885,
+          "full_optimizer_scaler_eight_rank_rng": true
+        },
+        {
+          "path": "/root/yoco/runs/yoco-gret-400m-baseline-8gpu-20261108T194918Z/baseline/checkpoint_00025000.pt",
+          "step": 25000,
+          "sha256": "6a34318a73c4632ed3d9f96f1673b8f0ed35df7ca0bdc242c8c2e1add38f9487",
+          "fingerprint": "90961bed7ae2c07dfa7ef0313fc384b774673212eb741ab2b1865d4af0c56c29",
+          "finite_tensors_checked": 885,
+          "full_optimizer_scaler_eight_rank_rng": true
+        },
+        {
+          "path": "/root/yoco/runs/yoco-gret-400m-baseline-8gpu-20261108T194918Z/baseline/checkpoint_00030000.pt",
+          "step": 30000,
+          "sha256": "411724cc7b0e5dcb7cd5a7731a6de73ed139d42608e5a1c2227bb966e5bc0046",
+          "fingerprint": "90961bed7ae2c07dfa7ef0313fc384b774673212eb741ab2b1865d4af0c56c29",
+          "finite_tensors_checked": 885,
+          "full_optimizer_scaler_eight_rank_rng": true
+        },
+        {
+          "path": "/root/yoco/runs/yoco-gret-400m-baseline-8gpu-20261108T194918Z/baseline/checkpoint_00035000.pt",
+          "step": 35000,
+          "sha256": "24649a38d7e2277824540eee333a54ea12f68d228b34e01c879812bdf0acd461",
+          "fingerprint": "90961bed7ae2c07dfa7ef0313fc384b774673212eb741ab2b1865d4af0c56c29",
+          "finite_tensors_checked": 885,
+          "full_optimizer_scaler_eight_rank_rng": true
+        },
+        {
+          "path": "/root/yoco/runs/yoco-gret-400m-baseline-8gpu-20261108T194918Z/baseline/checkpoint_00040000.pt",
+          "step": 40000,
+          "sha256": "6c81a48371c3d5157e7f0188cb97fb26684e373198c0b498822c0b8bafca6f2a",
+          "fingerprint": "90961bed7ae2c07dfa7ef0313fc384b774673212eb741ab2b1865d4af0c56c29",
+          "finite_tensors_checked": 885,
+          "full_optimizer_scaler_eight_rank_rng": true
+        }
+      ],
+      "historical_recovery": null
+    },
+    "A": {
+      "run": "/root/yoco/runs/yoco-400m-A-8gpu-retentionfix-20261106",
+      "checkpoint": {
+        "file": "checkpoint_00040000.pt",
+        "step": 40000,
+        "sha256": "5eb2be389bd252d7463ce734761ff69e288196f0b4a99edad2708b874a027839",
+        "fingerprint": "e6f1e3526e11509e7863e7335cd83cd24287e12f98cca72731e39873fb25b389"
+      },
+      "all_retained_checkpoints_verified": [
+        {
+          "path": "/root/yoco/runs/yoco-400m-A-8gpu-full-20261105T0310Z/checkpoint_00005000.pt",
+          "step": 5000,
+          "sha256": "c81209c6433a740193658e48a55f212d7e492f29f394d7ce55a44f5a2d4d5415",
+          "fingerprint": "43cd29522d1f5e18180934890667d0c5df351861203f39df56f54bb692020da1",
+          "finite_tensors_checked": 889,
+          "full_optimizer_scaler_eight_rank_rng": true
+        },
+        {
+          "path": "/root/yoco/runs/yoco-400m-A-8gpu-full-20261105T0310Z/checkpoint_00010000.pt",
+          "step": 10000,
+          "sha256": "778250c85985c341a375ca0e238972c0cd3a9d213837290bac7c67bfd8881a92",
+          "fingerprint": "43cd29522d1f5e18180934890667d0c5df351861203f39df56f54bb692020da1",
+          "finite_tensors_checked": 889,
+          "full_optimizer_scaler_eight_rank_rng": true
+        },
+        {
+          "path": "/root/yoco/runs/yoco-400m-A-8gpu-repaired-20261106/checkpoint_00015000.pt",
+          "step": 15000,
+          "sha256": "7546911d2727523b693ce6b747b3ad3b5a2573702fff8ee19bc00400fb0521e4",
+          "fingerprint": "da1aeb79a4100d986dcd2290aacb469272775c5e1481fabad653c2a287995ac3",
+          "finite_tensors_checked": 889,
+          "full_optimizer_scaler_eight_rank_rng": true
+        },
+        {
+          "path": "/root/yoco/runs/yoco-400m-A-8gpu-repaired-20261106/checkpoint_00020000.pt",
+          "step": 20000,
+          "sha256": "7c82eefeb5db702d59c4de11a184f1cac9407e49a43a1f6d83cafa55cf9c9939",
+          "fingerprint": "da1aeb79a4100d986dcd2290aacb469272775c5e1481fabad653c2a287995ac3",
+          "finite_tensors_checked": 889,
+          "full_optimizer_scaler_eight_rank_rng": true
+        },
+        {
+          "path": "/root/yoco/runs/yoco-400m-A-8gpu-retentionfix-20261106/checkpoint_00025000.pt",
+          "step": 25000,
+          "sha256": "ece311f53091f399a4964d196b1e8b7dd7740160631fde25eaf9fc23943c08e5",
+          "fingerprint": "e6f1e3526e11509e7863e7335cd83cd24287e12f98cca72731e39873fb25b389",
+          "finite_tensors_checked": 889,
+          "full_optimizer_scaler_eight_rank_rng": true
+        },
+        {
+          "path": "/root/yoco/runs/yoco-400m-A-8gpu-retentionfix-20261106/checkpoint_00030000.pt",
+          "step": 30000,
+          "sha256": "6da1b332ff246fea2fa72b8826efcd349d5a4ccc28803e274cf5589dbef2e714",
+          "fingerprint": "e6f1e3526e11509e7863e7335cd83cd24287e12f98cca72731e39873fb25b389",
+          "finite_tensors_checked": 889,
+          "full_optimizer_scaler_eight_rank_rng": true
+        },
+        {
+          "path": "/root/yoco/runs/yoco-400m-A-8gpu-retentionfix-20261106/checkpoint_00035000.pt",
+          "step": 35000,
+          "sha256": "fe5088bd443c34fedacf960c4661b5f3c495acf1830c420155f4008dd78496b0",
+          "fingerprint": "e6f1e3526e11509e7863e7335cd83cd24287e12f98cca72731e39873fb25b389",
+          "finite_tensors_checked": 889,
+          "full_optimizer_scaler_eight_rank_rng": true
+        },
+        {
+          "path": "/root/yoco/runs/yoco-400m-A-8gpu-retentionfix-20261106/checkpoint_00040000.pt",
+          "step": 40000,
+          "sha256": "5eb2be389bd252d7463ce734761ff69e288196f0b4a99edad2708b874a027839",
+          "fingerprint": "e6f1e3526e11509e7863e7335cd83cd24287e12f98cca72731e39873fb25b389",
+          "finite_tensors_checked": 889,
+          "full_optimizer_scaler_eight_rank_rng": true
+        }
+      ],
+      "historical_recovery": {
+        "source_run": "/root/yoco/runs/yoco-400m-A-8gpu-repaired-20261106",
+        "source_checkpoint": "/root/yoco/runs/yoco-400m-A-8gpu-repaired-20261106/checkpoint_00020000.pt",
+        "source_step": 20000,
+        "source_sha256": "7c82eefeb5db702d59c4de11a184f1cac9407e49a43a1f6d83cafa55cf9c9939",
+        "source_fingerprint": "da1aeb79a4100d986dcd2290aacb469272775c5e1481fabad653c2a287995ac3",
+        "repair": "Keep retention cross-chunk accumulation and its sum in FP32 until RMSNorm, then restore the original FP16 activation interface; disable rejected compilation.",
+        "model_repair": {
+          "passed": true,
+          "repair": "Keep retention cross-chunk accumulation and its sum in FP32 until RMSNorm, then restore the original FP16 activation interface; disable rejected compilation.",
+          "source_checkpoint_sha256": "7c82eefeb5db702d59c4de11a184f1cac9407e49a43a1f6d83cafa55cf9c9939",
+          "model_source_changes": {
+            "yoco_official/backend.py": {
+              "before": "830f672ae7f9b6fae3304b69b5b01681478f5de1584eb44b3264857194f1929e",
+              "after": "d8c025c5bd4e06e3f4d2977daaf636efb11beccc767d052c20b773e793973065"
+            },
+            "yoco_official/gate_retention.py": {
+              "before": "c1c16cdaf57f67cc537feabbdff7a8588746a160d3b63da24cbb34e453c33026",
+              "after": "e317190116956b878c7cef85c2874d4e8dadaa962cb07311711544dd4f1c4259"
+            }
+          },
+          "execution_before": {
+            "checkpoint_activations": false,
+            "fused_adamw": true,
+            "compile": true,
+            "allow_tf32": true,
+            "compile_loss": false,
+            "emulate_precision_casts": true,
+            "compile_scope": "layers"
+          },
+          "execution_after": {
+            "checkpoint_activations": false,
+            "fused_adamw": true,
+            "compile": false,
+            "allow_tf32": true,
+            "compile_loss": false,
+            "emulate_precision_casts": true,
+            "compile_scope": "layers"
+          },
+          "compiled_candidate_rejected": true,
+          "compiled_gradient_relative_l2_vs_eager": 0.011075695020503543,
+          "original_gradient_criterion": 0.005,
+          "full_update_samples": 128,
+          "fixed_eager_loss": 2.989857755601406,
+          "fp32_reference_loss": 2.989850454032421,
+          "all_fixed_gradients_finite": true,
+          "fp16_gradient_relative_l2_vs_fp32_reference": 0.3080492035588659,
+          "captured_failure_reproduced_and_eliminated": true,
+          "global_precision": "fp16_mixed_fp32_params",
+          "local_arithmetic_change": "Cross-chunk matmul/sum must not narrow to FP16 before the existing FP32 RMSNorm; normalize then cast to v.dtype.",
+          "unchanged_training_configuration": true,
+          "no_new_accuracy_or_convergence_claim": true
+        },
+        "execution_changes": {
+          "compile": {
+            "before": true,
+            "after": false,
+            "reason": "Trained failure snapshot gradient comparison exceeded the original 0.5% criterion."
+          }
+        },
+        "trainer_sha256_before": "125d3ab25a72563fff0b863562fdbaab87e425fab722b888e3c487c36c28d9b2",
+        "trainer_sha256_after": "47991278fafdbf4bb588521adf47b8ee28de2ec94bac954b0ae9c22b90f49b02",
+        "repair_check": {
+          "passed": true,
+          "device": "cpu",
+          "native": {
+            "after_backoff": {
+              "scale": 4.0,
+              "growth_factor": 2.0,
+              "backoff_factor": 0.5,
+              "growth_interval": 3,
+              "_growth_tracker": 0
+            },
+            "after_one_success": {
+              "scale": 4.0,
+              "growth_factor": 2.0,
+              "backoff_factor": 0.5,
+              "growth_interval": 3,
+              "_growth_tracker": 1
+            }
+          },
+          "fixed": {
+            "after_backoff": {
+              "scale": 4.0,
+              "growth_factor": 2.0,
+              "backoff_factor": 0.5,
+              "growth_interval": 3,
+              "_growth_tracker": 0
+            },
+            "after_one_success": {
+              "scale": 4.0,
+              "growth_factor": 2.0,
+              "backoff_factor": 0.5,
+              "growth_interval": 3,
+              "_growth_tracker": 1
+            }
+          },
+          "legacy_bug": {
+            "after_backoff": {
+              "scale": 4.0,
+              "growth_factor": 2.0,
+              "backoff_factor": 0.5,
+              "growth_interval": 3,
+              "_growth_tracker": 2
+            },
+            "after_one_success": {
+              "scale": 8.0,
+              "growth_factor": 2.0,
+              "backoff_factor": 0.5,
+              "growth_interval": 3,
+              "_growth_tracker": 0
+            }
+          },
+          "synchronized_remote_overflow": {
+            "after_backoff": {
+              "scale": 4.0,
+              "growth_factor": 2.0,
+              "backoff_factor": 0.5,
+              "growth_interval": 3,
+              "_growth_tracker": 0
+            },
+            "after_one_success": {
+              "scale": 4.0,
+              "growth_factor": 2.0,
+              "backoff_factor": 0.5,
+              "growth_interval": 3,
+              "_growth_tracker": 1
+            }
+          },
+          "precision_and_scaler_hyperparameters_unchanged": true,
+          "checkpoint_state_roundtrip_passed": true
+        },
+        "recorded_at": "2026-11-06T11:58:04.337276+00:00",
+        "preserved": [
+          "model",
+          "FP16 mixed / FP32 parameters",
+          "optimizer state",
+          "scaler state at source checkpoint",
+          "eight-rank RNG",
+          "data order",
+          "batch",
+          "LR schedule",
+          "validation",
+          "checkpoint cadence"
+        ],
+        "limitation": "The saved step-24935 forward failure is reproduced and fixed; full-run convergence remains to be measured."
+      }
+    },
+    "B": {
+      "run": "/root/yoco/runs/yoco-gret-400m-B-8gpu-20261108T073237Z/B",
+      "checkpoint": {
+        "file": "checkpoint_00040000.pt",
+        "step": 40000,
+        "sha256": "be20ce7dff448e07dfae64d5631b2b3364a14ad348a49a5ed56672be4a057c6c",
+        "fingerprint": "1b5f6ff7020108f7dbaad21ae6344a4e6899540b047e875b84af601078e7840a"
+      },
+      "all_retained_checkpoints_verified": [
+        {
+          "path": "/root/yoco/runs/yoco-gret-400m-B-8gpu-20261108T073237Z/B/checkpoint_00005000.pt",
+          "step": 5000,
+          "sha256": "a3ff1d72029f0f1f81db000f2f5448cdf620f79c7a781f48c55f09c1b9a92e53",
+          "fingerprint": "1b5f6ff7020108f7dbaad21ae6344a4e6899540b047e875b84af601078e7840a",
+          "finite_tensors_checked": 893,
+          "full_optimizer_scaler_eight_rank_rng": true
+        },
+        {
+          "path": "/root/yoco/runs/yoco-gret-400m-B-8gpu-20261108T073237Z/B/checkpoint_00010000.pt",
+          "step": 10000,
+          "sha256": "ba0b0ca406bd5ebc68306350cfcba73c3c267ba53f51c8c71c62e804452e79bc",
+          "fingerprint": "1b5f6ff7020108f7dbaad21ae6344a4e6899540b047e875b84af601078e7840a",
+          "finite_tensors_checked": 893,
+          "full_optimizer_scaler_eight_rank_rng": true
+        },
+        {
+          "path": "/root/yoco/runs/yoco-gret-400m-B-8gpu-20261108T073237Z/B/checkpoint_00015000.pt",
+          "step": 15000,
+          "sha256": "bbcffd45e1c397e087365dfc20701c7c21e6e88c59c637ef51172072e5d785bd",
+          "fingerprint": "1b5f6ff7020108f7dbaad21ae6344a4e6899540b047e875b84af601078e7840a",
+          "finite_tensors_checked": 893,
+          "full_optimizer_scaler_eight_rank_rng": true
+        },
+        {
+          "path": "/root/yoco/runs/yoco-gret-400m-B-8gpu-20261108T073237Z/B/checkpoint_00020000.pt",
+          "step": 20000,
+          "sha256": "d33875289e05d0858f08c745f827cb714bb7fa20985ed4ef282ab0c2ccd80d70",
+          "fingerprint": "1b5f6ff7020108f7dbaad21ae6344a4e6899540b047e875b84af601078e7840a",
+          "finite_tensors_checked": 893,
+          "full_optimizer_scaler_eight_rank_rng": true
+        },
+        {
+          "path": "/root/yoco/runs/yoco-gret-400m-B-8gpu-20261108T073237Z/B/checkpoint_00025000.pt",
+          "step": 25000,
+          "sha256": "717e8c327b98f87c5876e0da9c90c940d90da9a52cb3f9d3383e710cbac391c5",
+          "fingerprint": "1b5f6ff7020108f7dbaad21ae6344a4e6899540b047e875b84af601078e7840a",
+          "finite_tensors_checked": 893,
+          "full_optimizer_scaler_eight_rank_rng": true
+        },
+        {
+          "path": "/root/yoco/runs/yoco-gret-400m-B-8gpu-20261108T073237Z/B/checkpoint_00030000.pt",
+          "step": 30000,
+          "sha256": "74675256b5db76d4bc437ebe49f25d5f51b12f15e35d6803e905680ba88ec0ad",
+          "fingerprint": "1b5f6ff7020108f7dbaad21ae6344a4e6899540b047e875b84af601078e7840a",
+          "finite_tensors_checked": 893,
+          "full_optimizer_scaler_eight_rank_rng": true
+        },
+        {
+          "path": "/root/yoco/runs/yoco-gret-400m-B-8gpu-20261108T073237Z/B/checkpoint_00035000.pt",
+          "step": 35000,
+          "sha256": "1c956c0cc5460b4cffaf2d646766aa4c27b6817b928b82466082f8f0be81082a",
+          "fingerprint": "1b5f6ff7020108f7dbaad21ae6344a4e6899540b047e875b84af601078e7840a",
+          "finite_tensors_checked": 893,
+          "full_optimizer_scaler_eight_rank_rng": true
+        },
+        {
+          "path": "/root/yoco/runs/yoco-gret-400m-B-8gpu-20261108T073237Z/B/checkpoint_00040000.pt",
+          "step": 40000,
+          "sha256": "be20ce7dff448e07dfae64d5631b2b3364a14ad348a49a5ed56672be4a057c6c",
+          "fingerprint": "1b5f6ff7020108f7dbaad21ae6344a4e6899540b047e875b84af601078e7840a",
+          "finite_tensors_checked": 893,
+          "full_optimizer_scaler_eight_rank_rng": true
+        }
+      ],
+      "historical_recovery": null
+    }
+  },
+  "task_provenance": {
+    "arc_easy": {
+      "task_yaml_sha256": "96da1d9efe1df88659481cedc13985cb347dc068554a2eae561303fa39bfab3f",
+      "seed": 42,
+      "num_fewshot": 0,
+      "versions": {
+        "lm_eval": "0.4.5",
+        "datasets": "3.6.0",
+        "transformers": "4.53.1",
+        "torch": "2.7.1"
+      }
+    },
+    "arc_challenge": {
+      "task_yaml_sha256": "682621c26ae24b1065a2d732460a55a8ef2b9f2544574431666c9309a9efd7bd",
+      "seed": 42,
+      "num_fewshot": 0,
+      "versions": {
+        "lm_eval": "0.4.5",
+        "datasets": "3.6.0",
+        "transformers": "4.53.1",
+        "torch": "2.7.1"
+      }
+    },
+    "boolq": {
+      "task_yaml_sha256": "b6a50f0806b7a363ce6c0545d214d721742315567599ae213116a695ac333af9",
+      "seed": 42,
+      "num_fewshot": 0,
+      "versions": {
+        "lm_eval": "0.4.5",
+        "datasets": "3.6.0",
+        "transformers": "4.53.1",
+        "torch": "2.7.1"
+      }
+    },
+    "hellaswag": {
+      "task_yaml_sha256": "cabb0340cad5fb66c2d62f6cfab16b85df18070e606300f20e4f579e49fdc5e3",
+      "seed": 42,
+      "num_fewshot": 0,
+      "versions": {
+        "lm_eval": "0.4.5",
+        "datasets": "3.6.0",
+        "transformers": "4.53.1",
+        "torch": "2.7.1"
+      }
+    },
+    "openbookqa": {
+      "task_yaml_sha256": "6224b08e7b0f2f54c54d292994f67521213f49b50289be8f22321aa675b8c898",
+      "seed": 42,
+      "num_fewshot": 0,
+      "versions": {
+        "lm_eval": "0.4.5",
+        "datasets": "3.6.0",
+        "transformers": "4.53.1",
+        "torch": "2.7.1"
+      }
+    },
+    "piqa": {
+      "task_yaml_sha256": "89cc1c7288667e52f4651768d5d986f46c1c38f940f496b6a3e9793d4ff63242",
+      "seed": 42,
+      "num_fewshot": 0,
+      "versions": {
+        "lm_eval": "0.4.5",
+        "datasets": "3.6.0",
+        "transformers": "4.53.1",
+        "torch": "2.7.1"
+      }
+    },
+    "winogrande": {
+      "task_yaml_sha256": "68f42f3ac6358978973b4d891d889c544110b22d200fba6d0e52a588b2af4070",
+      "seed": 42,
+      "num_fewshot": 0,
+      "versions": {
+        "lm_eval": "0.4.5",
+        "datasets": "3.6.0",
+        "transformers": "4.53.1",
+        "torch": "2.7.1"
+      }
+    },
+    "sciq": {
+      "task_yaml_sha256": "2dd8bdee8714c0fa767433d6d4fafa3f82b0fb7d12c3a6741868a3d9bcca0399",
+      "seed": 42,
+      "num_fewshot": 0,
+      "versions": {
+        "lm_eval": "0.4.5",
+        "datasets": "3.6.0",
+        "transformers": "4.53.1",
+        "torch": "2.7.1"
+      }
+    }
+  },
+  "baseline_automatic_recoveries": [],
+  "limitations": [
+    "Baseline is newly trained after B; A and B are preserved completed 400M references.",
+    "A has a historical compiled/repaired prefix; baseline and B use the repaired native implementation throughout. Timing differences do not isolate the fusion method.",
+    "Single seed; no claim of a stable overall accuracy gain.",
+    "Successful-update timing excludes AMP failed attempts, validation, checkpoint I/O, setup and evaluation. Raw curves show the committed lineage; recovery archives are preserved.",
+    "6ND and repeated-projection estimates are compute proxies, not measured device FLOPs."
+  ]
+}
