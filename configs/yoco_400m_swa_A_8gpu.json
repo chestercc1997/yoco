@@ -1,0 +1,78 @@
+{
+  "experiment": "yoco_400m_swa_A_8gpu",
+  "architecture": "yoco",
+  "seed": 42,
+  "model": {
+    "dim": 1024,
+    "n_layers": 24,
+    "hidden_dim": 2816,
+    "n_self_heads": 16,
+    "n_attn_heads": 16,
+    "n_attn_kv_heads": 16,
+    "vocab_size": 100288,
+    "max_seq_len": 2048,
+    "model_parallel_size": 1,
+    "rope_theta": 10000.0,
+    "norm_eps": 1e-05,
+    "sliding_window": 1024
+  },
+  "tied_embeddings": true,
+  "training": {
+    "max_updates": 40000,
+    "sequence_length": 2048,
+    "world_size": 8,
+    "microbatch": 4,
+    "gradient_accumulation": 4,
+    "global_batch_tokens": 262144,
+    "optimizer": "AdamW",
+    "betas": [
+      0.9,
+      0.98
+    ],
+    "eps": 1e-08,
+    "lr": 0.00015,
+    "warmup_updates": 375,
+    "end_lr": 0.0,
+    "weight_decay": 0.05,
+    "grad_clip": 1.0,
+    "precision": "fp16_mixed_fp32_params",
+    "checkpoint_every": 5000,
+    "validation_every": 250,
+    "validation_batches": 64,
+    "max_consecutive_overflows": 20,
+    "keep_last_checkpoints": null
+  },
+  "data": {
+    "approved": true,
+    "dataset": "HuggingFaceFW/fineweb-edu",
+    "subset": "sample-10BT",
+    "manifest": "/root/yoco/data/fineweb_edu_10bt/manifest.json",
+    "revision": "87f09149ef4734204d70ed1d046ddc9ca3f2b8f9"
+  },
+  "status": "AUTHORIZED_SWA_400M_BASELINE_THEN_A_THEN_B_FULL",
+  "execution": {
+    "checkpoint_activations": false,
+    "fused_adamw": true,
+    "compile": false,
+    "allow_tf32": true,
+    "compile_loss": false
+  },
+  "memory_fusion": {
+    "mode": "learned_kv",
+    "source_layers": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12
+    ],
+    "temperature": 1.0
+  }
+}

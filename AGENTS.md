@@ -1,5 +1,13 @@
 # 用户执行约束（2026-10-29）
 
+## 2026-11-11 SWA 400M baseline→A→B连续训练授权
+
+- **baseline已正式启动，首100步核验通过**：新cohort `runs/yoco-swa-400m-ab-8gpu-20261111T054430Z`，ACTIVE `runs/setup/swa-400m-active.json`，tmux `yoco-swa-400m-8gpu`；八卡0→2→4/连续/独立重复、各卡791张量恢复前按位加载和eval smoke均通过。CPU公共张量198个按位相同，实际参数baseline/A/B为387958784/387958796/387959820。A/B GPU检查和训练尚待前组完整完成；不得重复启动或误报三组全部完成。[启动证据](docs/evidence/swa-400m-launch-20261111.json)。
+- 用户要求八张A100继续不间断运行SWA400M baseline、方法A和B，先baseline，依次串行训练并完成各八项完整下游。新cohort目录 `/root/yoco/runs/yoco-swa-400m-ab-8gpu-20261111T054430Z`，准备入口 `runs/setup/swa-400m-preparation.json`，运行后以 `runs/setup/swa-400m-active.json` 为准。不得重跑已完成gRet或SWA160M。
+- 24层、dim1024、FFN2816、SWA窗口1024、self/attention/KV heads均16（head dim64）；三组新的SWA共同随机初始化，不加载gRet或其他已训练权重。A/B为前12层候选K/V的learned_kv/conditional_kv，temperature1，仅声明融合模块不同。
+- 配置 `configs/yoco_400m_swa_{baseline,A,B}_8gpu.json`。training/data/seed/FP16 mixed/FP32参数、原AMP策略、microbatch4/accum4/seq2048/262144tokens每步、40000步、验证每250步原2048序列、每5000步保存全部保留完全沿用旧SWA160M与gRet400M；execution沿用已验证SWA native设置，compile关闭，不通过改参数处理故障。
+- 每组在自己的正式训练之前完成真实数据八卡0→2→4/连续/独立重复、任何前向前全状态按位恢复和eval smoke，保持原容差；先完成baseline全流程再自动接续A/B检查与训练。正常AMP拒绝尝试不触发回滚；检测八卡非有限前向、持续退化、停滞/退出，保留现场，最近健康完整checkpoint按同批数据恢复，每组最多两次自动回退，重复故障保留诊断，不无限重试或擅改setting。
+
 ## 2026-11-11 九组图表与400M完整发布
 
 - 用户要求将train/valid loss、compute–loss、下游图表按此前160M方式上传GitHub。新汇总 `evaluation/model_comparison_20261111` 覆盖九组；统一trunk 6ND系数6，gRet六个终点、SWA三个终点；保留PNG/PDF/SVG、数值CSV和来源SHA。

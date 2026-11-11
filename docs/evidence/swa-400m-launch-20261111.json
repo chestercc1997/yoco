@@ -1,0 +1,90 @@
+{
+  "recorded_at": "2026-11-11T05:57:56.328839+00:00",
+  "run_dir": "/root/yoco/runs/yoco-swa-400m-ab-8gpu-20261111T054430Z",
+  "architecture": "YOCO-SWA",
+  "scale": "400M-tier",
+  "phase": "baseline-training",
+  "full_three_arm_pipeline_complete": false,
+  "arm_order": [
+    "baseline",
+    "A",
+    "B"
+  ],
+  "current_step": 148,
+  "current_training_loss": 7.284226417541504,
+  "step100_training_loss": 8.18710708618164,
+  "recent_median_seconds_per_update": 1.257954350905493,
+  "world_size": 8,
+  "parameters": {
+    "baseline": 387958784,
+    "A": 387958796,
+    "B": 387959820
+  },
+  "real_data_baseline_restoration_and_eval_smoke_passed": true,
+  "formal_first100_verified": [
+    {
+      "rank": 0,
+      "accepted_updates_verified_through": 148,
+      "first100_accepted_updates_contiguous_and_finite": true,
+      "amp_rejected_attempts": 0
+    },
+    {
+      "rank": 1,
+      "accepted_updates_verified_through": 148,
+      "first100_accepted_updates_contiguous_and_finite": true,
+      "amp_rejected_attempts": 0
+    },
+    {
+      "rank": 2,
+      "accepted_updates_verified_through": 148,
+      "first100_accepted_updates_contiguous_and_finite": true,
+      "amp_rejected_attempts": 0
+    },
+    {
+      "rank": 3,
+      "accepted_updates_verified_through": 148,
+      "first100_accepted_updates_contiguous_and_finite": true,
+      "amp_rejected_attempts": 0
+    },
+    {
+      "rank": 4,
+      "accepted_updates_verified_through": 148,
+      "first100_accepted_updates_contiguous_and_finite": true,
+      "amp_rejected_attempts": 0
+    },
+    {
+      "rank": 5,
+      "accepted_updates_verified_through": 148,
+      "first100_accepted_updates_contiguous_and_finite": true,
+      "amp_rejected_attempts": 0
+    },
+    {
+      "rank": 6,
+      "accepted_updates_verified_through": 148,
+      "first100_accepted_updates_contiguous_and_finite": true,
+      "amp_rejected_attempts": 0
+    },
+    {
+      "rank": 7,
+      "accepted_updates_verified_through": 148,
+      "first100_accepted_updates_contiguous_and_finite": true,
+      "amp_rejected_attempts": 0
+    }
+  ],
+  "A_B_GPU_checks_and_training_pending": true,
+  "CPU_common_initialization_and_fusion_checks_passed": true,
+  "checkpoint_every": 5000,
+  "keep_all_checkpoints": true,
+  "automatic_recoveries": [],
+  "controller_pid": 986403,
+  "tmux_session": "yoco-swa-400m-8gpu",
+  "release_manifest_sha256": "38e9bf96f2f8020e0e1272d953ff3829a20ad004aa06ac5879955778e3003548",
+  "guard_contract_sha256": "d0d63aa52988a53ff8b5325cf24b15bf0c29682cc9cd15d47ada14030328f817",
+  "frozen_config_sha256": {
+    "baseline": "14009fd8951621a9c5583288083ffd6c1a7614e0f44888a0cc98cc0eb2d19069",
+    "A": "e73db8be768d001e647e5a801f3a2c94e2d6da6ed0e573eee1de49aa300054af",
+    "B": "bd305a2b733e19d90aa1b35aeec6fa89915caee194773ab0f392f4869deec3ee"
+  },
+  "no_training_setting_changes": true,
+  "meaningful_recovery_contract_test_cases_passed": 3
+}

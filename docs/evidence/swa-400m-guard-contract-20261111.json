@@ -1,0 +1,17 @@
+{
+  "architecture": "YOCO-SWA",
+  "scale": "400M",
+  "config_sha256": {
+    "baseline": "14009fd8951621a9c5583288083ffd6c1a7614e0f44888a0cc98cc0eb2d19069",
+    "A": "e73db8be768d001e647e5a801f3a2c94e2d6da6ed0e573eee1de49aa300054af",
+    "B": "bd305a2b733e19d90aa1b35aeec6fa89915caee194773ab0f392f4869deec3ee"
+  },
+  "release_manifest_sha256": "38e9bf96f2f8020e0e1272d953ff3829a20ad004aa06ac5879955778e3003548",
+  "data_manifest_sha256": "090868c9e65f7042d8126c420803eabcbb7381d552912956e4c802477d53f0ba",
+  "no_training_setting_changes": true,
+  "arm_order": [
+    "baseline",
+    "A",
+    "B"
+  ]
+}

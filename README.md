@@ -44,6 +44,16 @@ diagnosis. This completed cohort required no rollback and must not be restarted.
 The corpus is the repository's approved FineWeb recipe; paper comparisons require
 separate corpus and parameter-budget matching.
 
+## SWA 400M baseline → A → B pipeline
+
+A new **SWA 400M-tier** cohort passed its baseline real-data eight-GPU checks and
+started full baseline training (first100 accepted updates verified), followed automatically by A and B. Each arm keeps the
+original 40,000-update recipe, FP16 mixed / FP32 parameters, window1024 and all
+5,000-step full checkpoints. Actual parameters are 387,958,784 / 387,958,796 /
+387,959,820. The three models share one new random SWA backbone initialization.
+Bounded recovery preserves the frozen settings and complete optimizer/scaler/RNG.
+See [settings, sequential workflow and status commands](docs/SWA_400M_AB.md).
+
 ## Nine completed models: curves, compute and downstream
 
 All nine gRet160M / gRet400M / SWA160M baseline/A/B models completed 40,000
