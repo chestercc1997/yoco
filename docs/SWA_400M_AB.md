@@ -4,7 +4,15 @@
 
 运行目录：`runs/yoco-swa-400m-ab-8gpu-20261111T054430Z`。实时入口：`runs/setup/swa-400m-active.json`。tmux：`yoco-swa-400m-8gpu`，监督器`tools/watch_swa_400m.py`管理控制器`tools/run_swa_400m.py`。先看状态，禁止重复启动。历史gRet三组和SWA160M三组均保留，不重跑。
 
-当前已通过baseline真实数据八卡恢复/重复与eval smoke，正式训练首100步已核验；[启动快照](evidence/swa-400m-launch-20261111.json)为有时间戳的历史记录，实时进度以ACTIVE和run状态为准。A/B八卡检查和训练将在前组完整结束后依次运行，当前未启动。
+**已全部完成，禁止重复启动。** 三组均完成40000步及八项完整下游，三组八卡检查全部通过，自动汇总于北京时间2026-11-13 13:10完成。原[启动快照](evidence/swa-400m-launch-20261111.json)保留为历史证据；[完整结果及七组PNG/PDF/SVG](../evaluation/swa_400m_ab_20261111T054430Z/README.md) · [最终验收](evidence/swa-400m-final-review-20261114.json)。
+
+| 组别 | Train末100步均值 | 最终Valid loss | 综合准确率% | 相对baseline增幅 |
+| --- | ---: | ---: | ---: | ---: |
+| baseline | 2.929726 | 2.945771 | 48.1791 | +0.0000% |
+| A | 2.938457 | 2.954141 | 47.8970 | -0.5855% |
+| B | 2.946656 | 2.962127 | 48.4370 | +0.5354% |
+
+三组共24份每5000步完整checkpoint均保留。全程正常AMP拒绝尝试分别6/6/8次，0次非有限前向和checkpoint回退；八卡全部scaler时序符合原策略。baseline验证loss最低，B下游宏平均最高；本次仅单seed，不能宣称稳定增益。以下保留原配方和执行机制。
 
 ## 模型与共同初始化
 

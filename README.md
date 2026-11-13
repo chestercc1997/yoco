@@ -44,15 +44,23 @@ diagnosis. This completed cohort required no rollback and must not be restarted.
 The corpus is the repository's approved FineWeb recipe; paper comparisons require
 separate corpus and parameter-budget matching.
 
-## SWA 400M baseline → A → B pipeline
+## Completed SWA 400M baseline / A / B
 
-A new **SWA 400M-tier** cohort passed its baseline real-data eight-GPU checks and
-started full baseline training (first100 accepted updates verified), followed automatically by A and B. Each arm keeps the
-original 40,000-update recipe, FP16 mixed / FP32 parameters, window1024 and all
-5,000-step full checkpoints. Actual parameters are 387,958,784 / 387,958,796 /
-387,959,820. The three models share one new random SWA backbone initialization.
-Bounded recovery preserves the frozen settings and complete optimizer/scaler/RNG.
-See [settings, sequential workflow and status commands](docs/SWA_400M_AB.md).
+All three **SWA 400M-tier** models completed 40,000 updates and eight full
+zero-shot tasks each. The pipeline finished on **November 13, 2026 at 13:10 CST**.
+Final validation losses are **2.945771 / 2.954141 / 2.962127** and eight-task
+macro accuracies are **48.1791% / 47.8970% / 48.4370%** for baseline/A/B.
+B's relative macro gain is **+0.5354%**, while A's is **−0.5855%**; single-seed
+results are descriptive. Baseline has the lowest validation loss.
+
+[Full results and seven PNG/PDF/SVG figure sets](evaluation/swa_400m_ab_20261111T054430Z/README.md) ·
+[Final checkpoint, AMP timeline and evaluation verification](docs/evidence/swa-400m-final-review-20261114.json) ·
+[Frozen settings and execution history](docs/SWA_400M_AB.md)
+
+All 24 checkpoints are retained. The original recipe, FP16 mixed / FP32 parameters,
+window1024 and common random initialization were preserved. No nonfinite forwards
+or checkpoint rollbacks occurred; normal AMP retries were 6/6/8. GPUs are now idle;
+these completed runs must not be restarted.
 
 ## Nine completed models: curves, compute and downstream
 

@@ -2,7 +2,7 @@
 
 ## A/B 结果与历史执行计划
 
-- [SWA 400M baseline→A→B连续训练](SWA_400M_AB.md)：新授权的三组八卡完整流程，先baseline，同配方与有界自动恢复。
+- [SWA 400M baseline/A/B完整结果](SWA_400M_AB.md)：三组40000步及24项全量下游已完成；最终表格、七组图和checkpoint/AMP/评测核验。
 
 - [九组模型完整图表与数值](../evaluation/model_comparison_20261111/README.md)：train/valid loss、统一系数6的gRet六点/SWA三点compute–loss、八项下游及相对baseline增幅。
 - [400M gRet三组完整结果](../evaluation/gret_400m_3way_20261108T194918Z/README.md)：baseline/A/B均完成40000步及八项下游，原始曲线和七组图。

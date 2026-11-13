@@ -1,5 +1,12 @@
 # 用户执行约束（2026-10-29）
 
+## 2026-11-14 SWA 400M三组完成与发布
+
+- **SWA400M baseline/A/B全部完成，禁止重跑**：run `runs/yoco-swa-400m-ab-8gpu-20261111T054430Z`，三组各40000步及八项完整零样本下游，root/三组PIPELINE_SUCCESS齐全，自动导出于北京时间2026-11-13 13:10完成。GPU已空闲，没有授权启动其他新实验。
+- 最终valid loss依次2.945770979/2.954140902/2.962126732；宏平均48.1791071%/47.8970093%/48.4370398%。A/B相对baseline宏平均增幅−0.5855%/+0.5354%；baseline验证loss最低，B宏平均最高，单seed描述性结果。
+- 各组8份完整checkpoint全部保留，共24份，自动导出已核验SHA和有限性；发布前独立检查三份最终完整payload、198张量共同初始化、八卡全程scaler策略及24项完整评测/配对来源。全程正常AMP拒绝尝试6/6/8，0次非有限前向或checkpoint回退；原配方和代码未改。
+- 最终报告 `evaluation/swa_400m_ab_20261111T054430Z`，含120000训练点、480验证点、七组PNG/PDF/SVG。渲染/PDF/SVG和数值核验见 `docs/evidence/swa-400m-final-review-20261114.json`。旧SWA160M及gRet报告保持原样；Nov11九组汇总为历史快照。
+
 ## 2026-11-11 SWA 400M baseline→A→B连续训练授权
 
 - **baseline已正式启动，首100步核验通过**：新cohort `runs/yoco-swa-400m-ab-8gpu-20261111T054430Z`，ACTIVE `runs/setup/swa-400m-active.json`，tmux `yoco-swa-400m-8gpu`；八卡0→2→4/连续/独立重复、各卡791张量恢复前按位加载和eval smoke均通过。CPU公共张量198个按位相同，实际参数baseline/A/B为387958784/387958796/387959820。A/B GPU检查和训练尚待前组完整完成；不得重复启动或误报三组全部完成。[启动证据](docs/evidence/swa-400m-launch-20261111.json)。

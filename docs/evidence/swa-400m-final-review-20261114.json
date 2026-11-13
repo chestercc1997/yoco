@@ -1,0 +1,467 @@
+{
+  "passed": true,
+  "recorded_at": "2026-11-13T17:31:36.762031+00:00",
+  "architecture": "YOCO-SWA",
+  "scale": "400M-tier",
+  "window": 1024,
+  "world_size": 8,
+  "seed": 42,
+  "training_settings_unchanged": true,
+  "common_initialization_tensors_bitwise_equal": 198,
+  "all_frozen_release_files_sha256_verified": true,
+  "source_release_manifest_sha256": "38e9bf96f2f8020e0e1272d953ff3829a20ad004aa06ac5879955778e3003548",
+  "arms": {
+    "baseline": {
+      "final_checkpoint": {
+        "path": "/root/yoco/runs/yoco-swa-400m-ab-8gpu-20261111T054430Z/baseline/checkpoint_00040000.pt",
+        "step": 40000,
+        "sha256": "de171c40351d89dc57b158baa1f8853ffa1ee4ac17602778024c4b17a26ff8c0",
+        "fingerprint": "e267210df50473805c1021578a8a0ecb5030c4b384b252eaedc756eed61629d9",
+        "finite_tensors_checked": 789,
+        "full_optimizer_scaler_eight_rank_rng": true
+      },
+      "retained_checkpoint_metadata_verified": 8,
+      "full_tasks": 8,
+      "documents": 21465,
+      "training_points": 40000,
+      "validation_points": 160,
+      "final_train_loss": 2.9315402507781982,
+      "last100_training_loss": 2.929726228713989,
+      "final_validation_loss": 2.9457709789276123,
+      "macro_accuracy": 0.4817910708307543,
+      "relative_gain_percent": 0.0,
+      "all_eight_rank_scaler_timelines_verified": true,
+      "rank_scaler_audits": [
+        {
+          "rank": 0,
+          "accepted_updates": 40000,
+          "amp_rejected_attempts": 6,
+          "final_scale": 1048576.0,
+          "final_growth_tracker": 155
+        },
+        {
+          "rank": 1,
+          "accepted_updates": 40000,
+          "amp_rejected_attempts": 6,
+          "final_scale": 1048576.0,
+          "final_growth_tracker": 155
+        },
+        {
+          "rank": 2,
+          "accepted_updates": 40000,
+          "amp_rejected_attempts": 6,
+          "final_scale": 1048576.0,
+          "final_growth_tracker": 155
+        },
+        {
+          "rank": 3,
+          "accepted_updates": 40000,
+          "amp_rejected_attempts": 6,
+          "final_scale": 1048576.0,
+          "final_growth_tracker": 155
+        },
+        {
+          "rank": 4,
+          "accepted_updates": 40000,
+          "amp_rejected_attempts": 6,
+          "final_scale": 1048576.0,
+          "final_growth_tracker": 155
+        },
+        {
+          "rank": 5,
+          "accepted_updates": 40000,
+          "amp_rejected_attempts": 6,
+          "final_scale": 1048576.0,
+          "final_growth_tracker": 155
+        },
+        {
+          "rank": 6,
+          "accepted_updates": 40000,
+          "amp_rejected_attempts": 6,
+          "final_scale": 1048576.0,
+          "final_growth_tracker": 155
+        },
+        {
+          "rank": 7,
+          "accepted_updates": 40000,
+          "amp_rejected_attempts": 6,
+          "final_scale": 1048576.0,
+          "final_growth_tracker": 155
+        }
+      ],
+      "automatic_checkpoint_recoveries": 0,
+      "nonfinite_forward_events": 0,
+      "maximum_validation_regression": 0.0
+    },
+    "A": {
+      "final_checkpoint": {
+        "path": "/root/yoco/runs/yoco-swa-400m-ab-8gpu-20261111T054430Z/A/checkpoint_00040000.pt",
+        "step": 40000,
+        "sha256": "9cb2d1d4b2ee1ecf60c353ce62d18e1b57722dc519926ed12d20ce474624980a",
+        "fingerprint": "f5a21faa61512981e9d776297a7cb9cbd3b41289c206dece5e43a17a7517a3d1",
+        "finite_tensors_checked": 793,
+        "full_optimizer_scaler_eight_rank_rng": true
+      },
+      "retained_checkpoint_metadata_verified": 8,
+      "full_tasks": 8,
+      "documents": 21465,
+      "training_points": 40000,
+      "validation_points": 160,
+      "final_train_loss": 2.939229726791382,
+      "last100_training_loss": 2.938457386493683,
+      "final_validation_loss": 2.9541409015655518,
+      "macro_accuracy": 0.47897009314395,
+      "relative_gain_percent": -0.585518881024516,
+      "all_eight_rank_scaler_timelines_verified": true,
+      "rank_scaler_audits": [
+        {
+          "rank": 0,
+          "accepted_updates": 40000,
+          "amp_rejected_attempts": 6,
+          "final_scale": 262144.0,
+          "final_growth_tracker": 1715
+        },
+        {
+          "rank": 1,
+          "accepted_updates": 40000,
+          "amp_rejected_attempts": 6,
+          "final_scale": 262144.0,
+          "final_growth_tracker": 1715
+        },
+        {
+          "rank": 2,
+          "accepted_updates": 40000,
+          "amp_rejected_attempts": 6,
+          "final_scale": 262144.0,
+          "final_growth_tracker": 1715
+        },
+        {
+          "rank": 3,
+          "accepted_updates": 40000,
+          "amp_rejected_attempts": 6,
+          "final_scale": 262144.0,
+          "final_growth_tracker": 1715
+        },
+        {
+          "rank": 4,
+          "accepted_updates": 40000,
+          "amp_rejected_attempts": 6,
+          "final_scale": 262144.0,
+          "final_growth_tracker": 1715
+        },
+        {
+          "rank": 5,
+          "accepted_updates": 40000,
+          "amp_rejected_attempts": 6,
+          "final_scale": 262144.0,
+          "final_growth_tracker": 1715
+        },
+        {
+          "rank": 6,
+          "accepted_updates": 40000,
+          "amp_rejected_attempts": 6,
+          "final_scale": 262144.0,
+          "final_growth_tracker": 1715
+        },
+        {
+          "rank": 7,
+          "accepted_updates": 40000,
+          "amp_rejected_attempts": 6,
+          "final_scale": 262144.0,
+          "final_growth_tracker": 1715
+        }
+      ],
+      "automatic_checkpoint_recoveries": 0,
+      "nonfinite_forward_events": 0,
+      "maximum_validation_regression": 0.0
+    },
+    "B": {
+      "final_checkpoint": {
+        "path": "/root/yoco/runs/yoco-swa-400m-ab-8gpu-20261111T054430Z/B/checkpoint_00040000.pt",
+        "step": 40000,
+        "sha256": "9518615ee2889dce0751e008d413a1032f2c5ca7dd82d887d831984b8ef2f5a9",
+        "fingerprint": "6534ea10da52d21ce587d3416c1e06a922ef6e2df584389efb65d9f7cd409f5f",
+        "finite_tensors_checked": 797,
+        "full_optimizer_scaler_eight_rank_rng": true
+      },
+      "retained_checkpoint_metadata_verified": 8,
+      "full_tasks": 8,
+      "documents": 21465,
+      "training_points": 40000,
+      "validation_points": 160,
+      "final_train_loss": 2.9484703540802,
+      "last100_training_loss": 2.9466562390327455,
+      "final_validation_loss": 2.9621267318725586,
+      "macro_accuracy": 0.48437039785813346,
+      "relative_gain_percent": 0.5353621483543902,
+      "all_eight_rank_scaler_timelines_verified": true,
+      "rank_scaler_audits": [
+        {
+          "rank": 0,
+          "accepted_updates": 40000,
+          "amp_rejected_attempts": 8,
+          "final_scale": 262144.0,
+          "final_growth_tracker": 825
+        },
+        {
+          "rank": 1,
+          "accepted_updates": 40000,
+          "amp_rejected_attempts": 8,
+          "final_scale": 262144.0,
+          "final_growth_tracker": 825
+        },
+        {
+          "rank": 2,
+          "accepted_updates": 40000,
+          "amp_rejected_attempts": 8,
+          "final_scale": 262144.0,
+          "final_growth_tracker": 825
+        },
+        {
+          "rank": 3,
+          "accepted_updates": 40000,
+          "amp_rejected_attempts": 8,
+          "final_scale": 262144.0,
+          "final_growth_tracker": 825
+        },
+        {
+          "rank": 4,
+          "accepted_updates": 40000,
+          "amp_rejected_attempts": 8,
+          "final_scale": 262144.0,
+          "final_growth_tracker": 825
+        },
+        {
+          "rank": 5,
+          "accepted_updates": 40000,
+          "amp_rejected_attempts": 8,
+          "final_scale": 262144.0,
+          "final_growth_tracker": 825
+        },
+        {
+          "rank": 6,
+          "accepted_updates": 40000,
+          "amp_rejected_attempts": 8,
+          "final_scale": 262144.0,
+          "final_growth_tracker": 825
+        },
+        {
+          "rank": 7,
+          "accepted_updates": 40000,
+          "amp_rejected_attempts": 8,
+          "final_scale": 262144.0,
+          "final_growth_tracker": 825
+        }
+      ],
+      "automatic_checkpoint_recoveries": 0,
+      "nonfinite_forward_events": 0,
+      "maximum_validation_regression": 0.0
+    }
+  },
+  "total_full_tasks": 24,
+  "total_retained_checkpoints": 24,
+  "raw_training_rows": 120000,
+  "scheduled_validation_rows": 480,
+  "paired_document_prompt_target_hashes_verified": true,
+  "report_summary_sha256": "e88a4c68f93cc90fe1df07bc168742a898e90bb086a04cd00a5ad7c01fe2d6a4",
+  "source_hashes_sha256": "de532ce55b458d287059578ac09f83d14b397ae5e1d603ce48dab2e23e86d773",
+  "checkpoint_scope": "Independently rehashed and checked three final full payloads. All 24 retained checkpoint metadata match the original exporter full-payload SHA/finite-state verification.",
+  "limitations": [
+    "Single seed; descriptive differences, no stable overall gain claim.",
+    "Execution timing covers successful updates; excludes AMP rejected attempts, validation, checkpoint I/O, setup and downstream.",
+    "6ND is a compute proxy."
+  ],
+  "figures": [
+    {
+      "name": "01_quality_summary",
+      "rendered_png_visually_reviewed": true,
+      "png_dimensions": [
+        1938,
+        626
+      ],
+      "pdf_pages": 1,
+      "pdf_parsed_and_text_verified": true,
+      "svg_xml_verified": true,
+      "files": {
+        "png": {
+          "sha256": "c86dabf09e630c60a1fce308827934e9fdb6a053b02c995e9a916b07814875d4",
+          "bytes": 54931
+        },
+        "pdf": {
+          "sha256": "c06fde5ac4d6b5df3a55bb35073f114e5755bb44309f39ff9c85b5a4655f4040",
+          "bytes": 17021
+        },
+        "svg": {
+          "sha256": "f1aeabd81c1a198ec0e7bccb258ac4a902aab885a6a7d6d165e8dce8d5eab0ba",
+          "bytes": 51831
+        }
+      }
+    },
+    {
+      "name": "02_training_loss",
+      "rendered_png_visually_reviewed": true,
+      "png_dimensions": [
+        1938,
+        658
+      ],
+      "pdf_pages": 1,
+      "pdf_parsed_and_text_verified": true,
+      "svg_xml_verified": true,
+      "files": {
+        "png": {
+          "sha256": "03ec5a7effd0c1a4a1f246501bc9dc0194312dcf757d1bbef0ebe65a81c07ed4",
+          "bytes": 146624
+        },
+        "pdf": {
+          "sha256": "bd60fab35699956725f9f93512d7033c5ec2145b12b5485203e9824cb055e313",
+          "bytes": 446711
+        },
+        "svg": {
+          "sha256": "639a0aa6b3c302512f0309794ad026492a0eb6760c5fcfb96aa7c63635f7080b",
+          "bytes": 1150727
+        }
+      }
+    },
+    {
+      "name": "03_validation_loss",
+      "rendered_png_visually_reviewed": true,
+      "png_dimensions": [
+        1938,
+        658
+      ],
+      "pdf_pages": 1,
+      "pdf_parsed_and_text_verified": true,
+      "svg_xml_verified": true,
+      "files": {
+        "png": {
+          "sha256": "83f0d0d2fb5379dd3055d78e2c8c3e079c6f90b08097a27e0e85d90e7d1bfe44",
+          "bytes": 115661
+        },
+        "pdf": {
+          "sha256": "5f5f482fd4c1f38a6a89ef8f3f74003ed0b108511cacd83c1e7361dfa9835609",
+          "bytes": 18585
+        },
+        "svg": {
+          "sha256": "febe88f6a8e65e45e44b7fd19f2ac73d48a7fa3e5fb165206c5a515f5104f109",
+          "bytes": 57383
+        }
+      }
+    },
+    {
+      "name": "04_downstream",
+      "rendered_png_visually_reviewed": true,
+      "png_dimensions": [
+        1938,
+        738
+      ],
+      "pdf_pages": 1,
+      "pdf_parsed_and_text_verified": true,
+      "svg_xml_verified": true,
+      "files": {
+        "png": {
+          "sha256": "e2bc129a95ee22edc954e98977cc5c9e806e6e97ff1a5cae9c7f7dc560f0dc12",
+          "bytes": 50896
+        },
+        "pdf": {
+          "sha256": "15d490c76e18b52777a5781ef570ec5bc08e0f0c2acaf60cb1ac1aeeb199c477",
+          "bytes": 17534
+        },
+        "svg": {
+          "sha256": "958fe99d4d3ad6ad0fc8b95160a3a4414c40e960852386ab6b1859f6fb056256",
+          "bytes": 43493
+        }
+      }
+    },
+    {
+      "name": "05_gradient_norm",
+      "rendered_png_visually_reviewed": true,
+      "png_dimensions": [
+        1938,
+        658
+      ],
+      "pdf_pages": 1,
+      "pdf_parsed_and_text_verified": true,
+      "svg_xml_verified": true,
+      "files": {
+        "png": {
+          "sha256": "c6c045ee4a4bb37fa903d7971ad9aaa23ba3d3fb5d1840b0d25956158b8d4ef7",
+          "bytes": 95939
+        },
+        "pdf": {
+          "sha256": "3713793deab06c95d0b3473348d3a18eafe3ea42659e59ea06c08c82b598d00f",
+          "bytes": 431230
+        },
+        "svg": {
+          "sha256": "f92351e415f73966aaee00a932bcf8f7b4405e98d20e0a135b524c257db6a087",
+          "bytes": 1141541
+        }
+      }
+    },
+    {
+      "name": "06_execution_cost",
+      "rendered_png_visually_reviewed": true,
+      "png_dimensions": [
+        1938,
+        658
+      ],
+      "pdf_pages": 1,
+      "pdf_parsed_and_text_verified": true,
+      "svg_xml_verified": true,
+      "files": {
+        "png": {
+          "sha256": "c97c68b38d99a7a2076f2220d9a320d5eb82b0bd9c00888f768015dcf0d32936",
+          "bytes": 57150
+        },
+        "pdf": {
+          "sha256": "9aaf4e775d2d726dc305331dc82689b66ab955b0d9e39d8483b92a2aef2c5849",
+          "bytes": 15880
+        },
+        "svg": {
+          "sha256": "cc0da310bd5788d4d11f32e6e552f885da855bcd34efb5dc2fbc3f591ca7e793",
+          "bytes": 49156
+        }
+      }
+    },
+    {
+      "name": "07_loss_compute_proxy",
+      "rendered_png_visually_reviewed": true,
+      "png_dimensions": [
+        1138,
+        658
+      ],
+      "pdf_pages": 1,
+      "pdf_parsed_and_text_verified": true,
+      "svg_xml_verified": true,
+      "files": {
+        "png": {
+          "sha256": "c06a1166bafad84db56a4137cc33c1844c66c3c89044f20a0250fdda3e955f1b",
+          "bytes": 63989
+        },
+        "pdf": {
+          "sha256": "bbeac32728c9110e5a2d98d7781b6a87dbdd6f9f85f5229a5813f15097fd113d",
+          "bytes": 17807
+        },
+        "svg": {
+          "sha256": "9067d7d28cd59a11432e3c2488893168c032bbcaae12d4e8ef8b96cba2051fbe",
+          "bytes": 41589
+        }
+      }
+    }
+  ],
+  "figure_files": 21,
+  "report_manifest_sha256": "82bda2263d62f70a2408335d0a7da73c7fe3707123cd0fd8ff29567ef5105f66",
+  "review_notes": [
+    "All seven actual PNG figures reviewed, with readable labels and legends; PDF parsing and SVG XML verified independently.",
+    "All 120000 raw training points and480 scheduled validation points checked; curves remain unsmoothed and include finite pre-clip gradient excursions.",
+    "Baseline has lower final train/valid loss; B has highest eight-task macro. A/B relative macro changes are -0.5855% / +0.5354%, not percentage points.",
+    "Trunk 6ND and additional repeated K/V projections use the400M dimensions and12 sources; quantities are compute proxies, not measured FLOPs.",
+    "Full eight-rank scaler history verified through40000 accepted updates for each arm; normal AMP rejected attempts6/6/8, zero nonfinite forwards or automatic checkpoint rollbacks.",
+    "Final checkpoint evaluation and all paired document/prompt/target hashes agree. Settings, code, data manifest and source initialization frozen hashes unchanged."
+  ],
+  "documentation_sha256": {
+    "README.md": "a38021ac1cc3e9815f84bb79f0818f95937718c3778a2a4e98844f72d308b9df",
+    "docs/SWA_400M_AB.md": "4526c8868009d86888a6fbe003b92cc77f4438c69970eba166dc0963b6660ab1",
+    "evaluation/swa_400m_ab_20261111T054430Z/README.md": "4f302dcf21666c0c29c02ec7ebd0d02e1e88fea942bcdeea55f59598adb66b5d"
+  },
+  "scope": "Completed local training/evaluation, final full checkpoint verification, all-rank AMP history and artifact review. GitHub delivery is verified by the actual git push."
+}
