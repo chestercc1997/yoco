@@ -5,6 +5,21 @@ trees into one reproducible project. It contains model and training code,
 evaluation and inference benchmarks, pinned dataset metadata, measured tables,
 and figures. Checkpoints and training data are intentionally excluded.
 
+## SWA and gated-retention 830M baselines
+
+The next official scaling tier after 400M is **830M**. This baseline has
+**838,315,008 actual parameters**, 24 layers, hidden dimension1536, FFN4608,
+12 attention heads and SWA window1024. It starts from a fresh seed42 initialization.
+The eight-A100 pipeline performs resume checks before 40,000 updates, then eight
+full zero-shot evaluations and report export. The gated-retention baseline
+(866,737,152 actual parameters) is queued after the full SWA pipeline; only
+baselines are scheduled, with no new A/B runs.
+The established SWA400M training/data/precision/execution recipe is unchanged;
+full checkpoints are retained every5,000 updates, with bounded automatic recovery.
+Each variant preserves its existing execution settings. See the
+[serial queue and status pointers](docs/BASELINE_830M_QUEUE.md) and
+[SWA configuration](docs/SWA_830M_BASELINE.md).
+
 ## Completed SWA 160M baseline / A / B experiment
 
 All three YOCO **sliding-window self-decoder** arms completed 40,000 updates and
@@ -59,8 +74,8 @@ results are descriptive. Baseline has the lowest validation loss.
 
 All 24 checkpoints are retained. The original recipe, FP16 mixed / FP32 parameters,
 window1024 and common random initialization were preserved. No nonfinite forwards
-or checkpoint rollbacks occurred; normal AMP retries were 6/6/8. GPUs are now idle;
-these completed runs must not be restarted.
+or checkpoint rollbacks occurred; normal AMP retries were 6/6/8.
+These completed runs must not be restarted.
 
 ## Nine completed models: curves, compute and downstream
 

@@ -2,6 +2,7 @@
 
 ## A/B 结果与历史执行计划
 
+- [830M SWA → gated retention baseline队列](BASELINE_830M_QUEUE.md)：两个新授权baseline，依次八卡预检、40k步、八项下游和有界恢复；[SWA详细设置](SWA_830M_BASELINE.md)。
 - [SWA 400M baseline/A/B完整结果](SWA_400M_AB.md)：三组40000步及24项全量下游已完成；最终表格、七组图和checkpoint/AMP/评测核验。
 
 - [九组模型完整图表与数值](../evaluation/model_comparison_20261111/README.md)：train/valid loss、统一系数6的gRet六点/SWA三点compute–loss、八项下游及相对baseline增幅。

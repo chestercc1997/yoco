@@ -1,0 +1,98 @@
+{
+  "passed": true,
+  "world_size": 8,
+  "real_data": true,
+  "split_resume_step": 2,
+  "final_step": 4,
+  "exact_pre_forward_restore": {
+    "passed": true,
+    "ranks": [
+      {
+        "rank": 0,
+        "step": 2,
+        "passed": true,
+        "checked_tensors": 791,
+        "mismatches": [],
+        "no_forward_or_optimizer_updates": true
+      },
+      {
+        "rank": 1,
+        "step": 2,
+        "passed": true,
+        "checked_tensors": 791,
+        "mismatches": [],
+        "no_forward_or_optimizer_updates": true
+      },
+      {
+        "rank": 2,
+        "step": 2,
+        "passed": true,
+        "checked_tensors": 791,
+        "mismatches": [],
+        "no_forward_or_optimizer_updates": true
+      },
+      {
+        "rank": 3,
+        "step": 2,
+        "passed": true,
+        "checked_tensors": 791,
+        "mismatches": [],
+        "no_forward_or_optimizer_updates": true
+      },
+      {
+        "rank": 4,
+        "step": 2,
+        "passed": true,
+        "checked_tensors": 791,
+        "mismatches": [],
+        "no_forward_or_optimizer_updates": true
+      },
+      {
+        "rank": 5,
+        "step": 2,
+        "passed": true,
+        "checked_tensors": 791,
+        "mismatches": [],
+        "no_forward_or_optimizer_updates": true
+      },
+      {
+        "rank": 6,
+        "step": 2,
+        "passed": true,
+        "checked_tensors": 791,
+        "mismatches": [],
+        "no_forward_or_optimizer_updates": true
+      },
+      {
+        "rank": 7,
+        "step": 2,
+        "passed": true,
+        "checked_tensors": 791,
+        "mismatches": [],
+        "no_forward_or_optimizer_updates": true
+      }
+    ],
+    "world_size": 8,
+    "source_checkpoint": "/root/yoco/runs/yoco-swa-830m-baseline-8gpu-20261113T182844Z/baseline/checks/resumed/checkpoint_00000002.pt",
+    "model_optimizer_scaler_rng_bitwise_equal": true
+  },
+  "model_differences": {
+    "resumed": {
+      "max_absolute_difference": 1.8067657947540283e-06,
+      "relative_l2": 2.0856182329786218e-07
+    },
+    "independent_repeat": {
+      "max_absolute_difference": 1.378823071718216e-06,
+      "relative_l2": 2.0847717252971499e-07
+    }
+  },
+  "max_loss_difference": 1.9073486328125e-05,
+  "tolerances": {
+    "model_absolute": 2e-05,
+    "model_relative_l2": 2e-06,
+    "optimizer_atol": 1e-06,
+    "loss_absolute": 5e-05,
+    "RNG_scaler_steps_groups": "exact"
+  },
+  "completed_at": "2026-11-13T18:37:22.463333+00:00"
+}

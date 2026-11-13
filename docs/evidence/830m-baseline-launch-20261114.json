@@ -1,0 +1,298 @@
+{
+  "recorded_at": "2026-11-13T18:39:53.720655+00:00",
+  "authorized_scope": "SWA830M baseline then gated-retention830M baseline; no A/B",
+  "gret_state": "prepared_and_waiting_for_predecessor",
+  "variants": {
+    "SWA": {
+      "run_dir": "/root/yoco/runs/yoco-swa-830m-baseline-8gpu-20261113T182844Z",
+      "actual_parameters": 838315008,
+      "unchanged_sections": {
+        "architecture": true,
+        "training": true,
+        "data": true,
+        "seed": true,
+        "tied_embeddings": true,
+        "execution": true
+      },
+      "model_changes": {
+        "dim": {
+          "before": 1024,
+          "after": 1536
+        },
+        "hidden_dim": {
+          "before": 2816,
+          "after": 4608
+        },
+        "n_self_heads": {
+          "before": 16,
+          "after": 12
+        },
+        "n_attn_heads": {
+          "before": 16,
+          "after": 12
+        },
+        "n_attn_kv_heads": {
+          "before": 16,
+          "after": 12
+        }
+      },
+      "release_manifest_sha256": "fe33823635e2998d869146bbe3ccb2684ebb023dbab6218426bfdf143c129fbf",
+      "guard_contract": {
+        "architecture": "YOCO-SWA",
+        "scale": "830M",
+        "config_sha256": {
+          "baseline": "b483a16418996dd6ed37b427acb654b7b3252f25990c493e02d67dd2da8340a1"
+        },
+        "release_manifest_sha256": "fe33823635e2998d869146bbe3ccb2684ebb023dbab6218426bfdf143c129fbf",
+        "data_manifest_sha256": "090868c9e65f7042d8126c420803eabcbb7381d552912956e4c802477d53f0ba",
+        "no_training_setting_changes": true,
+        "arm_order": [
+          "baseline"
+        ]
+      },
+      "initialization_sha256": "5ac020570359c4c29230cf87ffab0c2e43549e081b6d3813eff3d7e531006c05"
+    },
+    "gRet": {
+      "run_dir": "/root/yoco/runs/yoco-gret-830m-baseline-8gpu-20261113T183312Z",
+      "actual_parameters": 866737152,
+      "unchanged_sections": {
+        "architecture": true,
+        "training": true,
+        "data": true,
+        "seed": true,
+        "tied_embeddings": true,
+        "execution": true
+      },
+      "model_changes": {
+        "dim": {
+          "before": 1024,
+          "after": 1536
+        },
+        "hidden_dim": {
+          "before": 2816,
+          "after": 4608
+        },
+        "n_self_heads": {
+          "before": 4,
+          "after": 6
+        },
+        "n_attn_heads": {
+          "before": 16,
+          "after": 12
+        },
+        "n_attn_kv_heads": {
+          "before": 16,
+          "after": 12
+        }
+      },
+      "release_manifest_sha256": "b95350c938c0351c8c813c5ef499263879253855ba68ce8c9283d4a4346e3b17",
+      "guard_contract": {
+        "architecture": "YOCO-gRet",
+        "scale": "830M",
+        "config_sha256": {
+          "baseline": "f8faa6e411f06967afda38ea8759fb252a54ba1390d03f211a5f420048cbb9cd"
+        },
+        "release_manifest_sha256": "b95350c938c0351c8c813c5ef499263879253855ba68ce8c9283d4a4346e3b17",
+        "data_manifest_sha256": "090868c9e65f7042d8126c420803eabcbb7381d552912956e4c802477d53f0ba",
+        "no_training_setting_changes": true,
+        "arm_order": [
+          "baseline"
+        ]
+      },
+      "initialization_sha256": "e4e9d14dca53b50e1990e46072101d6f752c51c8cae07d6b7ad3354845dfa8ef"
+    }
+  },
+  "swa_eight_gpu_restore": {
+    "passed": true,
+    "world_size": 8,
+    "real_data": true,
+    "split_resume_step": 2,
+    "final_step": 4,
+    "exact_pre_forward_restore": {
+      "passed": true,
+      "ranks": [
+        {
+          "rank": 0,
+          "step": 2,
+          "passed": true,
+          "checked_tensors": 791,
+          "mismatches": [],
+          "no_forward_or_optimizer_updates": true
+        },
+        {
+          "rank": 1,
+          "step": 2,
+          "passed": true,
+          "checked_tensors": 791,
+          "mismatches": [],
+          "no_forward_or_optimizer_updates": true
+        },
+        {
+          "rank": 2,
+          "step": 2,
+          "passed": true,
+          "checked_tensors": 791,
+          "mismatches": [],
+          "no_forward_or_optimizer_updates": true
+        },
+        {
+          "rank": 3,
+          "step": 2,
+          "passed": true,
+          "checked_tensors": 791,
+          "mismatches": [],
+          "no_forward_or_optimizer_updates": true
+        },
+        {
+          "rank": 4,
+          "step": 2,
+          "passed": true,
+          "checked_tensors": 791,
+          "mismatches": [],
+          "no_forward_or_optimizer_updates": true
+        },
+        {
+          "rank": 5,
+          "step": 2,
+          "passed": true,
+          "checked_tensors": 791,
+          "mismatches": [],
+          "no_forward_or_optimizer_updates": true
+        },
+        {
+          "rank": 6,
+          "step": 2,
+          "passed": true,
+          "checked_tensors": 791,
+          "mismatches": [],
+          "no_forward_or_optimizer_updates": true
+        },
+        {
+          "rank": 7,
+          "step": 2,
+          "passed": true,
+          "checked_tensors": 791,
+          "mismatches": [],
+          "no_forward_or_optimizer_updates": true
+        }
+      ],
+      "world_size": 8,
+      "source_checkpoint": "/root/yoco/runs/yoco-swa-830m-baseline-8gpu-20261113T182844Z/baseline/checks/resumed/checkpoint_00000002.pt",
+      "model_optimizer_scaler_rng_bitwise_equal": true
+    },
+    "model_differences": {
+      "resumed": {
+        "max_absolute_difference": 1.8067657947540283e-06,
+        "relative_l2": 2.0856182329786218e-07
+      },
+      "independent_repeat": {
+        "max_absolute_difference": 1.378823071718216e-06,
+        "relative_l2": 2.0847717252971499e-07
+      }
+    },
+    "max_loss_difference": 1.9073486328125e-05,
+    "tolerances": {
+      "model_absolute": 2e-05,
+      "model_relative_l2": 2e-06,
+      "optimizer_atol": 1e-06,
+      "loss_absolute": 5e-05,
+      "RNG_scaler_steps_groups": "exact"
+    },
+    "completed_at": "2026-11-13T18:37:22.463333+00:00"
+  },
+  "swa_all_rank_initial_training": [
+    {
+      "rank": 0,
+      "latest_step": 33,
+      "latest_loss": 10.41341495513916,
+      "normal_amp_retries": 0,
+      "nonfinite_forwards": 0
+    },
+    {
+      "rank": 1,
+      "latest_step": 33,
+      "latest_loss": 10.41341495513916,
+      "normal_amp_retries": 0,
+      "nonfinite_forwards": 0
+    },
+    {
+      "rank": 2,
+      "latest_step": 33,
+      "latest_loss": 10.41341495513916,
+      "normal_amp_retries": 0,
+      "nonfinite_forwards": 0
+    },
+    {
+      "rank": 3,
+      "latest_step": 33,
+      "latest_loss": 10.41341495513916,
+      "normal_amp_retries": 0,
+      "nonfinite_forwards": 0
+    },
+    {
+      "rank": 4,
+      "latest_step": 33,
+      "latest_loss": 10.41341495513916,
+      "normal_amp_retries": 0,
+      "nonfinite_forwards": 0
+    },
+    {
+      "rank": 5,
+      "latest_step": 33,
+      "latest_loss": 10.41341495513916,
+      "normal_amp_retries": 0,
+      "nonfinite_forwards": 0
+    },
+    {
+      "rank": 6,
+      "latest_step": 33,
+      "latest_loss": 10.41341495513916,
+      "normal_amp_retries": 0,
+      "nonfinite_forwards": 0
+    },
+    {
+      "rank": 7,
+      "latest_step": 33,
+      "latest_loss": 10.41341495513916,
+      "normal_amp_retries": 0,
+      "nonfinite_forwards": 0
+    }
+  ],
+  "swa_guard_state": {
+    "recoveries": [],
+    "state": "monitoring",
+    "updated_at": "2026-11-13T18:39:45.758508+00:00",
+    "controller_pid": 2371624,
+    "stage": "baseline-eval-smoke",
+    "arm": "baseline",
+    "completed_step": 36
+  },
+  "queue": {
+    "created_at": "2026-11-13T18:34:26.481128+00:00",
+    "order": [
+      "SWA830M baseline",
+      "gRet830M baseline"
+    ],
+    "tasks": [
+      {
+        "id": "gret-830m-baseline",
+        "kind": "gret-830m-baseline",
+        "run_dir": "/root/yoco/runs/yoco-gret-830m-baseline-8gpu-20261113T183312Z",
+        "after_run": "/root/yoco/runs/yoco-swa-830m-baseline-8gpu-20261113T182844Z",
+        "prepared": true,
+        "state": "waiting_for_predecessor"
+      }
+    ],
+    "heartbeat_at": "2026-11-13T18:39:32.907660+00:00"
+  },
+  "tests": {
+    "swa_contract_tests_passed": 3,
+    "gret_contract_tests_passed": 3,
+    "queue_tests_passed": 3
+  },
+  "original_training_runtime_modified": false,
+  "old_frozen_releases_modified": false,
+  "full_training_downstream_and_rendered_review_still_pending": true,
+  "note": "Snapshot at launch, not a completion claim. GPU gRet checks must run after the full SWA pipeline releases the queue.",
+  "swa_state": "formal_training"
+}

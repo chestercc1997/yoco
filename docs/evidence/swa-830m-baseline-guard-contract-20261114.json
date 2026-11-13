@@ -1,0 +1,13 @@
+{
+  "architecture": "YOCO-SWA",
+  "scale": "830M",
+  "config_sha256": {
+    "baseline": "b483a16418996dd6ed37b427acb654b7b3252f25990c493e02d67dd2da8340a1"
+  },
+  "release_manifest_sha256": "fe33823635e2998d869146bbe3ccb2684ebb023dbab6218426bfdf143c129fbf",
+  "data_manifest_sha256": "090868c9e65f7042d8126c420803eabcbb7381d552912956e4c802477d53f0ba",
+  "no_training_setting_changes": true,
+  "arm_order": [
+    "baseline"
+  ]
+}

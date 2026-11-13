@@ -1,5 +1,17 @@
 # 用户执行约束（2026-10-29）
 
+## 2026-11-14 下一档 SWA / gRet 830M baseline 授权
+
+- **SWA830M已正式接续40k训练，gRet830M已持久排队**：SWA run `runs/yoco-swa-830m-baseline-8gpu-20261113T182844Z`，tmux `yoco-swa-830m-baseline-8gpu`；八卡恢复/独立重复/前向前完整状态按位加载和eval smoke均通过。gRet run `runs/yoco-gret-830m-baseline-8gpu-20261113T183312Z` 已完成CPU预检与冻结，队列tmux `yoco-830m-baseline-queue` 正常等待，尚未执行GPU预检或训练。启动证据 `docs/evidence/830m-baseline-launch-20261114.json`；不得重复启动、误报gRet已训练或两组已完成。
+- 用户在确认SWA400M三组完成后要求“下一个档位的baseline模型是多大的，帮我开始训练”，随后明确“830m分别跑SWA和gated retention”。授权 **SWA830M baseline → gRet830M baseline** 串行完整训练和下游；没有授权新830M A/B。旧160M/400M实验不得重跑。
+- 官方论文Appendix D/Table7：830M档位dim1536、24层、12个attention heads；YOCO FFN为3d即4608，SWA窗口1024。实际参数量以CPU预检为准。新seed42随机初始化，不加载任何已训练模型；保留未训练初始化以便未来获授权的A/B使用。
+- 配置 `configs/yoco_830m_swa_baseline_8gpu.json`。training/data/seed/tied embeddings/execution逐项等于已完成SWA400M baseline；40k步、原FP16 mixed/FP32参数、8卡microbatch4/accum4、262144tokens/步、原LR/AMP/验证配方、每5000步完整保存并全部保留均不改。新规模所需的模型宽度、FFN和heads是本次明确授权的架构调整。
+- 先CPU因果性/有限梯度/重复seed初始化/SWA窗口与cache预检，再真实数据八卡0→2→4、连续与独立重复、前向前完整状态按位恢复和下游接口smoke；通过后接续40k步、八项完整下游并自动导出图表。沿用原容差，不因新规模放宽。
+- ACTIVE `runs/setup/swa-830m-baseline-active.json`，准备记录 `runs/setup/swa-830m-baseline-preparation.json`。`tools/run_swa_830m_baseline.py`及`watch_swa_830m_baseline.py`冻结配置/代码，复用已验证的有界全状态恢复逻辑，最多两次回退；正常AMP重试不触发回滚，重复异常留证并停下诊断。启动状态必须查实际ACTIVE/日志，不能把预检或后台启动说成已完成。
+- 新实验继续使用用户批准的FineWeb-Edu数据配方；官方档位与超参数来源不等于官方原始训练语料的严格复刻。旧冻结release不可修改。
+- SWA实际838315008参数，gRet实际866737152参数。gRet同为24层/dim1536/FFN4608，retention heads6（head dim256）、attention/KV heads12，无sliding_window；保留新seed42初始化，training/data/execution仍与既定400M配方一致，保留原已验证retention/AMP修复代码SHA。
+- gRet入口 `tools/run_gret_830m_baseline.py`、`watch_gret_830m_baseline.py`，准备记录 `runs/setup/gret-830m-baseline-preparation.json`，ACTIVE `runs/setup/gret-830m-baseline-active.json`仅实际启动时写入。持久队列 `runs/setup/830m-baseline-training-queue.json` 由 `tools/run_830m_baseline_queue.py`管理，必须确认SWA40k、八项完整下游、报告导出全部成功且GPU空闲才启动gRet八卡检查/训练。排队不能说成已开始训练。
+
 ## 2026-11-14 SWA 400M三组完成与发布
 
 - **SWA400M baseline/A/B全部完成，禁止重跑**：run `runs/yoco-swa-400m-ab-8gpu-20261111T054430Z`，三组各40000步及八项完整零样本下游，root/三组PIPELINE_SUCCESS齐全，自动导出于北京时间2026-11-13 13:10完成。GPU已空闲，没有授权启动其他新实验。

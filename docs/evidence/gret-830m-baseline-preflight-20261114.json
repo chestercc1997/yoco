@@ -1,0 +1,46 @@
+{
+  "passed": true,
+  "architecture": "YOCO-gRet",
+  "scale": "830M",
+  "model": {
+    "dim": 1536,
+    "n_layers": 24,
+    "hidden_dim": 4608,
+    "n_self_heads": 6,
+    "n_attn_heads": 12,
+    "n_attn_kv_heads": 12,
+    "vocab_size": 100288,
+    "max_seq_len": 2048,
+    "model_parallel_size": 1,
+    "rope_theta": 10000.0,
+    "norm_eps": 1e-05
+  },
+  "parameters": {
+    "baseline": 866737152
+  },
+  "common_weights_bitwise_equal": true,
+  "repeated_seed_initialization_bitwise_equal": true,
+  "initialization_origin": "fresh random seed42; no trained checkpoint loaded",
+  "training_data_execution_match_gret400m": true,
+  "all_gradients_finite": true,
+  "probe_loss": 29.30537223815918,
+  "causality_prefix_max_abs": 0.0,
+  "repaired_runtime_verified": true,
+  "repaired_runtime_sha256": {
+    "runtime/train.py": "47991278fafdbf4bb588521adf47b8ee28de2ec94bac954b0ae9c22b90f49b02",
+    "runtime/yoco_official/backend.py": "d8c025c5bd4e06e3f4d2977daaf636efb11beccc767d052c20b773e793973065",
+    "runtime/yoco_official/gate_retention.py": "e317190116956b878c7cef85c2874d4e8dadaa962cb07311711544dd4f1c4259"
+  },
+  "incremental_cache_checks": {
+    "tokenwise_max_abs": 9.5367431640625e-07,
+    "chunkwise_max_abs": 9.5367431640625e-07
+  },
+  "initializations": {
+    "baseline": {
+      "path": "/root/yoco/runs/setup/gret-830m-baseline-initializations/baseline.pt",
+      "sha256": "e4e9d14dca53b50e1990e46072101d6f752c51c8cae07d6b7ad3354845dfa8ef"
+    }
+  },
+  "official_setting_source": "https://arxiv.org/html/2405.05254v2#A4",
+  "reproduction_boundary": "Official 830M architecture dimensions and 3d FFN; existing approved FineWeb-Edu recipe, not original paper corpus."
+}

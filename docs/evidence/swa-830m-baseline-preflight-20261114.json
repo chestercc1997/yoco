@@ -1,0 +1,42 @@
+{
+  "passed": true,
+  "architecture": "YOCO-SWA",
+  "scale": "830M",
+  "model": {
+    "dim": 1536,
+    "n_layers": 24,
+    "hidden_dim": 4608,
+    "n_self_heads": 12,
+    "n_attn_heads": 12,
+    "n_attn_kv_heads": 12,
+    "vocab_size": 100288,
+    "max_seq_len": 2048,
+    "model_parallel_size": 1,
+    "rope_theta": 10000.0,
+    "norm_eps": 1e-05,
+    "sliding_window": 1024
+  },
+  "parameters": {
+    "baseline": 838315008
+  },
+  "common_weights_bitwise_equal": true,
+  "repeated_seed_initialization_bitwise_equal": true,
+  "initialization_origin": "fresh random seed42; no trained checkpoint loaded",
+  "training_data_execution_match_swa400m": true,
+  "all_gradients_finite": true,
+  "probe_loss": 24.10939598083496,
+  "causality_prefix_max_abs": 0.0,
+  "window_boundary_1024_passed": true,
+  "incremental_cache_checks": {
+    "tokenwise_max_abs": 1.430511474609375e-06,
+    "chunkwise_max_abs": 9.5367431640625e-07
+  },
+  "initializations": {
+    "baseline": {
+      "path": "/root/yoco/runs/setup/swa-830m-baseline-initializations/baseline.pt",
+      "sha256": "5ac020570359c4c29230cf87ffab0c2e43549e081b6d3813eff3d7e531006c05"
+    }
+  },
+  "official_setting_source": "https://arxiv.org/html/2405.05254v2#A4",
+  "reproduction_boundary": "Official 830M architecture dimensions and 3d FFN; existing approved FineWeb-Edu recipe, not original paper corpus."
+}
