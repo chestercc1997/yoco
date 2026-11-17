@@ -1,0 +1,13 @@
+{
+  "architecture": "YOCO-gRet",
+  "scale": "830M",
+  "config_sha256": {
+    "baseline": "f5e7646a385cffdec2778184024e44e02f51dda1f56af089eb676bdfc4013069"
+  },
+  "release_manifest_sha256": "98a70a4a037aa1652128e00c7315d96fce4197f8c568758aa0ae983737c20bec",
+  "data_manifest_sha256": "090868c9e65f7042d8126c420803eabcbb7381d552912956e4c802477d53f0ba",
+  "no_training_setting_changes": true,
+  "arm_order": [
+    "baseline"
+  ]
+}

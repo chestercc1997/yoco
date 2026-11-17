@@ -16,9 +16,19 @@ full zero-shot evaluations and report export. The gated-retention baseline
 baselines are scheduled, with no new A/B runs.
 The established SWA400M training/data/precision/execution recipe is unchanged;
 full checkpoints are retained every5,000 updates, with bounded automatic recovery.
-Each variant preserves its existing execution settings. See the
+Initial runs used their existing execution settings; the November17 repair
+adjustments are recorded below. See the
 [serial queue and status pointers](docs/BASELINE_830M_QUEUE.md) and
 [SWA configuration](docs/SWA_830M_BASELINE.md).
+
+November17 update: SWA830M completed40,000 updates and all eight downstream
+tasks (validation loss2.798173, macro50.7677%); its report still awaits rendered
+review and publication. The gRet830M run stopped after two bounded replays of a
+within-chunk FP16 overflow. A captured-failure repair has been validated and a
+new immutable continuation with deterministic attention backward and fixed
+DDP buckets passed the original eight-GPU restore checks with zero model/loss
+differences and resumed formal training from the full step5,000 checkpoint. See the [repair evidence and unchanged-recipe
+boundary](docs/GRET_830M_NUMERICAL_REPAIR.md).
 
 ## Completed SWA 160M baseline / A / B experiment
 

@@ -185,6 +185,12 @@ def main():
     torch.set_num_threads(2); torch.cuda.set_device(local)
     precision=t.get('precision','fp16_mixed_fp32_params'); configure_precision(precision)
     execution=c.get('execution',{})
+    if execution.get('deterministic_algorithms',False):
+        # Use deterministic attention backward / CUDA reductions for reproducible
+        # trained-checkpoint continuation; retain the configured precision.
+        if os.environ.get('CUBLAS_WORKSPACE_CONFIG') != ':4096:8':
+            raise RuntimeError('Deterministic execution requires CUBLAS_WORKSPACE_CONFIG=:4096:8 before CUDA initialization')
+        torch.use_deterministic_algorithms(True)
     if 'allow_tf32' in execution:
         torch.backends.cuda.matmul.allow_tf32=execution['allow_tf32']
         torch.backends.cudnn.allow_tf32=execution['allow_tf32']
@@ -262,7 +268,8 @@ def main():
     else:
         compiled=torch.compile(model,**compile_options) if execution.get('compile',False) else model
     loss_function=torch.compile(cross_entropy,**compile_options) if execution.get('compile_loss',False) else cross_entropy
-    train_model=DDP(compiled,device_ids=[local],broadcast_buffers=False,gradient_as_bucket_view=True) if world>1 else compiled
+    train_model=DDP(compiled,device_ids=[local],broadcast_buffers=False,gradient_as_bucket_view=True,
+        find_unused_parameters=execution.get('ddp_find_unused_parameters',False)) if world>1 else compiled
     log(run,rank,'started',step=step,world_size=world,parameters=sum(x.numel() for x in model.parameters()),synthetic=a.smoke,resumed=bool(checkpoint_path),precision=precision,execution=execution,checkpoint_every=t['checkpoint_every'],keep_last_checkpoints=keep_last)
     length=t['sequence_length']; micro=t['microbatch']; accum=t['gradient_accumulation']
     if manifest:

@@ -1,5 +1,18 @@
 # 用户执行约束（2026-10-29）
 
+## 2026-11-17 gRet830M数值修复并续训授权
+
+- 最新修复run为 `runs/yoco-gret-830m-baseline-repaired-20261117T065955Z`，八卡5000→5002→5004与连续/独立重复已通过原阈值，模型和loss差均0，恢复前模型/optimizer/scaler/八卡RNG按位相同。验收证据 `docs/evidence/gret-830m-repaired-resume-check-20261117.json`；最终正式训练启动状态以ACTIVE/日志为准。 正式训练已启动并超过5010步，八卡初段均有限；启动证据 `docs/evidence/gret-830m-repaired-launch-20261117.json`，禁止重复启动。
+
+- 用户明确要求“继续fix后继续跑gated retention830”。旧run `runs/yoco-gret-830m-baseline-8gpu-20261113T183312Z` 在6438/6494/5926尝试发生非有限前向，两次自动回退到5000后停止。旧release/checkpoint/故障现场全部保留，禁止原地修改旧release或清空状态重启。
+- SWA830M已完成40k及八项完整下游，valid2.798172951、macro50.7676569%，不重跑。其报告仍待渲染审阅发布，不将自动导出误称全部已发布。
+- 根因：第一层retention块内加权求和的FP16输出超出65504，原归一化前出现Inf；此前400M修复只覆盖跨块求和。新修复保留正常有限AMP路径，**仅对溢出块内结果**按原输入舍入、现有FP32状态累积dtype重算，现有RMSNorm后恢复原FP16接口。内部算术变化明确记录，不宣称逐位不变或通过全局改精度解决。
+- 三个故障快照均复现并修复，loss与FP32参考差<0.0002，完整模型梯度有限；独立FP64递推及梯度核验通过，正常控制批次loss/梯度与旧实现完全一致。前三个改变正常路径的候选未过0.5%梯度容差而被拒绝，最终候选不放宽容差。
+- 新入口 `tools/prepare_gret_830m_repaired.py`、`run_gret_830m_repaired.py`、`watch_gret_830m_repaired.py`，准备记录 `runs/setup/gret-830m-fixed-buckets-repair-preparation.json`；ACTIVE仍为 `runs/setup/gret-830m-baseline-active.json`，只在实际新controller启动时更新。续训来源原5000步完整CP，所有训练配方字段及optimizer/scaler/八卡RNG/数据步序保持原值；不加载故障诊断快照续训。
+- 原训练checkpoint的连续/恢复检查另发现注意力反向不确定性：独立SDPA复测Q梯度最大差0.0001220703；启用确定性算法后重复差为0。首次修复release的恢复检查未通过，未正式续训，不能放宽容差。新repair配置 `configs/yoco_830m_gret_baseline_repaired_8gpu.json` 仅在execution新增 `deterministic_algorithms=true` 和 `ddp_find_unused_parameters=true`，配套 `CUBLAS_WORKSPACE_CONFIG=:4096:8`；原training/data/model/精度全部相同。显式记录此执行路径变化，禁止冒称execution完全不变；仍须通过原八卡检查才接续。
+- 新release冻结健康1..5000步日志前缀，八卡5000→5002→5004、连续与独立重复、前向前原5000完整状态按位加载核验后，正式接续40k。原容差不变。每5000步保存，5000原CP保留在旧run、后续CP保留新run，导出器合并正确训练血统，不漏掉旧前缀也不混入失败后缀。
+- 原有有界自动恢复保留，新修复血统最多两次回退；新10000CP之前可回到已验证5004完整CP。重复故障留证停止诊断，不擅改任何setting。训练后继续八项完整下游和图表核验发布。
+
 ## 2026-11-14 下一档 SWA / gRet 830M baseline 授权
 
 - **SWA830M已正式接续40k训练，gRet830M已持久排队**：SWA run `runs/yoco-swa-830m-baseline-8gpu-20261113T182844Z`，tmux `yoco-swa-830m-baseline-8gpu`；八卡恢复/独立重复/前向前完整状态按位加载和eval smoke均通过。gRet run `runs/yoco-gret-830m-baseline-8gpu-20261113T183312Z` 已完成CPU预检与冻结，队列tmux `yoco-830m-baseline-queue` 正常等待，尚未执行GPU预检或训练。启动证据 `docs/evidence/830m-baseline-launch-20261114.json`；不得重复启动、误报gRet已训练或两组已完成。

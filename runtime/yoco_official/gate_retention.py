@@ -81,7 +81,7 @@ class GateRetention(nn.Module):
             else:
                 o = chunk_gate_retention(qr, kr, v, gt, chunk_size=256)
 
-        # Normalize the FP32 state accumulation before returning to the
+        # Normalize the FP32 within/cross-chunk accumulation before returning to the
         # original activation dtype; keep the mixed-precision block interface.
         o = self.subln(o).to(v.dtype).transpose(1, 2).reshape(bsz, tgt_len, self.num_heads * self.head_dim)
         o = swiglu(g, o)

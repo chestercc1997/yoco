@@ -1,0 +1,58 @@
+{
+  "device": "NVIDIA A100 80GB PCIe",
+  "dtype": "torch.float16",
+  "shape": [
+    4,
+    12,
+    2048,
+    128
+  ],
+  "causal": true,
+  "seed": 42,
+  "repeats": 3,
+  "CUBLAS_WORKSPACE_CONFIG": ":4096:8",
+  "default_backward_maximum_gradient_difference": {
+    "Q": 0.0001220703125,
+    "K": 0.0,
+    "V": 0.0
+  },
+  "deterministic_backward_maximum_gradient_difference": {
+    "Q": 0.0,
+    "K": 0.0,
+    "V": 0.0
+  },
+  "raw_log": "runs/setup/probe_sdpa_repeat.log",
+  "scope": "Operator diagnostic; full trained-checkpoint eight-GPU checks remain required.",
+  "trained_checkpoint_validation": {
+    "initial_overflow_only_release": "runs/yoco-gret-830m-baseline-repaired-20261117T061208Z",
+    "default_workspace_check": "validation-attempts/default-cublas-workspace",
+    "rejected_reason": "model/embed_tokens.weight failed original allclose threshold; no formal continuation started",
+    "workspace_only_check": "Stopped before formal continuation after attention operator nondeterminism was reproduced",
+    "deterministic_release": "runs/yoco-gret-830m-baseline-repaired-20261117T062925Z",
+    "deterministic_full_restore_check": "pending at record creation; see separate final resume proof when available",
+    "deterministic_only_release": "runs/yoco-gret-830m-baseline-repaired-20261117T062925Z",
+    "current_release": "runs/yoco-gret-830m-baseline-repaired-20261117T065955Z",
+    "deterministic_only_result": "Rejected: model maximum difference0.00018606 and relativeL2 0.000145705 exceeded original thresholds; no formal continuation started.",
+    "current_result": "PASSED original split/direct/repeat thresholds; full pre-forward model/optimizer/scaler/eight-rank RNG restored bitwise; formal continuation started."
+  },
+  "checkpoint_optimizer_audit": {
+    "update": 5003,
+    "source_step": 5000,
+    "split_step": 5002,
+    "original_parameters_bitwise_equal": true,
+    "original_moments_bitwise_equal": true,
+    "maximum_embedding_gradient_difference": 9.313225746154785e-10,
+    "maximum_embedding_post_update_difference": 7.450580596923828e-09,
+    "conclusion": "Tiny distributed gradient summation differences are amplified by subsequent FP16 steps; optimizer state loading itself matches.",
+    "raw_audit_directory": "runs/diagnostics/gret830-optimizer"
+  },
+  "bucket_rebuild_policy": {
+    "primary_local_source": "/root/miniconda3/envs/yoco/lib/python3.12/site-packages/torch/include/torch/csrc/distributed/c10d/reducer.hpp:145",
+    "expression": "(static_graph || !find_unused_parameters) && !has_rebuilt_bucket",
+    "execution_change": {
+      "ddp_find_unused_parameters": true,
+      "static_graph": false
+    },
+    "required_check": "Full eight-GPU split/direct/repeat and pre-forward state audit; original tolerances unchanged"
+  }
+}

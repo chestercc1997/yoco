@@ -1,0 +1,216 @@
+{
+  "recorded_at": "2026-11-17T07:12:58.792533+00:00",
+  "run_dir": "/root/yoco/runs/yoco-gret-830m-baseline-repaired-20261117T065955Z",
+  "source": {
+    "source_checkpoint": "/root/yoco/runs/yoco-gret-830m-baseline-8gpu-20261113T183312Z/baseline/checkpoint_00005000.pt",
+    "source_sha256": "8ec410c76c9eeaf5a7c24600bf58410de4878436b024d1ef3926a8dcca79bc57",
+    "source_step": 5000,
+    "source_run": "/root/yoco/runs/yoco-gret-830m-baseline-8gpu-20261113T183312Z",
+    "health": {
+      "path": "/root/yoco/runs/yoco-gret-830m-baseline-8gpu-20261113T183312Z/baseline/checkpoint_00005000.pt",
+      "step": 5000,
+      "sha256": "8ec410c76c9eeaf5a7c24600bf58410de4878436b024d1ef3926a8dcca79bc57",
+      "fingerprint": "76b8aef2ed8f382e666ff73605e9be7738f77c788e4890e328507c441834a07d",
+      "finite_tensors_checked": 885,
+      "full_optimizer_scaler_eight_rank_rng": true
+    },
+    "historical_prefix_rank_sha256": {
+      "0": "f81d28761a86513eea962e184d5c186f0cb29549c964c232803edcf702da30f3",
+      "1": "626505b0554e29d3551f117c0dbbc9adfccf961fb9a66337ab3b98bcb123a59f",
+      "2": "338c59706922da99bc709c149f67fd10e5b01b11a8d1a0811bbb90f700c50f35",
+      "3": "4828a5070af23581e9812f34e076edf4a016cd2892e193fa12ca29fd0ea13242",
+      "4": "6a47b8ff9f3e4d253013ae1d1aded0642d00ad013fa547687b9390f9f56f0bdb",
+      "5": "bd1f5078cf53dca6e21657610f35f6f553b4dfcd364d1fc54a01116885989b44",
+      "6": "c6aaa5a193825933d13dc061994d38cc7208997079985b4b0766bbc5bfc32943",
+      "7": "5a30180c1235b628abf616919c80a821b32eb2238df798f50de11ae47d19b8fb"
+    },
+    "model_repair_sha256": "403adf9ddfce17706e12b620c4a6dc7f4023906acb3459464ee47fa65e5d33e7",
+    "no_training_setting_changes": true,
+    "execution_change": {
+      "deterministic_algorithms": true,
+      "ddp_find_unused_parameters": true,
+      "CUBLAS_WORKSPACE_CONFIG": ":4096:8"
+    }
+  },
+  "resume_proof": {
+    "passed": true,
+    "world_size": 8,
+    "real_data": true,
+    "source_step": 5000,
+    "split_resume_step": 5002,
+    "final_step": 5004,
+    "exact_pre_forward_restore": {
+      "passed": true,
+      "ranks": [
+        {
+          "rank": 0,
+          "step": 5000,
+          "passed": true,
+          "checked_tensors": 887,
+          "mismatches": [],
+          "no_forward_or_optimizer_updates": true
+        },
+        {
+          "rank": 1,
+          "step": 5000,
+          "passed": true,
+          "checked_tensors": 887,
+          "mismatches": [],
+          "no_forward_or_optimizer_updates": true
+        },
+        {
+          "rank": 2,
+          "step": 5000,
+          "passed": true,
+          "checked_tensors": 887,
+          "mismatches": [],
+          "no_forward_or_optimizer_updates": true
+        },
+        {
+          "rank": 3,
+          "step": 5000,
+          "passed": true,
+          "checked_tensors": 887,
+          "mismatches": [],
+          "no_forward_or_optimizer_updates": true
+        },
+        {
+          "rank": 4,
+          "step": 5000,
+          "passed": true,
+          "checked_tensors": 887,
+          "mismatches": [],
+          "no_forward_or_optimizer_updates": true
+        },
+        {
+          "rank": 5,
+          "step": 5000,
+          "passed": true,
+          "checked_tensors": 887,
+          "mismatches": [],
+          "no_forward_or_optimizer_updates": true
+        },
+        {
+          "rank": 6,
+          "step": 5000,
+          "passed": true,
+          "checked_tensors": 887,
+          "mismatches": [],
+          "no_forward_or_optimizer_updates": true
+        },
+        {
+          "rank": 7,
+          "step": 5000,
+          "passed": true,
+          "checked_tensors": 887,
+          "mismatches": [],
+          "no_forward_or_optimizer_updates": true
+        }
+      ],
+      "world_size": 8,
+      "source_checkpoint": "/root/yoco/runs/yoco-gret-830m-baseline-8gpu-20261113T183312Z/baseline/checkpoint_00005000.pt",
+      "model_optimizer_scaler_rng_bitwise_equal": true
+    },
+    "model_differences": {
+      "resumed": {
+        "max_absolute_difference": 0.0,
+        "relative_l2": 0.0
+      },
+      "independent_repeat": {
+        "max_absolute_difference": 0.0,
+        "relative_l2": 0.0
+      }
+    },
+    "max_loss_difference": 0.0,
+    "tolerances": {
+      "model_absolute": 2e-05,
+      "model_relative_l2": 2e-06,
+      "optimizer_atol": 1e-06,
+      "loss_absolute": 5e-05,
+      "RNG_scaler_steps_groups": "exact"
+    },
+    "completed_at": "2026-11-17T07:10:35.432698+00:00"
+  },
+  "all_rank_initial_training": [
+    {
+      "rank": 0,
+      "latest_step": 5029,
+      "latest_loss": 3.332507371902466,
+      "nonfinite_forward_events": 0,
+      "AMP_retries": 0
+    },
+    {
+      "rank": 1,
+      "latest_step": 5029,
+      "latest_loss": 3.332507371902466,
+      "nonfinite_forward_events": 0,
+      "AMP_retries": 0
+    },
+    {
+      "rank": 2,
+      "latest_step": 5029,
+      "latest_loss": 3.332507371902466,
+      "nonfinite_forward_events": 0,
+      "AMP_retries": 0
+    },
+    {
+      "rank": 3,
+      "latest_step": 5029,
+      "latest_loss": 3.332507371902466,
+      "nonfinite_forward_events": 0,
+      "AMP_retries": 0
+    },
+    {
+      "rank": 4,
+      "latest_step": 5029,
+      "latest_loss": 3.332507371902466,
+      "nonfinite_forward_events": 0,
+      "AMP_retries": 0
+    },
+    {
+      "rank": 5,
+      "latest_step": 5029,
+      "latest_loss": 3.332507371902466,
+      "nonfinite_forward_events": 0,
+      "AMP_retries": 0
+    },
+    {
+      "rank": 6,
+      "latest_step": 5029,
+      "latest_loss": 3.332507371902466,
+      "nonfinite_forward_events": 0,
+      "AMP_retries": 0
+    },
+    {
+      "rank": 7,
+      "latest_step": 5029,
+      "latest_loss": 3.332507371902466,
+      "nonfinite_forward_events": 0,
+      "AMP_retries": 0
+    }
+  ],
+  "training_data_model_seed_precision_unchanged": true,
+  "execution_changes": {
+    "deterministic_algorithms": true,
+    "ddp_find_unused_parameters": true,
+    "CUBLAS_WORKSPACE_CONFIG": ":4096:8"
+  },
+  "new_runtime_matches_validated_frozen_runtime": true,
+  "guard": {
+    "recoveries": [],
+    "state": "monitoring",
+    "updated_at": "2026-11-17T07:12:57.381651+00:00",
+    "controller_pid": 3775457,
+    "stage": "baseline-eval-smoke",
+    "arm": "baseline",
+    "completed_step": 5029
+  },
+  "new_release_manifest_sha256": "98a70a4a037aa1652128e00c7315d96fce4197f8c568758aa0ae983737c20bec",
+  "checkpoint_policy": "5000-step schedule; original5000 checkpoint retained at source, subsequent scheduled checkpoints in new run",
+  "formal_training_and_full_downstream_still_pending": true,
+  "publication_checks": {
+    "regression_tests_passed": 4,
+    "backend_reference_tests_passed": true,
+    "whitespace_notice": "Single final blank line in frozen tools/gret830_recovery_support.py preserved; changing a running frozen module solely for formatting is intentionally avoided."
+  }
+}

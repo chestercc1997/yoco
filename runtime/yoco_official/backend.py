@@ -84,7 +84,15 @@ def chunk_gate_retention(q, k, v, g, chunk_size=256, last_hidden_state=None):
     gs = g.reshape(b, h, n, chunk_size).to(acc_dtype).cumsum(-1)
     lower = torch.ones(chunk_size, chunk_size, device=q.device, dtype=torch.bool).tril()
     decay = (gs[..., :, None] - gs[..., None, :]).masked_fill(~lower, -torch.inf).exp()
-    inner = ((qr @ kr.transpose(-1, -2)) * decay.to(q.dtype)) @ vr
+    scores = (qr @ kr.transpose(-1, -2)) * decay.to(q.dtype)
+    inner = scores @ vr
+    # Preserve the original AMP path exactly for representable outputs.
+    # Only an out-of-range weighted sum is recomputed in the existing FP32
+    # state accumulation dtype, before the unchanged RMSNorm/FP16 interface.
+    if not bool(torch.isfinite(inner).all()):
+        with torch.autocast(device_type=q.device.type, enabled=False):
+            wide = scores.to(vr.dtype).to(acc_dtype) @ vr.to(acc_dtype)
+            inner = torch.where(torch.isfinite(inner), inner.to(acc_dtype), wide)
     contributions = kr.transpose(-1, -2) @ (vr * (gs[..., -1, None] - gs).exp().to(v.dtype)[..., None])
     state = (torch.zeros((b, h, dk, v.shape[-1]), device=q.device, dtype=acc_dtype)
              if last_hidden_state is None else last_hidden_state.to(acc_dtype))

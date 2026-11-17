@@ -4,6 +4,8 @@
 
 2026-11-14启动状态：SWA已通过全部八卡预检和评测smoke，进入正式40k训练；gRet已通过CPU预检并冻结，持久队列等待SWA全流程完成。两组均未完成训练；[启动与队列证据](evidence/830m-baseline-launch-20261114.json)。
 
+2026-11-17更新：SWA已完成40k和八项完整下游，valid2.798172951、macro50.7676569%；报告待渲染审阅发布。gRet接续后因块内数值溢出触发两次回退并停止；用户已授权[修复后从原5000步完整checkpoint继续](GRET_830M_NUMERICAL_REPAIR.md)，以ACTIVE指向的新修复run为准。
+
 | 档位 | 实际参数量 | 层数 | dim / FFN | self heads / cross heads | 结构 |
 | --- | ---: | ---: | --- | --- | --- |
 | SWA830M | 838315008 | 24 | 1536 / 4608 | 12 / 12 | window1024 |
