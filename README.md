@@ -7,28 +7,13 @@ and figures. Checkpoints and training data are intentionally excluded.
 
 ## SWA and gated-retention 830M baselines
 
-The next official scaling tier after 400M is **830M**. This baseline has
-**838,315,008 actual parameters**, 24 layers, hidden dimension1536, FFN4608,
-12 attention heads and SWA window1024. It starts from a fresh seed42 initialization.
-The eight-A100 pipeline performs resume checks before 40,000 updates, then eight
-full zero-shot evaluations and report export. The gated-retention baseline
-(866,737,152 actual parameters) is queued after the full SWA pipeline; only
-baselines are scheduled, with no new A/B runs.
-The established SWA400M training/data/precision/execution recipe is unchanged;
-full checkpoints are retained every5,000 updates, with bounded automatic recovery.
-Initial runs used their existing execution settings; the November17 repair
-adjustments are recorded below. See the
-[serial queue and status pointers](docs/BASELINE_830M_QUEUE.md) and
-[SWA configuration](docs/SWA_830M_BASELINE.md).
-
-November17 update: SWA830M completed40,000 updates and all eight downstream
-tasks (validation loss2.798173, macro50.7677%); its report still awaits rendered
-review and publication. The gRet830M run stopped after two bounded replays of a
-within-chunk FP16 overflow. A captured-failure repair has been validated and a
-new immutable continuation with deterministic attention backward and fixed
-DDP buckets passed the original eight-GPU restore checks with zero model/loss
-differences and resumed formal training from the full step5,000 checkpoint. See the [repair evidence and unchanged-recipe
-boundary](docs/GRET_830M_NUMERICAL_REPAIR.md).
+The 830M SWA baseline (838,315,008 parameters) completed 40,000 updates and
+eight downstream evaluations. The gated-retention baseline (866,737,152
+parameters) is paused after a nonfinite forward at update 9,793. The state-write
+repair passed replay of the full failed batch on eight GPUs. The verified full
+recovery checkpoint is at step 5,004. See the [baseline settings and FP16
+audit](docs/YOCO_BASELINE_AUDIT.md), [queue history](docs/BASELINE_830M_QUEUE.md)
+and [SWA configuration](docs/SWA_830M_BASELINE.md).
 
 ## Completed SWA 160M baseline / A / B experiment
 

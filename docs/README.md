@@ -2,10 +2,7 @@
 
 ## A/B 结果与历史执行计划
 
-- [830M 第 9793 步状态写入修复与历史异常归因](GRET_9793_AND_HISTORICAL_FAILURES.md)记录故障回放、八卡恢复，以及 160M 和 400M 的证据边界。
-- [400M FP16 溢出与加速策略对照](GRET_400M_ACCELERATION_AUDIT.md)核对 160M/400M 训练历史、故障快照和普通/融合 AdamW 更新。
-- [gated retention NaN/Inf 根因审计](GRET_NUMERICAL_ROOT_CAUSE.md)：跨块/块内FP16溢出、AMP计数bug、真实baseline现场回放、未定位历史异常及与官方YOCO/DeepSeek-V4.1的比较边界。
-- [gRet830M数值修复与完整状态续训](GRET_830M_NUMERICAL_REPAIR.md)：块内FP16求和溢出、三份故障快照回放、原5000步完整状态接续和不改训练setting的边界。
+- [160M–830M baseline 配方与 FP16 溢出](YOCO_BASELINE_AUDIT.md)汇总六组模型与论文的差异、已验证的根因和两次未定因的历史异常。
 - [830M SWA → gated retention baseline队列](BASELINE_830M_QUEUE.md)：两个新授权baseline，依次八卡预检、40k步、八项下游和有界恢复；[SWA详细设置](SWA_830M_BASELINE.md)。
 - [SWA 400M baseline/A/B完整结果](SWA_400M_AB.md)：三组40000步及24项全量下游已完成；最终表格、七组图和checkpoint/AMP/评测核验。
 
