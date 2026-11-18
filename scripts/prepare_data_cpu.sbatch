@@ -21,7 +21,7 @@ p=Path('runs/setup'); p.mkdir(parents=True,exist_ok=True)
  'host':socket.gethostname(),'status':'running','started_unix':time.time()},indent=2)+'\n')
 PY
 trap 'python -c '\''import json; from pathlib import Path; p=Path("runs/setup/data_job.json"); d=json.loads(p.read_text()); d["status"]="failed"; p.write_text(json.dumps(d,indent=2)+"\n")'\''' ERR
-bash scripts/prepare_local_data.sh
+bash scripts/prepare_local_data.sh --historical-ab
 python - <<'PY'
 import json, time
 from pathlib import Path

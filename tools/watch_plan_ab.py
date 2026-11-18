@@ -14,7 +14,7 @@ import subprocess
 import sys
 import tarfile
 import time
-from deploy_fusion_2gpu import ROOT, BASE, ENV, SKILL
+from hpc3_watch_settings import ROOT, BASE, ENV, SKILL
 
 STATE=ROOT/'runs/setup/plan-ab-publish-watcher.json'
 ACTIVE={'PENDING','RUNNING','CONFIGURING','COMPLETING','SUSPENDED','RESIZING','REQUEUED','UNKNOWN'}

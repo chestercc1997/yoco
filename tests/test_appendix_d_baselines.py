@@ -16,7 +16,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from runtime.model import build_model, tokenizer
 from runtime.train import Tokens
-from tools import prepare_data
+from tools import prepare_data, verify_data
 from tools.yoco_samples import SamplePacker, document_segments
 
 
@@ -48,6 +48,15 @@ class AppendixDBaselineTests(unittest.TestCase):
             self.assertFalse((base / 'manifest.json').exists())
             self.assertEqual(json.loads(path.read_text()), config)
             manifest = json.loads(output.read_text())
+            with patch.object(verify_data, 'sha256', wraps=prepare_data.sha256) as digest:
+                verify_data.verify_configs([path, path])
+                self.assertEqual(digest.call_count, 2)
+            incompatible = root / 'other.json'
+            for key, value in [('revision', 'wrong'), ('packing', 'stream')]:
+                other = dict(config, data=dict(config['data'], **{key: value}))
+                incompatible.write_text(json.dumps(other))
+                with self.assertRaisesRegex(ValueError, key):
+                    verify_data.verify_configs([path, incompatible])
             for split in ('train', 'validation'):
                 ds = Tokens(manifest, split, 4, 42)
                 self.assertEqual(ds.sample(0).tolist(), [0] + tokenizer().encode(docs[0]['text'])[:4])

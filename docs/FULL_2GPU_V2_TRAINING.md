@@ -31,7 +31,7 @@ runs/yoco-160m-fusion-token-2gpu-full-20261101-v2
 ## 入口与监测
 
 - [续训脚本](../scripts/full_2gpu_inside.sh)
-- [部署与提交工具](../tools/deploy_full_2gpu.py)
+- [部署与提交工具](https://github.com/chestercc1997/yoco/blob/ea889a5892034eab5ee37f70cb279dc171ca5371/tools/deploy_full_2gpu.py)
 - 当前提交记录：`runs/setup/full-v2-active-jobs.json`
 - 后台状态：`runs/setup/full-v2-watcher.json`
 

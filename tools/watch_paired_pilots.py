@@ -10,7 +10,7 @@ import shlex
 import subprocess
 import sys
 import time
-from deploy_fusion_2gpu import ROOT, BASE, ENV, SKILL
+from hpc3_watch_settings import ROOT, BASE, ENV, SKILL
 
 STATE=ROOT/'runs/setup/paired-v2-watcher.json'
 RECORDS=[ROOT/'runs/setup'/('submitted-'+tag+'.json') for tag in ('baseline-2gpu-20261101-v2','fusion-token-2gpu-20261101-v2')]

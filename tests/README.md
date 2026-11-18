@@ -3,10 +3,9 @@
 Run from the repository root in an environment with the project's PyTorch dependencies:
 
 ```bash
-python tests/test_plan_ab_kv.py
-python tests/test_memory_fusion.py
-python tests/test_conditional_kv.py
-python tests/test_training_guard.py
+python -m unittest discover -s tests -p 'test_*.py'
+python tests/test_backend.py
+python tests/test_transformer.py
 ```
 
 `test_plan_ab_kv.py` covers all six source layers, global versus input-dependent
