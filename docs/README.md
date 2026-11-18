@@ -3,6 +3,8 @@
 从头训练使用[六份 Appendix D 配置](../configs/appendix_d)。模型选择、数据准备和八卡入口见[仓库首页](../README.md)。
 
 ## A/B 结果与历史执行计划
+
+- [160M 新配方八组训练计划](PLAN_160M_RAW_KV.md)覆盖 SWA 与 gRet 的 baseline、raw A/B 及双查询深度注意力 C。
 - [YOCO 与 VertiKV 的末段训练效率](VERTIKV_TRAINING_EFFICIENCY.md)汇总四套完成对照的最后 200 步和 VertiKV 四个已公开档位。
 
 - [160M–830M baseline 配方与 FP16 溢出](YOCO_BASELINE_AUDIT.md)汇总六组模型与论文的差异、已验证的根因和两次未定因的历史异常。

@@ -220,6 +220,7 @@ class CrossDecoder(nn.Module):
         memory=None,
         memory_sources=None,
         memory_weights=None,
+        value_weights=None,
     ):
         bsz, seqlen, embed_dim = x.size()
         if memory is not None and memory.shape != x.shape:
@@ -230,6 +231,8 @@ class CrossDecoder(nn.Module):
         else:
             if memory is not None or memory_weights is None or memory_weights.shape != (bsz, seqlen, len(memory_sources)):
                 raise ValueError('Invalid conditional memory sources or weights')
+            if value_weights is not None and value_weights.shape != memory_weights.shape:
+                raise ValueError('Invalid value routing weights')
             key = value = None
             for i, source in enumerate(memory_sources):
                 if source.shape != x.shape:
@@ -238,7 +241,8 @@ class CrossDecoder(nn.Module):
                 k, v = self.k_proj(norm), self.v_proj(norm)
                 weight = memory_weights[..., i, None].to(k.dtype)
                 key = k * weight if key is None else key + k * weight
-                value = v * weight if value is None else value + v * weight
+                v_weight = weight if value_weights is None else value_weights[..., i, None].to(v.dtype)
+                value = v * v_weight if value is None else value + v * v_weight
         key = key.view(bsz, seqlen, self.num_heads, self.head_dim)
         value = value.view(bsz, seqlen, self.num_heads, self.head_dim)
         rel_pos = self.build_rel_pos(x, start_pos)

@@ -1,5 +1,10 @@
 # 用户执行约束（2026-10-29）
 
+## 160M Appendix D 八组训练（2026-11-18）
+
+用户重新授权 160M 新配方从头训练。每种 self-decoder 各四组，依次为 baseline、raw A、raw B 与独立的 Attention Residual 风格 C。两个 baseline 先行，详见 `docs/PLAN_160M_RAW_KV.md`。当前 cohort 为 `runs/appendix-d-160m-raw-v1`，启动器 `scripts/run_160m_raw_kv.sh`。先检查队列、日志和 GPU，实际开跑及完成以本 cohort 证据为准。此前旧配方、旧编号和已暂停的 830M 分属其他实验。
+
+
 ## 2026-11-17 gRet830M数值修复并续训授权
 
 - 最新修复run为 `runs/yoco-gret-830m-baseline-repaired-20261117T065955Z`，八卡5000→5002→5004与连续/独立重复已通过原阈值，模型和loss差均0，恢复前模型/optimizer/scaler/八卡RNG按位相同。验收证据 `docs/evidence/gret-830m-repaired-resume-check-20261117.json`；最终正式训练启动状态以ACTIVE/日志为准。 正式训练已启动并超过5010步，八卡初段均有限；启动证据 `docs/evidence/gret-830m-repaired-launch-20261117.json`，禁止重复启动。

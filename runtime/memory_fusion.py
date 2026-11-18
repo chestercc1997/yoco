@@ -8,6 +8,9 @@ from torch import nn
 from .yoco_official import YOCO
 
 
+KV_MODES = {'learned_kv', 'conditional_kv', 'raw_learned_kv', 'raw_conditional_kv', 'depth_attention_kv'}
+
+
 @dataclass(frozen=True)
 class FusionConfig:
     mode: str
@@ -23,7 +26,7 @@ class FusionConfig:
         if unknown:
             raise ValueError(f'Unknown memory_fusion fields: {sorted(unknown)}')
         mode = value.get('mode', 'last')
-        if mode not in {'last', 'mean', 'static', 'token', 'learned_kv', 'conditional_kv'}:
+        if mode not in {'last', 'mean', 'static', 'token'} | KV_MODES:
             raise ValueError('Unknown fusion mode')
         layers = value.get('source_layers', [model_args.n_layers // 2])
         if not isinstance(layers, (list, tuple)) or not layers:
@@ -41,6 +44,8 @@ class FusionConfig:
         temperature = value.get('temperature', 1.0)
         if isinstance(temperature, bool) or not isinstance(temperature, (int, float)) or not math.isfinite(temperature) or temperature <= 0:
             raise ValueError('temperature must be finite and positive')
+        if mode in {'raw_learned_kv', 'raw_conditional_kv', 'depth_attention_kv'} and temperature != 1:
+            raise ValueError('This routing mode requires unit temperature')
         initial = value.get('initial_weights')
         if initial is not None:
             if mode not in {'token', 'static'}:
@@ -60,9 +65,14 @@ class DepthMemoryFusion(nn.Module):
         super().__init__()
         self.config, self.eps = config, eps
         count = len(config.source_layers)
-        if config.mode == 'conditional_kv':
+        if config.mode == 'depth_attention_kv':
+            self.key_query = nn.Parameter(torch.zeros(dim))
+            self.value_query = nn.Parameter(torch.zeros(dim))
+        elif config.mode == 'raw_learned_kv':
+            self.weights = nn.Parameter(torch.full((count,), 1 / count))
+        elif config.mode in {'conditional_kv', 'raw_conditional_kv'}:
             self.score = nn.Parameter(torch.zeros(dim))
-            self.layer_bias = nn.Parameter(torch.zeros(count))
+            self.layer_bias = nn.Parameter(torch.full((count,), 1 / count if config.mode == 'raw_conditional_kv' else 0.0))
         elif config.mode == 'token':
             self.router = nn.Linear(dim, count)
             # All mixture controls start uniformly; no routing randomness.
@@ -91,6 +101,8 @@ class DepthMemoryFusion(nn.Module):
         return (logits.float() / self.config.temperature).softmax(-1).to(final.dtype)
 
     def conditional_weights(self, states):
+        if self.config.mode == 'raw_learned_kv':
+            return self.weights.expand(*states[-1].shape[:-1], -1)
         if self.config.mode == 'learned_kv':
             # Six global learned weights, shared across tokens and examples.
             weights = (self.logits.float() / self.config.temperature).softmax(-1)
@@ -101,7 +113,21 @@ class DepthMemoryFusion(nn.Module):
             normalized = x * torch.rsqrt(x.square().mean(-1, keepdim=True) + self.eps)
             scores.append((normalized * self.score.float()).sum(-1) / math.sqrt(x.shape[-1]))
         logits = torch.stack(scores, dim=-1) + self.layer_bias.float()
+        if self.config.mode == 'raw_conditional_kv':
+            return logits
         return (logits / self.config.temperature).softmax(-1)
+
+    def depth_attention_weights(self, states):
+        keys, values = [], []
+        for state in states:
+            x = state.float()
+            normalized = x * torch.rsqrt(x.square().mean(-1, keepdim=True) + self.eps)
+            keys.append((normalized * self.key_query).sum(-1))
+            values.append((normalized * self.value_query).sum(-1))
+        scale = math.sqrt(states[-1].shape[-1])
+        key_weights = (torch.stack(keys, -1) / scale).softmax(-1)
+        value_weights = (torch.stack(values, -1) / scale).softmax(-1)
+        return key_weights, value_weights
 
     def forward(self, states):
         if len(states) != len(self.config.source_layers):
@@ -132,12 +158,16 @@ class MemoryFusionYOCO(YOCO):
             is_prefilling=is_prefilling,
             return_layers=self.memory_fusion.config.source_layers,
         )
-        if self.memory_fusion.config.mode in {'learned_kv', 'conditional_kv'}:
-            weights = self.memory_fusion.conditional_weights(states)
+        if self.memory_fusion.config.mode in KV_MODES:
+            value_weights = None
+            if self.memory_fusion.config.mode == 'depth_attention_kv':
+                weights, value_weights = self.memory_fusion.depth_attention_weights(states)
+            else:
+                weights = self.memory_fusion.conditional_weights(states)
             x = self.cross_decoder(final, start_pos=start_pos,
                                    incremental_state=incremental_state,
                                    skip_cross_decoder=skip_cross_decoder,
-                                   memory_sources=states, memory_weights=weights)
+                                   memory_sources=states, memory_weights=weights, value_weights=value_weights)
             return self.output_layer(self.layer_norm(x)), None
         memory = self.memory_fusion(states)
         # Query stream remains the original final self-decoder output.
