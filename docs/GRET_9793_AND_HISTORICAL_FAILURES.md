@@ -27,6 +27,17 @@
 
 830M 正式训练仍暂停。用于诊断的快照仅保存故障状态；未来接续应使用原 5004 步**完整** checkpoint 和含本轮修复的新代码。恢复入口校验 checkpoint 和变更文件的 SHA；仅替换后端的恢复还要求整份配置一致。旧训练目录和故障快照均保留。[既往现场复测](evidence/gret-state-write-prior-snapshots.json) · [八卡故障步回放](evidence/gret-830m-state-write-full-update.json) · [八卡恢复证据](evidence/gret-830m-state-write-exact-restore.json) · [验证脚本](../tools/check_gret_9793.py)
 
+## 官方计算路径在同一输入上的结果
+
+在 A100 上提取本地 9793 步快照第一层的 Q、K、V 和门值，沿用该现场的 256-token 分块，调用微软公开的 `cross_chunk`。在递推内核入口读取刚算出的状态增量，两次均使用同一组源张量。BF16 对照将 V 和门值按 BF16 舍入，再在 BF16 autocast 下计算。被检查的是同一个位置 `[0,5,5,211,57]`。
+
+| 官方状态增量计算的执行方式 | 该位置的值 | 整个增量张量的非有限元素数 |
+| --- | ---: | ---: |
+| FP16 autocast | Inf | 1 |
+| BF16 autocast | 66048 | 0 |
+
+这将归因进一步缩小到状态增量写回 FP16 的边界。保留官方乘法表达式，也能用本地权重产生同一个 Inf。微软公开的预训练命令推荐 BF16，65911 附近的幅度处于其有限范围内。这里仅验证状态写入；本机 Triton 未能编译该版本后续递推函数中的类型注解，因此没有得到完整官方内核或从头训练的对照结果。官方源文件 SHA-256 为 `5ffe76f10feb2789c460893357f7ffc7510b5c16c460071535ab2a25e88e090e`。[官方内核](https://github.com/microsoft/unilm/blob/master/YOCO/yoco/models/decoder/kernel/gate_recurrent.py) · [官方预训练说明](https://github.com/microsoft/unilm/blob/master/YOCO/README.md#pretraining-from-scratch)
+
 ## 400M A 第 14311 步为何重放不出原故障
 
 原训练日志记录 rank 3 前向 loss 非有限。可用的 14310 步快照来自**后来重放**。本次逐步对齐两条运行的 rank 0 日志，比较从同一 10000 步 checkpoint 接续后的共同区段。
