@@ -3,6 +3,7 @@
 从头训练使用[六份 Appendix D 配置](../configs/appendix_d)。模型选择、数据准备和八卡入口见[仓库首页](../README.md)。
 
 ## A/B 结果与历史执行计划
+- [YOCO 与 VertiKV 的末段训练效率](VERTIKV_TRAINING_EFFICIENCY.md)汇总四套完成对照的最后 200 步和 VertiKV 四个已公开档位。
 
 - [160M–830M baseline 配方与 FP16 溢出](YOCO_BASELINE_AUDIT.md)汇总六组模型与论文的差异、已验证的根因和两次未定因的历史异常。
 - [830M SWA → gated retention baseline队列](BASELINE_830M_QUEUE.md)：两个新授权baseline，依次八卡预检、40k步、八项下游和有界恢复；[SWA详细设置](SWA_830M_BASELINE.md)。
