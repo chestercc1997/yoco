@@ -1,0 +1,101 @@
+{
+  "snapshot": "/root/yoco/runs/yoco-gret-830m-baseline-8gpu-20261113T183312Z/baseline/nonfinite_forward_00005926_rank4.pt",
+  "failure_update": 5926,
+  "captured_layer": "self_decoder.layers.0.mixer",
+  "weights_all_finite": true,
+  "inputs": {
+    "q": {
+      "dtype": "torch.float32",
+      "nonfinite": 0,
+      "finite_max_abs": 19.923341751098633
+    },
+    "k": {
+      "dtype": "torch.float32",
+      "nonfinite": 0,
+      "finite_max_abs": 18.604307174682617
+    },
+    "v": {
+      "dtype": "torch.float16",
+      "nonfinite": 0,
+      "finite_max_abs": 139.25
+    },
+    "g": {
+      "dtype": "torch.float16",
+      "nonfinite": 0,
+      "finite_max_abs": 2.84375
+    }
+  },
+  "operations": {
+    "scores": {
+      "dtype": "torch.float32",
+      "nonfinite": 0,
+      "finite_max_abs": 102.73062133789062
+    },
+    "inner_fp16": {
+      "dtype": "torch.float16",
+      "nonfinite": 14,
+      "finite_max_abs": 65088.0
+    },
+    "inner_fp32_reference": {
+      "dtype": "torch.float32",
+      "nonfinite": 0,
+      "finite_max_abs": 72390.8828125
+    },
+    "contributions": {
+      "dtype": "torch.float16",
+      "nonfinite": 0,
+      "finite_max_abs": 815.5
+    },
+    "final_state": {
+      "dtype": "torch.float32",
+      "nonfinite": 0,
+      "finite_max_abs": 278.5
+    },
+    "cross_fp32": {
+      "dtype": "torch.float32",
+      "nonfinite": 0,
+      "finite_max_abs": 48484.71484375
+    }
+  },
+  "first_overflow_in_inner_matmul": true,
+  "diagnostic_only_precision_comparison": {
+    "old_fp16": {
+      "raw": {
+        "dtype": "torch.float32",
+        "nonfinite": 14,
+        "finite_max_abs": 65088.0
+      },
+      "normalized": {
+        "dtype": "torch.float16",
+        "nonfinite": 14,
+        "finite_max_abs": 15.984375
+      }
+    },
+    "old_bf16_diagnostic": {
+      "raw": {
+        "dtype": "torch.float32",
+        "nonfinite": 0,
+        "finite_max_abs": 72192.0
+      },
+      "normalized": {
+        "dtype": "torch.bfloat16",
+        "nonfinite": 0,
+        "finite_max_abs": 16.0
+      }
+    },
+    "current_fp16": {
+      "raw": {
+        "dtype": "torch.float32",
+        "nonfinite": 0,
+        "finite_max_abs": 72390.8828125
+      },
+      "normalized": {
+        "dtype": "torch.float16",
+        "nonfinite": 0,
+        "finite_max_abs": 15.984375
+      }
+    }
+  },
+  "training_updates": 0,
+  "backend_sha256": "814f18beda70bed8bbc98c068409c17dc73e06998771c4e389fcc5c67495f89f"
+}

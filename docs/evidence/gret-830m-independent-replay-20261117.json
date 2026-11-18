@@ -1,0 +1,63 @@
+{
+  "passed": true,
+  "source_checkpoint": "/root/yoco/runs/yoco-gret-830m-baseline-8gpu-20261113T183312Z/baseline/checkpoint_00005000.pt",
+  "source_checkpoint_sha256": "8ec410c76c9eeaf5a7c24600bf58410de4878436b024d1ef3926a8dcca79bc57",
+  "model_source_changes": {
+    "yoco_official/backend.py": {
+      "before": "d8c025c5bd4e06e3f4d2977daaf636efb11beccc767d052c20b773e793973065",
+      "after": "814f18beda70bed8bbc98c068409c17dc73e06998771c4e389fcc5c67495f89f"
+    },
+    "yoco_official/gate_retention.py": {
+      "before": "e317190116956b878c7cef85c2874d4e8dadaa962cb07311711544dd4f1c4259",
+      "after": "197abe9a9adbcd377363d59a7761b686bc5e0708e8defa20ab7a4151e1da501d"
+    }
+  },
+  "failures": [
+    {
+      "snapshot": "/root/yoco/runs/yoco-gret-830m-baseline-8gpu-20261113T183312Z/baseline/nonfinite_forward_00005926_rank4.pt",
+      "sha256": "ff04f4a6da81d60d1b34839e4ad04b3be2d7078990977cf1ae991a1272763c28",
+      "failure_update": 5926,
+      "old_nonfinite_reproduced": true,
+      "fixed_loss": 3.4144065380096436,
+      "fp32_reference_loss": 3.414433717727661,
+      "loss_abs_difference": 2.7179718017578125e-05,
+      "all_model_gradients_finite": true
+    },
+    {
+      "snapshot": "/root/yoco/runs/yoco-gret-830m-baseline-8gpu-20261113T183312Z/baseline/recovery-attempts/001/nonfinite_forward_00006438_rank6.pt",
+      "sha256": "1e85178fa30951f8e6ee11d88468b5160767a590ec13142353800835c1b5f0f6",
+      "failure_update": 6438,
+      "old_nonfinite_reproduced": true,
+      "fixed_loss": 3.330815315246582,
+      "fp32_reference_loss": 3.3306431770324707,
+      "loss_abs_difference": 0.00017213821411132812,
+      "all_model_gradients_finite": true
+    },
+    {
+      "snapshot": "/root/yoco/runs/yoco-gret-830m-baseline-8gpu-20261113T183312Z/baseline/recovery-attempts/002/nonfinite_forward_00006494_rank3.pt",
+      "sha256": "fbf916817a694a4a1ff7fed95f0c94774e4d5054ffa1f7075c82dc70f9fa0a2e",
+      "failure_update": 6494,
+      "old_nonfinite_reproduced": true,
+      "fixed_loss": 3.102327346801758,
+      "fp32_reference_loss": 3.1021368503570557,
+      "loss_abs_difference": 0.00019049644470214844,
+      "all_model_gradients_finite": true
+    }
+  ],
+  "independent_float64_forward_backward_passed": true,
+  "normal_range": {
+    "losses": {
+      "legacy": 3.2734789848327637,
+      "fixed": 3.2734789848327637
+    },
+    "gradient_relative_l2": 0.0,
+    "tolerances": {
+      "loss_abs": 0.001,
+      "gradient_relative_l2": 0.005
+    }
+  },
+  "repair": "Keep original finite AMP path exactly; recompute only out-of-range within-chunk sums in existing FP32 state dtype before unchanged RMSNorm/FP16 interface.",
+  "training_setting_changes": {},
+  "internal_arithmetic_change_explicit": true,
+  "no_training_updates_performed": true
+}
