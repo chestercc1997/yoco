@@ -1,0 +1,38 @@
+{
+  "snapshot_sha256": "b73408c0117d1f41b16c2b3472f74e39d4014e98fc4ee466c59484ef1f9e6b47",
+  "backend_sha256": "814f18beda70bed8bbc98c068409c17dc73e06998771c4e389fcc5c67495f89f",
+  "snapshot": "runs/yoco-400m-A-8gpu-repaired-20261106/nonfinite_forward_00024935_rank0.pt",
+  "runtime_root": ".",
+  "update": 24935,
+  "rank": 0,
+  "microbatch": 1,
+  "loss_scale": 512.0,
+  "precision": "fp16_mixed_fp32_params",
+  "compile": false,
+  "optimizer_steps": 0,
+  "gpu": "NVIDIA A100 80GB PCIe",
+  "torch": "2.7.1+cu126",
+  "cases": [
+    {
+      "checkpoint_activations": false,
+      "first_norm_input_nonfinite": 0,
+      "logits_dtype": "torch.float16",
+      "logits_nonfinite": 0,
+      "loss": "2.970219612121582",
+      "gradient_tensors": 222,
+      "nonfinite_gradient_norms": [],
+      "unscaled_microbatch_grad_norm": 0.41733506321907043
+    },
+    {
+      "checkpoint_activations": true,
+      "first_norm_input_nonfinite": 0,
+      "logits_dtype": "torch.float16",
+      "logits_nonfinite": 0,
+      "loss": "2.970219612121582",
+      "gradient_tensors": 222,
+      "nonfinite_gradient_norms": [],
+      "unscaled_microbatch_grad_norm": 0.4173312783241272
+    }
+  ],
+  "passed": true
+}

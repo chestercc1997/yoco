@@ -1,0 +1,23 @@
+{
+  "checkpoint": "runs/yoco-400m-A-8gpu-repaired-20261106/checkpoint_00020000.pt",
+  "checkpoint_sha256": "7c82eefeb5db702d59c4de11a184f1cac9407e49a43a1f6d83cafa55cf9c9939",
+  "update": 20001,
+  "global_samples": 128,
+  "single_gpu_accumulation": true,
+  "precision": "fp16_mixed_fp32_params",
+  "scale": 16384.0,
+  "learning_rate": 7.570599369085174e-05,
+  "preclip_grad_norm": 0.2854233682155609,
+  "next_microbatch_loss": {
+    "plain": 3.200054407119751,
+    "fused": 3.2001001834869385
+  },
+  "max_absolute_differences": {
+    "param": 1.1920928955078125e-07,
+    "step": 0.0,
+    "exp_avg": 5.820766091346741e-11,
+    "exp_avg_sq": 9.094947017729282e-13
+  },
+  "all_parameters_and_optimizer_states_finite": true,
+  "checkpoints_written": 0
+}
