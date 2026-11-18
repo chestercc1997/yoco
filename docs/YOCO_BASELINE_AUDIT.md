@@ -2,7 +2,7 @@
 
 **已定位的 gRet 前向溢出已修复。** 这批实验复现了论文的小模型训练规模和大部分优化器设置。影响结果可比性的主要差异是 400M 的前馈层宽度、本地语料与样本构造、输入输出权重共享，以及混合精度和算子实现。只有最后一项已在故障快照上建立了与前向 Inf 的因果关系。
 
-## 六组 baseline 与论文如何对应
+## 已有六组 baseline 与论文如何对应
 
 三个档位各有 gated retention（gRet）和滑动窗口注意力（SWA）两组。下表取自六组实际运行的 `resolved_config.json`，并与下列配置逐项比对。另直接读取六份 checkpoint（五份 40000 步、一份 5004 步），核验每层 FFN 权重形状，以及输入输出权重是否共享存储。小模型的对照依据是论文 §4.2 和附录 D；官方 README 给出的是通用预训练命令，附录 C 则描述另一套 3B 实验。[论文 §4.2](https://arxiv.org/html/2405.05254v2#S4.SS2) · [附录 D，表 7](https://arxiv.org/html/2405.05254v2#A4)
 
@@ -23,6 +23,23 @@
 | 输入输出权重 | 六组均绑定 token embedding 与输出投影。微软公开建模入口调用 YOCO 时沿用默认的独立权重。绑定改变参数量，并让输入和输出两路梯度更新同一张表。附录 D 未单列论文小模型实际使用的绑定开关。[本地入口](../runtime/model.py) · [官方入口](https://github.com/microsoft/unilm/blob/ca43e4cd19445a536f133bf2bc25b573b2f0c7c5/YOCO/yoco/models/yoco.py) · [官方解码器](https://github.com/microsoft/unilm/blob/ca43e4cd19445a536f133bf2bc25b573b2f0c7c5/YOCO/yoco/models/decoder/yoco.py) |
 | 精度与执行 | 本地为保持既有 A/B 对照，使用 FP16 混合精度、FP32 参数和动态 loss scale，并采用 PyTorch 替代后端。微软公开预训练命令使用并推荐 BF16，附录 D 未逐档披露 dtype。本地六组均用 fused AdamW 并关闭激活重算；正式对照中的 160M gRet 启用了编译，其余五组关闭编译。[官方预训练命令](https://github.com/microsoft/unilm/blob/ca43e4cd19445a536f133bf2bc25b573b2f0c7c5/YOCO/README.md#pretraining-from-scratch) · [本地后端](../runtime/yoco_official/backend.py) |
 | 其他超参数 | 本地 AdamW ε=10⁻⁸、梯度裁剪阈值 1.0、末端学习率 0、seed 42。官方 README 示例 ε=10⁻⁶、裁剪阈值 2.0；附录 D 未给出这几项的逐档值。可确认与示例的差别，论文小模型的实际取值仍未知。[官方示例](https://github.com/microsoft/unilm/blob/ca43e4cd19445a536f133bf2bc25b573b2f0c7c5/YOCO/README.md#pretraining-from-scratch) · [论文附录 D](https://arxiv.org/html/2405.05254v2#A4) |
+
+## 2816 的来源与后续 baseline 配置
+
+核对仓库锁定的微软提交 `ca43e4cd`，其 `YOCO/` 树中没有随代码发布的 160M、400M、830M 分档配置文件。官方建模入口把调用方的 `hidden_dim`（或外部 `params.json` 的值）传入解码器，FFN 按该值创建权重。论文附录 D 单独规定了 YOCO 的 FFN 宽度为 `3d`。本地首次添加 400M A 和参考 baseline 的提交 `ebf4c7b` 在两个 JSON 中都显式写入 2816；当时的预检比较 A 与本地参考 baseline 的公共配置和初始化，未校验论文公式。之后的 400M baseline 沿用了这个宽度。提交记录可以确定数值的来源，没有给出选择 2816 的计算依据。[官方模型入口](https://github.com/microsoft/unilm/blob/ca43e4cd19445a536f133bf2bc25b573b2f0c7c5/YOCO/yoco/models/yoco.py) · [官方 FFN](https://github.com/microsoft/unilm/blob/ca43e4cd19445a536f133bf2bc25b573b2f0c7c5/YOCO/yoco/models/decoder/feedforward_network.py) · [本地首次配置](https://github.com/chestercc1997/yoco/commit/ebf4c7b5085268d03a22da33e749f6fa0b8bf2c1)
+
+[六份新配置](../configs/appendix_d)供从头训练使用。FFN 分别为 2304、3072、4608，输入 embedding 和输出投影采用官方入口默认的独立权重。400M gRet 和 SWA 的实际总参数分别为 **522,160,128** 和 **509,528,064**；“400M”沿用论文规模档位名称。两张权重表的选择会改变总参数量，也改变梯度流向。旧配置和 checkpoint 保留历史定义。
+
+新数据格式在每个来源分片内分行编码、文末加 EOS，每条记录以 BOS 开始。按官方加载器的严格溢出条件截到 2049 个 token，丢弃溢出行的剩余部分和分片末尾待发出的尾样本。训练器整条读取记录，再错位一位构造输入与标签。用锁定的微软分词器和加载器对同一批 FineWeb 原文逐 token 核对，1000 篇训练文档输出 494 条样本，13 篇验证文档输出 8 条，全部一致。两种新 400M 模型均通过 A100 上真实长度 2048 的 FP16 前反向检查。[切块实现](../tools/yoco_samples.py) · [配置与边界测试](../tests/test_appendix_d_baselines.py)
+
+这些新配置仍使用本地 FineWeb-Edu 来源、哈希验证集划分、确定性样本顺序和 FP16 配方。微软没有在上述固定版本中提供论文小模型逐样本的语料清单，切块对照验证的是**同一原文对应的训练样本**。新旧权重形状、参数绑定和数据指纹不同，应各用独立训练目录。本次仅做样本及模型验证，未重建全量语料或启动新一轮训练。
+
+在仓库根目录，以下命令用已下载的固定版本原始 parquet 生成六组共用的独立样本 manifest，并校验分片。新格式输出到 `data/fineweb_edu_10bt/yoco_samples_2048/`。从头训练的入口为 `runtime.train --config configs/appendix_d/<规模>_<gret或swa>.json --run-dir <新目录>`，采用既定八卡启动方式。
+
+```bash
+python tools/prepare_data.py --offline --config configs/appendix_d/400m_gret.json
+python tools/verify_data.py --config configs/appendix_d/400m_gret.json
+```
 
 ## 为什么前向会出现 Inf
 

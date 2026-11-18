@@ -64,15 +64,24 @@ def backoff_loss_scaler(scaler):
 class Tokens:
     def __init__(self, manifest, split, length, seed):
         self.seed, self.length = seed, length
+        packing = manifest.get('packing', 'stream')
+        if packing not in ('stream', 'yoco_samples'):
+            raise ValueError(f'Unknown token packing: {packing}')
+        if packing == 'yoco_samples' and manifest.get('sequence_length') != length:
+            raise ValueError('YOCO packed record length differs from the training configuration')
+        self.stride = length + 1 if packing == 'yoco_samples' else length
         self.arrays, self.ends = [], []
         count = 0
         for row in manifest['shards']:
             p = Path(row[split]['path'])
             if p.stat().st_size != row[split]['tokens'] * 4:
                 raise ValueError(f'Incomplete token shard {p}')
-            arr = np.memmap(p, mode='r', dtype='<u4')
-            blocks = max(0, (len(arr)-1)//length)
+            tokens = row[split]['tokens']
+            if packing == 'yoco_samples' and tokens % self.stride:
+                raise ValueError(f'Truncated YOCO sample in {p}')
+            blocks = tokens // self.stride if packing == 'yoco_samples' else max(0, (tokens-1)//length)
             if blocks:
+                arr = np.memmap(p, mode='r', dtype='<u4')
                 self.arrays.append(arr); count += blocks; self.ends.append(count)
         self.count = count
         if not count: raise ValueError('Dataset has no full sequences')
@@ -85,7 +94,7 @@ class Tokens:
         while math.gcd(a, self.count) != 1: a = (a + 1) % self.count or 1
         pos = (a*pos + rng.randrange(self.count)) % self.count
         shard = int(np.searchsorted(self.ends, pos, side='right'))
-        offset = (pos - (self.ends[shard-1] if shard else 0)) * self.length
+        offset = (pos - (self.ends[shard-1] if shard else 0)) * self.stride
         return torch.from_numpy(np.array(self.arrays[shard][offset:offset+self.length+1], dtype=np.int64))
 
 
@@ -207,6 +216,8 @@ def main():
         if not c['data']['approved'] or not c['data']['manifest']: raise RuntimeError('Training data choice/preparation is not complete')
         manifest=json.loads(Path(c['data']['manifest']).read_text())
         if not manifest.get('ready'): raise RuntimeError('Dataset manifest is not ready')
+        if c['data'].get('packing','stream') != manifest.get('packing','stream'):
+            raise RuntimeError('Prepared data packing differs from the requested recipe')
     resolved={'config':c,'synthetic_smoke':a.smoke,'world_size':world,'data':manifest}
     identity={'model':c['model'],'tied_embeddings':c['tied_embeddings'],'seed':c['seed'],'training':t,'data':manifest,'synthetic':a.smoke,'world_size':world}
     if 'memory_fusion' in c:

@@ -8,8 +8,14 @@ import argparse
 parser=argparse.ArgumentParser();parser.add_argument('--config',type=Path,required=True);a=parser.parse_args()
 c=json.loads(a.config.read_text())
 manifest=Path(c['data']['manifest'])
-if not manifest.is_absolute(): manifest=a.config.resolve().parents[1]/manifest
+if not manifest.is_absolute():
+    base = ROOT if c['data'].get('packing') == 'yoco_samples' else a.config.resolve().parents[1]
+    manifest = base / manifest
 m=json.loads(manifest.read_text());assert m['ready']
+if m.get('packing','stream') != c['data'].get('packing','stream'):
+    raise RuntimeError('Data packing differs from config')
+if m.get('packing') == 'yoco_samples' and m.get('sequence_length') != c['training']['sequence_length']:
+    raise RuntimeError('Packed record length differs from config')
 for row in m['shards']:
     for split in ('train','validation'):
         x=row[split];p=Path(x['path'])

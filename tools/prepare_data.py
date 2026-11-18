@@ -53,6 +53,9 @@ def main():
     if args.workers < 1: parser.error('--workers must be positive')
     c=json.loads(args.config.read_text())
     if not c['data']['approved']: raise SystemExit('Data selection is pending; no training corpus downloaded.')
+    packing = c['data'].get('packing', 'stream')
+    if packing not in ('stream', 'yoco_samples'):
+        raise ValueError(f'Unknown token packing: {packing}')
     candidate=json.loads((ROOT/'provenance/fineweb_candidate.json').read_text())
     if c['data']['dataset']!=candidate['id'] or c['data']['subset']!='sample-10BT' or c['data']['revision']!=candidate['sha']: raise SystemExit('Candidate mismatch')
     revision=candidate['sha']; repo=candidate['id']; base=ROOT/'data/fineweb_edu_10bt';base.mkdir(parents=True,exist_ok=True)
@@ -71,9 +74,16 @@ def main():
     import shutil
     # Reserve room for downloaded parquet, uint32 tokens and safe working space.
     required=sum(x['bytes'] for x in inventory)+(55<<30)
-    if not (base/'manifest.json').exists() and shutil.disk_usage(base).free<required:
+    output = base
+    if packing == 'yoco_samples':
+        length = c['training']['sequence_length']
+        output = base / f'yoco_samples_{length}'
+        if Path(c['data']['manifest']).resolve() != (output/'manifest.json').resolve():
+            raise ValueError('Config must reference the dedicated YOCO sample manifest')
+    if not (output/'manifest.json').exists() and shutil.disk_usage(base).free<required:
         raise RuntimeError(f'Insufficient disk space for data preparation: need {required} bytes free')
-    atomic_json(base/'raw_manifest.json',{'dataset':repo,'revision':revision,'files':inventory})
+    if packing == 'stream':
+        atomic_json(base/'raw_manifest.json',{'dataset':repo,'revision':revision,'files':inventory})
     tasks=[]
     for entry in inventory:
         existing=base/'raw'/entry['path']
@@ -91,6 +101,10 @@ def main():
                 if attempt==7: raise
                 time.sleep(min(60,5*2**attempt))
         tasks.append((raw,Path(entry['path']).stem,entry['sha256'],revision)); print(json.dumps({'event':'downloaded','file':entry['path']}),flush=True)
+    if packing == 'yoco_samples':
+        from tools.yoco_samples import prepare_packed_manifest
+        prepare_packed_manifest(tasks, output, length, args.workers, c['data'])
+        return
     with concurrent.futures.ProcessPoolExecutor(max_workers=args.workers) as pool: records=list(pool.map(tokenize_shard,tasks))
     manifest={'ready':True,'dataset':repo,'subset':'sample-10BT','revision':revision,'shards':records,
               'dtype':'little_endian_uint32','tokenizer':'official YOCO cl100k_base wrapper, vocab=100288, normal IDs+4, EOS=2',
