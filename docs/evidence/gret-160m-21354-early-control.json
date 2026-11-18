@@ -1,0 +1,295 @@
+{
+  "checkpoint_step": 100,
+  "batch": "global_train",
+  "global_update": 21354,
+  "sequence_indices": [
+    2733184,
+    2733185,
+    2733186,
+    2733187,
+    2733188,
+    2733189,
+    2733190,
+    2733191,
+    2733192,
+    2733193,
+    2733194,
+    2733195,
+    2733196,
+    2733197,
+    2733198,
+    2733199,
+    2733200,
+    2733201,
+    2733202,
+    2733203,
+    2733204,
+    2733205,
+    2733206,
+    2733207,
+    2733208,
+    2733209,
+    2733210,
+    2733211,
+    2733212,
+    2733213,
+    2733214,
+    2733215,
+    2733216,
+    2733217,
+    2733218,
+    2733219,
+    2733220,
+    2733221,
+    2733222,
+    2733223,
+    2733224,
+    2733225,
+    2733226,
+    2733227,
+    2733228,
+    2733229,
+    2733230,
+    2733231,
+    2733232,
+    2733233,
+    2733234,
+    2733235,
+    2733236,
+    2733237,
+    2733238,
+    2733239,
+    2733240,
+    2733241,
+    2733242,
+    2733243,
+    2733244,
+    2733245,
+    2733246,
+    2733247,
+    2733248,
+    2733249,
+    2733250,
+    2733251,
+    2733252,
+    2733253,
+    2733254,
+    2733255,
+    2733256,
+    2733257,
+    2733258,
+    2733259,
+    2733260,
+    2733261,
+    2733262,
+    2733263,
+    2733264,
+    2733265,
+    2733266,
+    2733267,
+    2733268,
+    2733269,
+    2733270,
+    2733271,
+    2733272,
+    2733273,
+    2733274,
+    2733275,
+    2733276,
+    2733277,
+    2733278,
+    2733279,
+    2733280,
+    2733281,
+    2733282,
+    2733283,
+    2733284,
+    2733285,
+    2733286,
+    2733287,
+    2733288,
+    2733289,
+    2733290,
+    2733291,
+    2733292,
+    2733293,
+    2733294,
+    2733295,
+    2733296,
+    2733297,
+    2733298,
+    2733299,
+    2733300,
+    2733301,
+    2733302,
+    2733303,
+    2733304,
+    2733305,
+    2733306,
+    2733307,
+    2733308,
+    2733309,
+    2733310,
+    2733311
+  ],
+  "torch": "2.7.1+cu126",
+  "cuda": "12.6",
+  "gpu": "NVIDIA A100 80GB PCIe",
+  "no_optimizer_updates": true,
+  "cases": [
+    {
+      "name": "fp32",
+      "scale": 1.0,
+      "loss": 8.805206298828125,
+      "gradient_norm": 0.8914246566436729,
+      "nonfinite_parameters": [],
+      "largest_parameter_gradients": [
+        [
+          "embed_tokens.weight",
+          0.8807550668716431
+        ],
+        [
+          "layer_norm.weight",
+          0.06154639646410942
+        ],
+        [
+          "cross_decoder.layers.5.ffn.fc2.weight",
+          0.033790454268455505
+        ],
+        [
+          "cross_decoder.layers.4.ffn.fc2.weight",
+          0.0327773243188858
+        ],
+        [
+          "cross_decoder.layers.3.ffn.fc2.weight",
+          0.03037017211318016
+        ],
+        [
+          "cross_decoder.layers.5.mixer.out_proj.weight",
+          0.02926928922533989
+        ],
+        [
+          "cross_decoder.v_proj.weight",
+          0.027724333107471466
+        ],
+        [
+          "cross_decoder.layers.4.mixer.out_proj.weight",
+          0.026973333209753036
+        ],
+        [
+          "cross_decoder.layers.2.ffn.fc2.weight",
+          0.026761917397379875
+        ],
+        [
+          "cross_decoder.layers.3.mixer.out_proj.weight",
+          0.02557196654379368
+        ]
+      ],
+      "seconds": 23.22556000901386
+    },
+    {
+      "name": "fp16_scale16",
+      "scale": 16.0,
+      "loss": 8.805187225341797,
+      "gradient_norm": 0.8959747395062614,
+      "nonfinite_parameters": [],
+      "largest_parameter_gradients": [
+        [
+          "embed_tokens.weight",
+          0.8822348117828369
+        ],
+        [
+          "layer_norm.weight",
+          0.0683356299996376
+        ],
+        [
+          "cross_decoder.v_proj.weight",
+          0.045485854148864746
+        ],
+        [
+          "cross_decoder.layers.5.ffn.fc2.weight",
+          0.034350164234638214
+        ],
+        [
+          "cross_decoder.layers.4.ffn.fc2.weight",
+          0.03401514142751694
+        ],
+        [
+          "cross_decoder.layers.3.ffn.fc2.weight",
+          0.03192727640271187
+        ],
+        [
+          "cross_decoder.layers.5.mixer.out_proj.weight",
+          0.03005378507077694
+        ],
+        [
+          "cross_decoder.layers.2.ffn.fc2.weight",
+          0.02842973731458187
+        ],
+        [
+          "cross_decoder.layers.4.mixer.out_proj.weight",
+          0.02822432480752468
+        ],
+        [
+          "cross_decoder.layers.3.mixer.out_proj.weight",
+          0.027221569791436195
+        ]
+      ],
+      "relative_gradient_l2": 0.17067702611760782,
+      "gradient_cosine": 0.985521616697293,
+      "seconds": 5.328281911090016
+    },
+    {
+      "name": "fp16_scale128",
+      "scale": 128.0,
+      "loss": 8.805187225341797,
+      "gradient_norm": 0.8898202372216786,
+      "nonfinite_parameters": [],
+      "largest_parameter_gradients": [
+        [
+          "embed_tokens.weight",
+          0.8805285692214966
+        ],
+        [
+          "layer_norm.weight",
+          0.0528230182826519
+        ],
+        [
+          "cross_decoder.layers.5.ffn.fc2.weight",
+          0.031386811286211014
+        ],
+        [
+          "cross_decoder.layers.4.ffn.fc2.weight",
+          0.03072236105799675
+        ],
+        [
+          "cross_decoder.layers.3.ffn.fc2.weight",
+          0.028644274920225143
+        ],
+        [
+          "cross_decoder.layers.5.mixer.out_proj.weight",
+          0.027249174192547798
+        ],
+        [
+          "cross_decoder.layers.2.ffn.fc2.weight",
+          0.025470588356256485
+        ],
+        [
+          "cross_decoder.layers.4.mixer.out_proj.weight",
+          0.025278829038143158
+        ],
+        [
+          "cross_decoder.v_proj.weight",
+          0.025200245901942253
+        ],
+        [
+          "cross_decoder.layers.3.mixer.out_proj.weight",
+          0.02413587085902691
+        ]
+      ],
+      "relative_gradient_l2": 0.04391300443549975,
+      "gradient_cosine": 0.9990355362974235,
+      "seconds": 5.106509032193571
+    }
+  ]
+}

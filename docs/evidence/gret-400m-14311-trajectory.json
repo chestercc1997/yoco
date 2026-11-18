@@ -1,0 +1,43 @@
+{
+  "original_log": "runs/yoco-400m-A-8gpu-full-20261105T0310Z/rank0.jsonl",
+  "replay_log": "runs/diagnostics/400m-A-failure-20261106/replay/rank0.jsonl",
+  "compared_accepted_steps": [
+    10001,
+    14310
+  ],
+  "first_logged_difference": {
+    "loss": {
+      "step": 10002,
+      "original": 3.1949942111968994,
+      "replay": 3.1949963569641113
+    },
+    "grad_norm": {
+      "step": 10001,
+      "original": 0.3302188813686371,
+      "replay": 0.33021944761276245
+    },
+    "scale": {
+      "step": 11853,
+      "original": 4096.0,
+      "replay": 2048.0
+    }
+  },
+  "selected_grad_norms": [
+    {
+      "step": 11499,
+      "original": 11.980352401733398,
+      "replay": 0.2986680269241333
+    },
+    {
+      "step": 13937,
+      "original": 39.947425842285156,
+      "replay": 0.30018192529678345
+    },
+    {
+      "step": 14310,
+      "original": 0.3383442461490631,
+      "replay": 0.2892133295536041
+    }
+  ],
+  "replay_final_loss": 3.1167750358581543
+}

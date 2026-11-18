@@ -1,0 +1,106 @@
+{
+  "update": 9793,
+  "scale": 128.0,
+  "global_samples": 128,
+  "global_loss": 3.3183463364839554,
+  "ranks": [
+    {
+      "rank": 0,
+      "microbatch_losses": [
+        3.5332863330841064,
+        3.445138692855835,
+        3.216442346572876,
+        3.416335344314575
+      ],
+      "preclip_norm": 0.7568390369415283,
+      "tensors": 221,
+      "captured_tokens_matched": false
+    },
+    {
+      "rank": 1,
+      "microbatch_losses": [
+        3.2328243255615234,
+        3.129703998565674,
+        3.2053606510162354,
+        3.427813768386841
+      ],
+      "preclip_norm": 0.7568390369415283,
+      "tensors": 221,
+      "captured_tokens_matched": true
+    },
+    {
+      "rank": 2,
+      "microbatch_losses": [
+        3.3334808349609375,
+        3.2664833068847656,
+        3.1933791637420654,
+        3.317296028137207
+      ],
+      "preclip_norm": 0.7568390369415283,
+      "tensors": 221,
+      "captured_tokens_matched": false
+    },
+    {
+      "rank": 3,
+      "microbatch_losses": [
+        3.17226243019104,
+        3.474189043045044,
+        3.26936674118042,
+        3.309300184249878
+      ],
+      "preclip_norm": 0.7568390369415283,
+      "tensors": 221,
+      "captured_tokens_matched": false
+    },
+    {
+      "rank": 4,
+      "microbatch_losses": [
+        3.3940820693969727,
+        3.347118854522705,
+        3.0912067890167236,
+        3.268399715423584
+      ],
+      "preclip_norm": 0.7568390369415283,
+      "tensors": 221,
+      "captured_tokens_matched": false
+    },
+    {
+      "rank": 5,
+      "microbatch_losses": [
+        3.2064435482025146,
+        3.2712762355804443,
+        3.2225022315979004,
+        3.218444585800171
+      ],
+      "preclip_norm": 0.7568390369415283,
+      "tensors": 221,
+      "captured_tokens_matched": false
+    },
+    {
+      "rank": 6,
+      "microbatch_losses": [
+        3.3204221725463867,
+        3.367999315261841,
+        3.6353540420532227,
+        3.4880311489105225
+      ],
+      "preclip_norm": 0.7568390369415283,
+      "tensors": 221,
+      "captured_tokens_matched": false
+    },
+    {
+      "rank": 7,
+      "microbatch_losses": [
+        3.385446071624756,
+        3.322904348373413,
+        3.4202656745910645,
+        3.284522771835327
+      ],
+      "preclip_norm": 0.7568390369415283,
+      "tensors": 221,
+      "captured_tokens_matched": false
+    }
+  ],
+  "optimizer_steps": 0,
+  "passed": true
+}

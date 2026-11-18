@@ -1,0 +1,40 @@
+{
+  "passed": true,
+  "snapshot": "runs/yoco-gret-830m-baseline-repaired-20261117T065955Z/baseline/nonfinite_forward_00009793_rank1.pt",
+  "snapshot_sha256": "12c6ee347d2df5c77ae998fd50cad998ecb6b7e4ffc676730e60cd41cc37db39",
+  "failure_update": 9793,
+  "microbatch": 2,
+  "first_layer_state_write": {
+    "bad_elements": 1,
+    "index": [
+      0,
+      5,
+      5,
+      211,
+      57
+    ],
+    "fp64_dot": 65911.34683799744,
+    "repaired_dot": 65911.1875,
+    "finite_elements_unchanged": true,
+    "old_output_nonfinite": 512
+  },
+  "scale": 128.0,
+  "frozen_loss": "nan",
+  "fixed_loss": 3.2053606510162354,
+  "fp32_tf32_reference_loss": 3.2049200534820557,
+  "scaled_gradient_tensors_finite": 221,
+  "training_updates": 0,
+  "healthy_control": {
+    "step": 5004,
+    "loss": 3.2816922664642334,
+    "all_gradients_bitwise_equal": true
+  },
+  "source_checkpoint": "runs/yoco-gret-830m-baseline-repaired-20261117T065955Z/baseline/checks/resumed/checkpoint_00005004.pt",
+  "source_checkpoint_sha256": "3a70629aed5716aa130c2feab7e0de44353f0c14fade657046158afa80944a10",
+  "model_source_changes": {
+    "yoco_official/backend.py": {
+      "before": "814f18beda70bed8bbc98c068409c17dc73e06998771c4e389fcc5c67495f89f",
+      "after": "b7e5feb6f9c846b46e3040a64f803ff1f794fae91058e0eb7e70c4477c9ee933"
+    }
+  }
+}

@@ -159,9 +159,12 @@ def verify_fork(checkpoint, config, manifest, world, model_repair=None):
     if changed:
         if model_repair is None:raise RuntimeError(f'Fork changes model source {sorted(changed)} without a validated repair')
         repair=json.loads(Path(model_repair).read_text())
+        # A second retention repair changes only the backend. This narrower
+        # recovery path also requires the entire frozen config to match.
+        backend_only = set(changed) == {'yoco_official/backend.py'} and config == old
         if (not repair.get('passed') or repair.get('source_checkpoint_sha256')!=meta['sha256']
             or repair.get('model_source_changes')!=changed
-            or set(changed)!={'yoco_official/backend.py','yoco_official/gate_retention.py'}):
+            or not (backend_only or set(changed)=={'yoco_official/backend.py','yoco_official/gate_retention.py'})):
             raise RuntimeError('Model repair provenance or source hashes do not match')
     return {'source_checkpoint':str(checkpoint), 'source_sha256':meta['sha256'],
             'source_fingerprint':meta['fingerprint'], 'source_step':meta['step'],

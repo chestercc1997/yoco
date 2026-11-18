@@ -72,6 +72,18 @@ def flash_attn_func(q, k, v, causal=True, window_size=(-1, -1), **kwargs):
     return F.scaled_dot_product_attention(q, k, v, attn_mask=mask, is_causal=simple_causal).transpose(1, 2).contiguous()
 
 
+def _retention_sum(left, right, acc_dtype):
+    # In the mixed-FP16 training path, right is the activation dtype used
+    # for both GEMM inputs under autocast. Preserve that input rounding.
+    result = left @ right
+    finite = torch.isfinite(result)
+    if bool(finite.all()):
+        return result
+    with torch.autocast(device_type=left.device.type, enabled=False):
+        wide = left.to(right.dtype).to(acc_dtype) @ right.to(acc_dtype)
+        return torch.where(finite, result.to(acc_dtype), wide)
+
+
 def chunk_gate_retention(q, k, v, g, chunk_size=256, last_hidden_state=None):
     b, h, length, dk = q.shape
     if length % chunk_size:
@@ -85,15 +97,11 @@ def chunk_gate_retention(q, k, v, g, chunk_size=256, last_hidden_state=None):
     lower = torch.ones(chunk_size, chunk_size, device=q.device, dtype=torch.bool).tril()
     decay = (gs[..., :, None] - gs[..., None, :]).masked_fill(~lower, -torch.inf).exp()
     scores = (qr @ kr.transpose(-1, -2)) * decay.to(q.dtype)
-    inner = scores @ vr
-    # Preserve the original AMP path exactly for representable outputs.
-    # Only an out-of-range weighted sum is recomputed in the existing FP32
-    # state accumulation dtype, before the unchanged RMSNorm/FP16 interface.
-    if not bool(torch.isfinite(inner).all()):
-        with torch.autocast(device_type=q.device.type, enabled=False):
-            wide = scores.to(vr.dtype).to(acc_dtype) @ vr.to(acc_dtype)
-            inner = torch.where(torch.isfinite(inner), inner.to(acc_dtype), wide)
-    contributions = kr.transpose(-1, -2) @ (vr * (gs[..., -1, None] - gs).exp().to(v.dtype)[..., None])
+    inner = _retention_sum(scores, vr, acc_dtype)
+    weighted_v = vr * (gs[..., -1, None] - gs).exp().to(v.dtype)[..., None]
+    # A single overflowing K^T V element contaminates every subsequent
+    # query that reads its recurrent state, even when the inner sum is safe.
+    contributions = _retention_sum(kr.transpose(-1, -2), weighted_v, acc_dtype)
     state = (torch.zeros((b, h, dk, v.shape[-1]), device=q.device, dtype=acc_dtype)
              if last_hidden_state is None else last_hidden_state.to(acc_dtype))
     states = []

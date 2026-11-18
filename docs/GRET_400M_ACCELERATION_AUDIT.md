@@ -61,7 +61,7 @@ AdamW 始终开启。为检查以前一次更新为起点的影响，本次取�
 
 - **前向 loss 非有限**时，保留实际 rank、microbatch、权重、输入、标签和 scaler，停止本次更新。降低 loss scale 不能修复已经溢出的前向。历史 400M A 用完整 20000 步 checkpoint 恢复，同序重跑并通过故障位置，最终到达 40000 步。[八卡恢复核验](evidence/400m-A-retention-fix/exact-restore.json) · [400M A 完成记录](evidence/400m-A-completed-20261107.json)
 - **前向有限、梯度非有限**时，既有 AMP 策略拒绝该次更新，下调 scale 并重试同一批数据。另一个已修缺陷是手动回退 scale 时没有清零成功步计数，可能让 scale 过早回升。纯 baseline 的 12 次 AMP 拒绝和最大有限范数 1348.63 是两个独立指标。第 14311 次前向失败的直接原因仍未知。[AMP 计数回归](evidence/400m-A-amp-backoff-check.json) · [14311 重放记录](evidence/400m-A-failure-review.json)
-- **适用范围。** 本次验收覆盖已捕获的 400M 现场。另一个 830M 运行在第 9793 次尝试出现非有限前向，两次有界回退后已停止，保留 5004 步完整 checkpoint。830M 此次的第一个异常观测点也是第一层 RMSNorm 输入，单凭该位置不能判断是哪个上游运算。它没有参加本次 400M 训练或诊断更新。
+- **适用范围。** 本次验收覆盖已捕获的 400M 现场。另一个 830M 运行在第 9793 次尝试出现非有限前向，两次有界回退后已停止，保留 5004 步完整 checkpoint。830M 此次的第一个异常观测点也是第一层 RMSNorm 输入，单凭该位置不能判断是哪个上游运算。后续逐算子回放已定位到状态写入，见[第 9793 步修复与八卡验证](GRET_9793_AND_HISTORICAL_FAILURES.md)。
 
 ## 复核命令
 

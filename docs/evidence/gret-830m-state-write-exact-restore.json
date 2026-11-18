@@ -1,0 +1,72 @@
+{
+  "passed": true,
+  "ranks": [
+    {
+      "rank": 0,
+      "step": 5004,
+      "passed": true,
+      "checked_tensors": 887,
+      "mismatches": [],
+      "no_forward_or_optimizer_updates": true
+    },
+    {
+      "rank": 1,
+      "step": 5004,
+      "passed": true,
+      "checked_tensors": 887,
+      "mismatches": [],
+      "no_forward_or_optimizer_updates": true
+    },
+    {
+      "rank": 2,
+      "step": 5004,
+      "passed": true,
+      "checked_tensors": 887,
+      "mismatches": [],
+      "no_forward_or_optimizer_updates": true
+    },
+    {
+      "rank": 3,
+      "step": 5004,
+      "passed": true,
+      "checked_tensors": 887,
+      "mismatches": [],
+      "no_forward_or_optimizer_updates": true
+    },
+    {
+      "rank": 4,
+      "step": 5004,
+      "passed": true,
+      "checked_tensors": 887,
+      "mismatches": [],
+      "no_forward_or_optimizer_updates": true
+    },
+    {
+      "rank": 5,
+      "step": 5004,
+      "passed": true,
+      "checked_tensors": 887,
+      "mismatches": [],
+      "no_forward_or_optimizer_updates": true
+    },
+    {
+      "rank": 6,
+      "step": 5004,
+      "passed": true,
+      "checked_tensors": 887,
+      "mismatches": [],
+      "no_forward_or_optimizer_updates": true
+    },
+    {
+      "rank": 7,
+      "step": 5004,
+      "passed": true,
+      "checked_tensors": 887,
+      "mismatches": [],
+      "no_forward_or_optimizer_updates": true
+    }
+  ],
+  "world_size": 8,
+  "source_checkpoint": "runs/yoco-gret-830m-baseline-repaired-20261117T065955Z/baseline/checks/resumed/checkpoint_00005004.pt",
+  "model_optimizer_scaler_rng_bitwise_equal": true
+}

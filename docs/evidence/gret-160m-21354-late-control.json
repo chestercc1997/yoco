@@ -1,0 +1,295 @@
+{
+  "checkpoint_step": 40000,
+  "batch": "global_train",
+  "global_update": 21354,
+  "sequence_indices": [
+    2733184,
+    2733185,
+    2733186,
+    2733187,
+    2733188,
+    2733189,
+    2733190,
+    2733191,
+    2733192,
+    2733193,
+    2733194,
+    2733195,
+    2733196,
+    2733197,
+    2733198,
+    2733199,
+    2733200,
+    2733201,
+    2733202,
+    2733203,
+    2733204,
+    2733205,
+    2733206,
+    2733207,
+    2733208,
+    2733209,
+    2733210,
+    2733211,
+    2733212,
+    2733213,
+    2733214,
+    2733215,
+    2733216,
+    2733217,
+    2733218,
+    2733219,
+    2733220,
+    2733221,
+    2733222,
+    2733223,
+    2733224,
+    2733225,
+    2733226,
+    2733227,
+    2733228,
+    2733229,
+    2733230,
+    2733231,
+    2733232,
+    2733233,
+    2733234,
+    2733235,
+    2733236,
+    2733237,
+    2733238,
+    2733239,
+    2733240,
+    2733241,
+    2733242,
+    2733243,
+    2733244,
+    2733245,
+    2733246,
+    2733247,
+    2733248,
+    2733249,
+    2733250,
+    2733251,
+    2733252,
+    2733253,
+    2733254,
+    2733255,
+    2733256,
+    2733257,
+    2733258,
+    2733259,
+    2733260,
+    2733261,
+    2733262,
+    2733263,
+    2733264,
+    2733265,
+    2733266,
+    2733267,
+    2733268,
+    2733269,
+    2733270,
+    2733271,
+    2733272,
+    2733273,
+    2733274,
+    2733275,
+    2733276,
+    2733277,
+    2733278,
+    2733279,
+    2733280,
+    2733281,
+    2733282,
+    2733283,
+    2733284,
+    2733285,
+    2733286,
+    2733287,
+    2733288,
+    2733289,
+    2733290,
+    2733291,
+    2733292,
+    2733293,
+    2733294,
+    2733295,
+    2733296,
+    2733297,
+    2733298,
+    2733299,
+    2733300,
+    2733301,
+    2733302,
+    2733303,
+    2733304,
+    2733305,
+    2733306,
+    2733307,
+    2733308,
+    2733309,
+    2733310,
+    2733311
+  ],
+  "torch": "2.7.1+cu126",
+  "cuda": "12.6",
+  "gpu": "NVIDIA A100 80GB PCIe",
+  "no_optimizer_updates": true,
+  "cases": [
+    {
+      "name": "fp32",
+      "scale": 1.0,
+      "loss": 3.4203755855560303,
+      "gradient_norm": 3.5473640541658655,
+      "nonfinite_parameters": [],
+      "largest_parameter_gradients": [
+        [
+          "cross_decoder.v_proj.weight",
+          2.501598358154297
+        ],
+        [
+          "self_decoder.layers.5.ffn.fc2.weight",
+          1.2503364086151123
+        ],
+        [
+          "self_decoder.layers.5.mixer.v_proj.weight",
+          0.7692463397979736
+        ],
+        [
+          "self_decoder.layers.5.mixer.out_proj.weight",
+          0.6473859548568726
+        ],
+        [
+          "cross_decoder.layers.2.mixer.out_proj.weight",
+          0.5635642409324646
+        ],
+        [
+          "cross_decoder.layers.3.mixer.out_proj.weight",
+          0.5479106307029724
+        ],
+        [
+          "cross_decoder.layers.0.mixer.out_proj.weight",
+          0.5336036086082458
+        ],
+        [
+          "cross_decoder.layers.1.mixer.out_proj.weight",
+          0.5272443294525146
+        ],
+        [
+          "self_decoder.layers.5.ffn.gate.weight",
+          0.5116568207740784
+        ],
+        [
+          "cross_decoder.layers.4.mixer.out_proj.weight",
+          0.48898160457611084
+        ]
+      ],
+      "seconds": 23.24482211098075
+    },
+    {
+      "name": "fp16_scale16",
+      "scale": 16.0,
+      "loss": 3.424441337585449,
+      "gradient_norm": 13.366014546177661,
+      "nonfinite_parameters": [],
+      "largest_parameter_gradients": [
+        [
+          "cross_decoder.v_proj.weight",
+          9.138253211975098
+        ],
+        [
+          "self_decoder.layers.5.ffn.fc2.weight",
+          4.357095718383789
+        ],
+        [
+          "self_decoder.layers.5.mixer.v_proj.weight",
+          2.8034188747406006
+        ],
+        [
+          "self_decoder.layers.5.mixer.out_proj.weight",
+          2.44572114944458
+        ],
+        [
+          "cross_decoder.layers.1.mixer.out_proj.weight",
+          2.266777753829956
+        ],
+        [
+          "cross_decoder.layers.0.mixer.out_proj.weight",
+          2.253425359725952
+        ],
+        [
+          "cross_decoder.k_proj.weight",
+          1.9993726015090942
+        ],
+        [
+          "self_decoder.layers.5.ffn.gate.weight",
+          1.9760680198669434
+        ],
+        [
+          "cross_decoder.layers.0.ffn.gate.weight",
+          1.8932344913482666
+        ],
+        [
+          "cross_decoder.layers.2.mixer.out_proj.weight",
+          1.8569855690002441
+        ]
+      ],
+      "relative_gradient_l2": 4.257157157901386,
+      "gradient_cosine": -0.3883525244366944,
+      "seconds": 5.362333758268505
+    },
+    {
+      "name": "fp16_scale128",
+      "scale": 128.0,
+      "loss": 3.424441337585449,
+      "gradient_norm": 2.429688677526845,
+      "nonfinite_parameters": [],
+      "largest_parameter_gradients": [
+        [
+          "cross_decoder.v_proj.weight",
+          1.2669624090194702
+        ],
+        [
+          "self_decoder.layers.5.ffn.fc2.weight",
+          0.9414879083633423
+        ],
+        [
+          "self_decoder.layers.5.mixer.v_proj.weight",
+          0.5717952251434326
+        ],
+        [
+          "self_decoder.layers.5.mixer.out_proj.weight",
+          0.5154600739479065
+        ],
+        [
+          "self_decoder.layers.5.ffn.gate.weight",
+          0.4608432948589325
+        ],
+        [
+          "self_decoder.layers.5.ffn.fc1.weight",
+          0.4066707193851471
+        ],
+        [
+          "cross_decoder.layers.0.ffn.gate.weight",
+          0.3578791618347168
+        ],
+        [
+          "cross_decoder.layers.0.mixer.out_proj.weight",
+          0.3574713170528412
+        ],
+        [
+          "cross_decoder.k_proj.weight",
+          0.3554041385650635
+        ],
+        [
+          "cross_decoder.layers.1.mixer.out_proj.weight",
+          0.34489303827285767
+        ]
+      ],
+      "relative_gradient_l2": 0.8064237962503624,
+      "gradient_cosine": 0.5977321236785362,
+      "seconds": 5.1318084402009845
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "update": 10001,
+  "rank": 3,
+  "microbatch": 0,
+  "optimizer_updates": 0,
+  "layer": "cross_decoder.layers.0.mixer",
+  "frozen_native_operator": true,
+  "cases": [
+    {
+      "deterministic": false,
+      "repeats": 3,
+      "max_output_difference": 0.0,
+      "max_grad_differences_qkv": [
+        9.5367431640625e-07,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "deterministic": true,
+      "repeats": 3,
+      "max_output_difference": 0.0,
+      "max_grad_differences_qkv": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    }
+  ]
+}

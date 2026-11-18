@@ -1,0 +1,70 @@
+{
+  "backend_sha256": "b7e5feb6f9c846b46e3040a64f803ff1f794fae91058e0eb7e70c4477c9ee933",
+  "frozen_830m_regressions": [
+    {
+      "snapshot": "/root/yoco/runs/yoco-gret-830m-baseline-8gpu-20261113T183312Z/baseline/nonfinite_forward_00005926_rank4.pt",
+      "sha256": "ff04f4a6da81d60d1b34839e4ad04b3be2d7078990977cf1ae991a1272763c28",
+      "failure_update": 5926,
+      "old_nonfinite_reproduced": true,
+      "fixed_loss": 3.4144065380096436,
+      "fp32_reference_loss": 3.414433717727661,
+      "loss_abs_difference": 2.7179718017578125e-05,
+      "all_model_gradients_finite": true
+    },
+    {
+      "snapshot": "/root/yoco/runs/yoco-gret-830m-baseline-8gpu-20261113T183312Z/baseline/recovery-attempts/001/nonfinite_forward_00006438_rank6.pt",
+      "sha256": "1e85178fa30951f8e6ee11d88468b5160767a590ec13142353800835c1b5f0f6",
+      "failure_update": 6438,
+      "old_nonfinite_reproduced": true,
+      "fixed_loss": 3.330815315246582,
+      "fp32_reference_loss": 3.3306431770324707,
+      "loss_abs_difference": 0.00017213821411132812,
+      "all_model_gradients_finite": true
+    },
+    {
+      "snapshot": "/root/yoco/runs/yoco-gret-830m-baseline-8gpu-20261113T183312Z/baseline/recovery-attempts/002/nonfinite_forward_00006494_rank3.pt",
+      "sha256": "fbf916817a694a4a1ff7fed95f0c94774e4d5054ffa1f7075c82dc70f9fa0a2e",
+      "failure_update": 6494,
+      "old_nonfinite_reproduced": true,
+      "fixed_loss": 3.102327346801758,
+      "fp32_reference_loss": 3.1021368503570557,
+      "loss_abs_difference": 0.00019049644470214844,
+      "all_model_gradients_finite": true
+    }
+  ],
+  "normal_control": {
+    "losses": {
+      "legacy": 3.2734789848327637,
+      "fixed": 3.2734789848327637
+    },
+    "gradient_relative_l2": 0.0,
+    "tolerances": {
+      "loss_abs": 0.001,
+      "gradient_relative_l2": 0.005
+    }
+  },
+  "fp64_recurrence_forward_and_backward": true,
+  "snapshot_400m": "b73408c0117d1f41b16c2b3472f74e39d4014e98fc4ee466c59484ef1f9e6b47",
+  "cases_400m": [
+    {
+      "checkpoint_activations": false,
+      "first_norm_input_nonfinite": 0,
+      "logits_dtype": "torch.float16",
+      "logits_nonfinite": 0,
+      "loss": "2.970219612121582",
+      "gradient_tensors": 222,
+      "nonfinite_gradient_norms": [],
+      "unscaled_microbatch_grad_norm": 0.4173338711261749
+    },
+    {
+      "checkpoint_activations": true,
+      "first_norm_input_nonfinite": 0,
+      "logits_dtype": "torch.float16",
+      "logits_nonfinite": 0,
+      "loss": "2.970219612121582",
+      "gradient_tensors": 222,
+      "nonfinite_gradient_norms": [],
+      "unscaled_microbatch_grad_norm": 0.41733843088150024
+    }
+  ]
+}
