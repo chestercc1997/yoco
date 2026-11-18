@@ -26,9 +26,9 @@ final_score = mean(score(t) for t in the last 200 logged training updates)
 | SWA 830M | 2.770138 | — | — | — | — |
 | gRet 830M | — | — | — | — | — |
 
-SWA 830M 只完成了 baseline，gRet 830M 暂停在最后一次成功更新 9792，两种 830M 架构均缺少完成的 A/B。400M 数字来自历史的 FFN 2816、绑定输入输出权重的对照。现行从头训练配置的 3072 FFN 和独立输入输出权重尚无完整 A/B 数据。[830M 队列](BASELINE_830M_QUEUE.md) · [配置审计](YOCO_BASELINE_AUDIT.md)
+SWA 830M 只完成了 baseline，gRet 830M 暂停在最后一次成功更新 9792，两种 830M 架构均缺少完成的 A/B。400M 数字来自历史的 FFN 2816、绑定输入输出权重的对照。现行从头训练配置的 3072 FFN 和独立输入输出权重尚无完整 A/B 数据。[830M 队列](../history/BASELINE_830M_QUEUE.md) · [配置审计](YOCO_BASELINE_AUDIT.md)
 
-400M gRet baseline 是目前唯一完成的同配方 baseline。全程无非有限前向和 checkpoint 回滚，有 12 次 AMP 重试，最大有限 pre-clip 梯度范数 1348.629 出现在第 22891 步。计分窗口内该范数最大为 4.719。方法 A 包含编译及数值修复前的健康训练前缀。400M gRet 的高分描述了这一套单 seed 对照的末段损失差，仍需独立复现来验证幅度。[400M 原始曲线和训练记录](../evaluation/gret_400m_3way_20261108T194918Z/README.md)
+400M gRet baseline 是目前唯一完成的同配方 baseline。全程无非有限前向和 checkpoint 回滚，有 12 次 AMP 重试，最大有限 pre-clip 梯度范数 1348.629 出现在第 22891 步。计分窗口内该范数最大为 4.719。方法 A 包含编译及数值修复前的健康训练前缀。400M gRet 的高分描述了这一套单 seed 对照的末段损失差，仍需独立复现来验证幅度。[400M 原始曲线和训练记录](../../evaluation/gret_400m_3way_20261108T194918Z/README.md)
 
 ## VertiKV
 
@@ -45,7 +45,7 @@ SWA 830M 只完成了 baseline，gRet 830M 暂停在最后一次成功更新 979
 
 ## 复算
 
-从仓库根目录运行脚本，`--vertikv` 指向 VertiKV 仓库的固定版本 `8aee2653`。脚本验证 YOCO 四组三臂各有连续 40000 步，并核对复算的全部 28 条 VertiKV 汇总与公开结果一致。830M 单基线状态列在上表，CSV 记录具备对照的数据。[复算代码](../tools/compare_training_efficiency.py) · [完整数值 CSV](evidence/vertikv-training-efficiency-final200.csv)
+从仓库根目录运行脚本，`--vertikv` 指向 VertiKV 仓库的固定版本 `8aee2653`。脚本验证 YOCO 四组三臂各有连续 40000 步，并核对复算的全部 28 条 VertiKV 汇总与公开结果一致。830M 单基线状态列在上表，CSV 记录具备对照的数据。[复算代码](../../tools/compare_training_efficiency.py) · [完整数值 CSV](../evidence/vertikv-training-efficiency-final200.csv)
 
 ```bash
 python tools/compare_training_efficiency.py --vertikv /root/vertikv \

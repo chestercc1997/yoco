@@ -1,48 +1,10 @@
-# YOCO 架构与实验文档
+# YOCO 实验文档
 
-从头训练使用[六份 Appendix D 配置](../configs/appendix_d)。模型选择、数据准备和八卡入口见[仓库首页](../README.md)。
-
-## A/B 结果与历史执行计划
-
-- [160M 新配方八组训练计划](PLAN_160M_RAW_KV.md)覆盖 SWA 与 gRet 的 baseline、raw A/B 及双查询深度注意力 C。
-- [YOCO 与 VertiKV 的末段训练效率](VERTIKV_TRAINING_EFFICIENCY.md)汇总四套完成对照的最后 200 步和 VertiKV 四个已公开档位。
-
-- [160M–830M baseline 配方与 FP16 溢出](YOCO_BASELINE_AUDIT.md)汇总六组模型与论文的差异、已验证的根因和两次未定因的历史异常。
-- [830M SWA → gated retention baseline队列](BASELINE_830M_QUEUE.md)：两个新授权baseline，依次八卡预检、40k步、八项下游和有界恢复；[SWA详细设置](SWA_830M_BASELINE.md)。
-- [SWA 400M baseline/A/B完整结果](SWA_400M_AB.md)：三组40000步及24项全量下游已完成；最终表格、七组图和checkpoint/AMP/评测核验。
-
-- [九组模型完整图表与数值](../evaluation/model_comparison_20261111/README.md)：train/valid loss、统一系数6的gRet六点/SWA三点compute–loss、八项下游及相对baseline增幅。
-- [400M gRet三组完整结果](../evaluation/gret_400m_3way_20261108T194918Z/README.md)：baseline/A/B均完成40000步及八项下游，原始曲线和七组图。
-
-- [SWA 160M baseline / A / B](SWA_160M_AB.md)：三组40000步、24项完整下游均已完成；含设计公式、冻结设置、七张对比图、原始曲线和验收证据。
-- [gRet 400M baseline队列与完成记录](GRET_400M_BASELINE_QUEUE.md)：已接续完成，同配方八卡训练与baseline/A/B三组汇总。
-- [gRet 400M 方法B](PLAN_B_400M_8GPU.md)：已完成12来源conditional K/V完整训练，保留八卡恢复、自动监督与原配方约束。
-- [400M 方法 A 八卡训练](PLAN_A_400M_8GPU.md)：已完成 40000 步及八项下游，验证 loss 2.918184，宏平均 48.5270%；保留故障修复与恢复证据。
-- [A100 八卡训练加速与复用](BASELINE_A100_ACCELERATION.md)：执行设置、启动与续训命令、速度测量和原始 loss 核查。
-
-- [A/B 训练与测试说明](PLAN_AB_4GPU.md)：A 是全局可学习六来源 K/V 权重；B 是按 hidden states 生成条件权重。
-- [公式与范围](plan.md)：两种方法均融合前六层候选 K/V，供后六层共享。
-- [一页 A/B 设计说明](plan_feishu_concise.pdf)：共同流程、全局权重与逐 token 权重的核心公式；[生成脚本](../tools/render_plan_feishu_concise.py)。
-- **2026-11-05：baseline 已更新为本次加速 FP16 运行，三组数据、七张对比图和八项下游已同步。** [三组完整结果、loss/6ND 曲线与脱敏数据](../evaluation/ab_baseline_20261104/README.md)。四卡计划为另一执行记录，不混作本次完成证据。
-
-## 历史两卡实验与背景
-
-1. [YOCO 架构讲解](YOCO_EXPLAINED.md)：baseline 的计算路径、共享 K/V、prefill 和 decode。
-2. [动态 YOCO 的理论动机 公式与实验](DYNAMIC_YOCO_THEORY_AND_EXPERIMENTS.md)：ABC 的研究目标、动态融合与梯度公式、代码实现和当前结果。
-3. [两卡完整训练记录](FULL_2GPU_V2_TRAINING.md)：配对训练设置、checkpoint 恢复与实验追溯。
-
-旧两卡 baseline / token 动态 v2 两组已完成 40,000 步；这不是本轮 A/B。单 seed 的最终验证 loss 为 baseline 3.288449、动态 v2 3.284284；尚未建立训练计算效率优势。
-
-## 实验依据
-
-- [完整训练验收](evidence/full-v2-convergence-review.md) · [原始汇总 JSON](evidence/full-v2-convergence-review.json)
-- [两卡短程验收](evidence/paired-v2-convergence-review.md)
-- [ABC 聊天理解摘录](evidence/abc-research-context.md)
-- [早期 baseline 材料核查](BASELINE_EVIDENCE.md)：历史候选与来源，配套副本在 `baseline_sources/`。
-
-## 图文教程
-
-- [从 Transformer 到 YOCO 与 CED](tutorials/CED_YOCO_TUTORIAL.md) · [离线 HTML](tutorials/CED_YOCO_TUTORIAL.html)
-- [DeepSeek V4.1 架构讲解](tutorials/DEEPSEEK_V41_TUTORIAL.md) · [离线 HTML](tutorials/DEEPSEEK_V41_TUTORIAL.html)
-
-`assets/` 保留当前文档使用的图片与生成脚本，`evidence/` 保留实验原始证据。旧计划备份保留在本地 archives/，不作为当前执行入口。
+| 分类 | 文档 |
+| --- | --- |
+| **本轮 160M 训练** | [配方、顺序与耗时](160m/README.md) · [baseline、A、B、C 如何构造 K/V](160m/fusion.md) · [SWA 窗口验证与消融](160m/swa.md) |
+| 配置与数值稳定性 | [官方架构对齐、历史配方差异与 FP16 溢出](analysis/YOCO_BASELINE_AUDIT.md) |
+| 效率分析 | [YOCO 与 VertiKV 的相对训练效率](analysis/VERTIKV_TRAINING_EFFICIENCY.md) · [历史 A100 实测加速](BASELINE_A100_ACCELERATION.md) |
+| 历史实验 | [各规模的结果、曲线和恢复记录](history/README.md) |
+| 架构教程 | [YOCO 原理](YOCO_EXPLAINED.md) · [从 Transformer 到 YOCO 与 CED](tutorials/CED_YOCO_TUTORIAL.md) · [DeepSeek V4.1](tutorials/DEEPSEEK_V41_TUTORIAL.md) |
+| 原始材料 | [实验核验记录](evidence) · [早期 baseline 来源](baseline_sources) |

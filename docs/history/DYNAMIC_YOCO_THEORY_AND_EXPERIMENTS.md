@@ -1,6 +1,6 @@
 # 动态 YOCO 的理论动机 公式与实验
 
-**2026-11-03 当前状态：**用户明确要求 A（全局可学习六层 K/V 聚合）和 B（conditional 六层 K/V 聚合），两组实现与测试已完成。四卡作业 794750 已提交，完整训练和下游结果待定；原始两卡 baseline 已完成，不再重训。执行入口以 [PLAN_AB_4GPU.md](PLAN_AB_4GPU.md) 为准。下文包含历史动机、旧三来源 v2 结果及阶段性规划，其中“未实现/未启动”描述属于当时记录。
+**2026-11-03 当前状态：**用户明确要求 A（全局可学习六层 K/V 聚合）和 B（conditional 六层 K/V 聚合），两组实现与测试已完成。四卡作业 794750 已提交，完整训练和下游结果待定；原始两卡 baseline 已完成，不再重训。执行入口以 [PLAN_AB_4GPU.md](../PLAN_AB_4GPU.md) 为准。下文包含历史动机、旧三来源 v2 结果及阶段性规划，其中“未实现/未启动”描述属于当时记录。
 
 更新日期：2026-11-02。对象：ABC 提出的多层 K/V 加权组合思路，以及当前 160M YOCO-gRet 上的 token 动态记忆融合 v2。
 
@@ -352,12 +352,12 @@ flowchart TD
 
 | 步骤 | 实现 | 作用 |
 | --- | --- | --- |
-| 创建模型 | [runtime/model.py](../runtime/model.py) | 读取可选 `memory_fusion` 字段，构造 `MemoryFusionYOCO` |
-| 取中间表示 | [SelfDecoder.forward](../runtime/yoco_official/yoco.py) | `return_layers=[2,4,6]` 收集完整 block 输出，并移除块对齐 padding |
-| 计算权重与融合 | [DepthMemoryFusion](../runtime/memory_fusion.py) | 归一化 H6、计算 softmax、逐来源累加 |
-| 进入后半网络 | [MemoryFusionYOCO.forward](../runtime/memory_fusion.py) | 调用 `cross_decoder(final, memory=memory)` |
-| 构建共享记忆 | [CrossDecoder.forward](../runtime/yoco_official/yoco.py) | `memory` 生成 K/V，`final` 保留为查询主路径起点 |
-| 恢复训练 | [runtime/train.py](../runtime/train.py) | 将融合配置纳入恢复 fingerprint，防止不同机制混用 |
+| 创建模型 | [runtime/model.py](../../runtime/model.py) | 读取可选 `memory_fusion` 字段，构造 `MemoryFusionYOCO` |
+| 取中间表示 | [SelfDecoder.forward](../../runtime/yoco_official/yoco.py) | `return_layers=[2,4,6]` 收集完整 block 输出，并移除块对齐 padding |
+| 计算权重与融合 | [DepthMemoryFusion](../../runtime/memory_fusion.py) | 归一化 H6、计算 softmax、逐来源累加 |
+| 进入后半网络 | [MemoryFusionYOCO.forward](../../runtime/memory_fusion.py) | 调用 `cross_decoder(final, memory=memory)` |
+| 构建共享记忆 | [CrossDecoder.forward](../../runtime/yoco_official/yoco.py) | `memory` 生成 K/V，`final` 保留为查询主路径起点 |
+| 恢复训练 | [runtime/train.py](../../runtime/train.py) | 将融合配置纳入恢复 fingerprint，防止不同机制混用 |
 
 核心计算可概括为下列伪代码；实际实现没有构造完整的四维来源堆叠张量，以减少额外临时分配：
 
@@ -371,7 +371,7 @@ logits = output_layer(layer_norm(hidden))
 
 ### 5.2 v2 的初始化
 
-[当前配置](../configs/yoco_160m_fusion_token_v2_2gpu.json)为：
+[当前配置](../../configs/yoco_160m_fusion_token_v2_2gpu.json)为：
 
 ```json
 {
@@ -400,7 +400,7 @@ v2 的初始记忆是 \(0.05h^{(2)}+0.05h^{(4)}+0.90h^{(6)}\)，更偏向 baseli
 
 长期缓存仍是一组全局 K/V 加各 self 层的 retention state。训练则需要保存或重算选中的中间激活，并承担融合反向开销。缓存份数保持不变，不代表训练显存和每步耗时不变。
 
-归一化和 softmax 使用 FP32 运算，router linear 遵循现有混合精度，融合权重转换回表示 dtype。现有 [正确性测试](../tests/test_memory_fusion.py)覆盖关闭时等价、来源和查询路径、因果与缓存一致性、梯度、初始化以及保存恢复；这些检查支持实现正确性，不能代替收益实验。此前文档记录：2026-11-02 使用 `CUDA_VISIBLE_DEVICES='' OMP_NUM_THREADS=2 .venv/bin/python tests/test_memory_fusion.py` 检查，9 项 CPU 测试全部通过。本次总结未重跑这些测试；该历史结果验证代码行为，不代表已经完成与第 1 节 ABC 思路的符合性审查。
+归一化和 softmax 使用 FP32 运算，router linear 遵循现有混合精度，融合权重转换回表示 dtype。现有 [正确性测试](../../tests/test_memory_fusion.py)覆盖关闭时等价、来源和查询路径、因果与缓存一致性、梯度、初始化以及保存恢复；这些检查支持实现正确性，不能代替收益实验。此前文档记录：2026-11-02 使用 `CUDA_VISIBLE_DEVICES='' OMP_NUM_THREADS=2 .venv/bin/python tests/test_memory_fusion.py` 检查，9 项 CPU 测试全部通过。本次总结未重跑这些测试；该历史结果验证代码行为，不代表已经完成与第 1 节 ABC 思路的符合性审查。
 
 ## 6 已完成的配对实验
 
@@ -419,7 +419,7 @@ v2 的初始记忆是 \(0.05h^{(2)}+0.05h^{(4)}+0.90h^{(6)}\)，更偏向 baseli
 | 随机种子 | 42，当前只有一个 seed |
 | 验证 | 每 250 步，相同验证配置，共 160 个验证点 |
 
-两组先从头运行配对 1,000 步，再从各自 checkpoint 续训到 40,000 步，保留 optimizer、scaler、RNG 和原 schedule。正式比较采用两卡对两卡；早期四卡 baseline 与两卡 v1 的差距不能直接归因于融合机制。执行细节见 [完整训练说明](FULL_2GPU_V2_TRAINING.md)。
+两组先从头运行配对 1,000 步，再从各自 checkpoint 续训到 40,000 步，保留 optimizer、scaler、RNG 和原 schedule。正式比较采用两卡对两卡；早期四卡 baseline 与两卡 v1 的差距不能直接归因于融合机制。执行细节见 [完整训练说明](https://github.com/chestercc1997/yoco/blob/660cef1200dfb8ff32a6335fb3dc8fc044d037ce/docs/FULL_2GPU_V2_TRAINING.md)。
 
 ### 6.2 验证结果与成本
 
@@ -434,7 +434,7 @@ v2 的初始记忆是 \(0.05h^{(2)}+0.05h^{(4)}+0.90h^{(6)}\)，更偏向 baseli
 
 单 seed 的动态版最终验证 loss 略低；前期并未持续领先。训练阶段累计 GPU 秒分别为约 119,932 和 122,229，动态版高约 1.9%。该统计来自 step timers，排除验证、保存、诊断和排队；节点差异也可能影响时间，因此不能直接把这 1.9% 解释为融合的严格计算开销。
 
-当前证据支持“这轮训练的动态版最终 loss 略低”。它还不能证明跨 seed 的稳定提升、同等 FLOPs 下的优势，或梯度路径带来的因果收益。原始 160 点曲线、阈值区间和梯度诊断见 [验收 JSON](evidence/full-v2-convergence-review.json) 与 [验收摘要](evidence/full-v2-convergence-review.md)。
+当前证据支持“这轮训练的动态版最终 loss 略低”。它还不能证明跨 seed 的稳定提升、同等 FLOPs 下的优势，或梯度路径带来的因果收益。原始 160 点曲线、阈值区间和梯度诊断见 [验收 JSON](../evidence/full-v2-convergence-review.json) 与 [验收摘要](../evidence/full-v2-convergence-review.md)。
 
 两组 40,000 步权重的八项下游评测已迁往 HPC3 两卡作业，覆盖 ARC Easy、ARC Challenge、BoolQ、HellaSwag、OpenBookQA、PIQA、WinoGrande 和 SciQ。本文暂不填写下游分数，需以完整评测结果为准。
 

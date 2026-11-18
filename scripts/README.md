@@ -12,6 +12,6 @@
 
 ## 历史实验
 
-四卡 A/B、两卡 pilot、旧 32 卡基准和 Slurm 文件对应各自的集群与冻结配置。旧四卡 A/B 的数据准备入口为 `bash scripts/prepare_local_data.sh --historical-ab`。本文档涉及的 830M gRet 实验处于暂停状态，其恢复依据见[数值审计](../docs/YOCO_BASELINE_AUDIT.md)。
+四卡 A/B、两卡 pilot、旧 32 卡基准和 Slurm 文件对应各自的集群与冻结配置。旧四卡 A/B 的数据准备入口为 `bash scripts/prepare_local_data.sh --historical-ab`。本文档涉及的 830M gRet 实验处于暂停状态，其恢复依据见[数值审计](../docs/analysis/YOCO_BASELINE_AUDIT.md)。
 
 早期一次性远端部署、重试和传输工具可按原版本查阅。[历史工具快照](https://github.com/chestercc1997/yoco/tree/ea889a5892034eab5ee37f70cb279dc171ca5371/tools) · [历史实验索引](../docs/README.md)

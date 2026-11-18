@@ -1,6 +1,6 @@
 # ABC 的研究目标与聊天理解
 
-以下保留自 2026-11-01 的研究计划整理，属于聊天片段的转述与解释，并非完整逐字转录。当前实现见 [动态 YOCO 总览](../DYNAMIC_YOCO_THEORY_AND_EXPERIMENTS.md)。
+以下保留自 2026-11-01 的研究计划整理，属于聊天片段的转述与解释，并非完整逐字转录。当前实现见 [动态 YOCO 总览](../history/DYNAMIC_YOCO_THEORY_AND_EXPERIMENTS.md)。
 
 ## 能从转录确认的内容
 

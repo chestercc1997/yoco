@@ -290,7 +290,7 @@ H²、H⁴、H⁶ → 加权融合 M → 生成共享 K/V
              H⁶ ─────────→ cross-decoder 的初始隐藏输入
 ```
 
-查询主路径依然从 `H⁶` 开始；后半每层仍使用自己的 Q、attention 和 FFN。动态融合依然只有一组全局 KV，增加的是融合路径和路由计算。它检验多个深度的信息能否帮助训练收敛，是否有收益需要看受控实验与计算成本，不能预先假设。[动态融合理论与实现](DYNAMIC_YOCO_THEORY_AND_EXPERIMENTS.md) · [配对训练说明](FULL_2GPU_V2_TRAINING.md)
+查询主路径依然从 `H⁶` 开始；后半每层仍使用自己的 Q、attention 和 FFN。动态融合依然只有一组全局 KV，增加的是融合路径和路由计算。它检验多个深度的信息能否帮助训练收敛，是否有收益需要看受控实验与计算成本，不能预先假设。[动态融合理论与实现](history/DYNAMIC_YOCO_THEORY_AND_EXPERIMENTS.md) · [配对训练说明](https://github.com/chestercc1997/yoco/blob/660cef1200dfb8ff32a6335fb3dc8fc044d037ce/docs/FULL_2GPU_V2_TRAINING.md)
 
 ## 11. 读完后可以用这几个问题自测
 

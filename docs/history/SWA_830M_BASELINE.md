@@ -6,7 +6,7 @@
 
 模型依据[YOCO论文Appendix D/Table7](https://arxiv.org/html/2405.05254v2#A4)：24层、dim1536、12个attention/KV heads（head dim128）、FFN4608（3d）；SWA窗口1024。CPU实际计数为 **838315008** 参数。保留新seed42未训练初始化，后续A/B若获授权可加载共同随机基座；本轮不启动A/B。
 
-除新规模需要的model字段及实验标识，配置继承[SWA400M baseline](../configs/yoco_400m_swa_baseline_8gpu.json)。training/data/seed/tied_embeddings/execution保持相同：
+除新规模需要的model字段及实验标识，配置继承[SWA400M baseline](../../configs/yoco_400m_swa_baseline_8gpu.json)。training/data/seed/tied_embeddings/execution保持相同：
 
 | 项目 | 值 |
 | --- | --- |
@@ -25,7 +25,7 @@
 
 ## 执行与恢复
 
-入口为[controller](../tools/run_swa_830m_baseline.py)、[guard](../tools/watch_swa_830m_baseline.py)、[CPU预检](../tools/preflight_swa_830m_baseline.py)。先核对 `runs/setup/swa-830m-baseline-active.json` 或准备记录，禁止重复启动。
+入口为[controller](../../tools/run_swa_830m_baseline.py)、[guard](../../tools/watch_swa_830m_baseline.py)、[CPU预检](../../tools/preflight_swa_830m_baseline.py)。先核对 `runs/setup/swa-830m-baseline-active.json` 或准备记录，禁止重复启动。
 
 CPU预检核验重复seed的初始权重按位一致、完整模型有限前向/反向及因果性、窗口边界和增量cache。正式训练前运行真实数据八卡0→2→4、连续0→4、独立重复及前向前完整状态按位恢复；使用既有模型max_abs2e-5、relative_L2 2e-6、loss5e-5阈值，绝不放宽。通过的前4步计入正式40k预算。
 

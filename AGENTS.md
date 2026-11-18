@@ -2,7 +2,7 @@
 
 ## 160M Appendix D 八组训练（2026-11-18）
 
-用户重新授权 160M 新配方从头训练。每种 self-decoder 各四组，依次为 baseline、raw A、raw B 与独立的 Attention Residual 风格 C。两个 baseline 先行，详见 `docs/PLAN_160M_RAW_KV.md`。当前 cohort 为 `runs/appendix-d-160m-raw-v1`，启动器 `scripts/run_160m_raw_kv.sh`。先检查队列、日志和 GPU，实际开跑及完成以本 cohort 证据为准。此前旧配方、旧编号和已暂停的 830M 分属其他实验。
+用户重新授权 160M 新配方从头训练。每种 self-decoder 各四组，依次为 baseline、raw A、raw B 与独立的 Attention Residual 风格 C。两个 baseline 先行，详见 `docs/160m/README.md`。当前 cohort 为 `runs/appendix-d-160m-raw-v1`，启动器 `scripts/run_160m_raw_kv.sh`。先检查队列、日志和 GPU，实际开跑及完成以本 cohort 证据为准。此前旧配方、旧编号和已暂停的 830M 分属其他实验。
 
 
 ## 2026-11-17 gRet830M数值修复并续训授权
@@ -184,7 +184,7 @@
 - 完整作业：baseline `788651`，dynamic `788652`，各 2×H100、24 小时时限。当前记录 `runs/setup/full-v2-active-jobs.json`；旧 pilot 作业已完成，不重复提交。
 - 新 run 目录与旧 pilot 分离，复用原不可变 runtime/配置和 checkpoint 的 optimizer/scaler/RNG；不更换卡数、重置 schedule 或中途改路由设计。
 - 完整训练后台状态 `runs/setup/full-v2-watcher.json`；验收输出 `docs/evidence/full-v2-convergence-review.{json,md}`。检查真实状态后再行动，避免重复提交。
-- 细节见 `docs/FULL_2GPU_V2_TRAINING.md`；如因基础设施问题失败，保留证据并按原配置从最近有效 checkpoint 恢复。
+- 细节见 [两卡训练历史计划](https://github.com/chestercc1997/yoco/blob/660cef1200dfb8ff32a6335fb3dc8fc044d037ce/docs/FULL_2GPU_V2_TRAINING.md)；如因基础设施问题失败，保留证据并按原配置从最近有效 checkpoint 恢复。
 
 ## 2026-11-01 两卡配对与动态调整授权（历史）
 
@@ -192,7 +192,7 @@
 - 当前 baseline 作业为 `788464`、动态 v2 为 `788465`（原 788258/788259 因启动参数触发容器封装器误判，在训练前失败；已仅修复 launcher 并重提），各 2 卡、1000 步，从头配对训练。v2 只将路由初始权重改为 `[0.05,0.05,0.90]`；保留原 v1 证据，不修改运行快照。
 - 本地长运行监测进程（执行会话 40443）已安排在两组完成后作只读梯度诊断、回传及收敛验收；状态文件 `runs/setup/paired-v2-watcher.json`，当前作业记录 `runs/setup/paired-v2-active-jobs.json`。先查状态，禁止重复提交现有作业或重复启动监测进程。
 - “gradient 拟合更快”暂解释为本设计的梯度传播/收敛假设，不擅自引入新梯度算法。验收以相同 tokens 的 loss 和到达同 loss 的训练量为主；梯度范数只作诊断。
-- 下一步以 `docs/DYNAMIC_YOCO_THEORY_AND_EXPERIMENTS.md` 及结果为准；完整 40000 步仍需效果证据支持，不因短作业正常退出就自动开始。
+- 下一步以 `docs/history/DYNAMIC_YOCO_THEORY_AND_EXPERIMENTS.md` 及结果为准；完整 40000 步仍需效果证据支持，不因短作业正常退出就自动开始。
 
 ## 2026-11-01 动态融合两卡授权
 

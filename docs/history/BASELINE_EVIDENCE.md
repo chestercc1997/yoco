@@ -25,16 +25,16 @@
 | 代码版本 | `25c94928858e1a5945ce653d27b4b53907fc1062` |
 | YOCO 参数 | 166,708,224 |
 | Transformer 参数 | 161,975,040 |
-| 配置 | [YOCO](../configs/yoco_160m.json)、[Transformer](../configs/transformer_160m.json) |
+| 配置 | [YOCO](../../configs/yoco_160m.json)、[Transformer](../../configs/transformer_160m.json) |
 | 训练数据 | FineWeb-Edu sample-10BT，revision `87f09149ef4734204d70ed1d046ddc9ca3f2b8f9` |
-| 数据文件和校验值 | [数据 provenance](../provenance/fineweb_candidate.json) |
+| 数据文件和校验值 | [数据 provenance](../../provenance/fineweb_candidate.json) |
 | tokenizer | 当前实现使用 cl100k_base；复制时还需固定编码资源和 tokenized manifest |
 | 训练长度 | 2048 |
 | 每次更新 tokens | 262,144 |
 | 更新次数 | 40,000 |
 | 总训练 tokens | 10,485,760,000 |
-| 可核对曲线 | [每个验证点的 CSV](../evaluation/figures/training_efficiency_validation_points.csv) |
-| 最终结果 | [training_comparison.json](../evaluation/results/training_comparison.json) |
+| 可核对曲线 | [每个验证点的 CSV](../../evaluation/figures/training_efficiency_validation_points.csv) |
+| 最终结果 | [training_comparison.json](../../evaluation/results/training_comparison.json) |
 
 已有最终 validation loss 为 Transformer 3.1612818241、YOCO 3.1636610031。这是本仓库作者报告的结果，不是此次重跑结果。复刻时不仅看终点，还比较例如 step 1000、2000、4000 的验证曲线。
 
@@ -59,7 +59,7 @@ Pythia 提供不同规模的公开模型、预分词数据和顺序重建工具�
 
 选 standard checkpoint 必须配 standard 数据；不能为了下载方便换成 deduped。也不能混用 v0 和修订版。数据仓库页面可访问，不代表所有训练文件已经在本机完整下载并验证。
 
-我已保存官方 YAML 的固定版本，来源与 SHA256 见 [manifest](baseline_sources/manifest.json)。其中 410M 配置明确给出：24 层、hidden size 1024、16 heads、长度 2048、peak LR 3e-4、min LR 3e-5、Adam betas 为 0.9/0.95、epsilon 1e-8、weight decay 0.1、143,000 次更新、cosine schedule、warmup 比例 0.01。[本地官方配置副本](baseline_sources/pythia_models_410M_pythia-410m.yml)
+我已保存官方 YAML 的固定版本，来源与 SHA256 见 [manifest](../baseline_sources/manifest.json)。其中 410M 配置明确给出：24 层、hidden size 1024、16 heads、长度 2048、peak LR 3e-4、min LR 3e-5、Adam betas 为 0.9/0.95、epsilon 1e-8、weight decay 0.1、143,000 次更新、cosine schedule、warmup 比例 0.01。[本地官方配置副本](../baseline_sources/pythia_models_410M_pythia-410m.yml)
 
 ### 1B 配置存在需要解决的真实差异
 
@@ -68,7 +68,7 @@ Pythia 提供不同规模的公开模型、预分词数据和顺序重建工具�
 | peak LR | 3e-4 | 2.5e-4 |
 | standard 1B 精度 | 说明改用 BF16 | 配置仍启用 FP16 |
 
-因此不能直接说“复制 YAML 就能完全复刻官方 1B”。正式复刻前需读取准确 W&B run 的 resolved config、对应代码版本和 checkpoint 元数据，解释差异后再开跑。[已保存的 1B YAML](baseline_sources/pythia_models_1B_pythia-1b.yml)
+因此不能直接说“复制 YAML 就能完全复刻官方 1B”。正式复刻前需读取准确 W&B run 的 resolved config、对应代码版本和 checkpoint 元数据，解释差异后再开跑。[已保存的 1B YAML](../baseline_sources/pythia_models_1B_pythia-1b.yml)
 
 410M 的日志项目同样需要确定具体 run，而不是仅使用项目首页。本轮把它列为首选候选，尚未把“官方 run 已完全锁定”标为完成。
 
