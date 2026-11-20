@@ -8,7 +8,7 @@
 | 400M | 24 | 1024 | 3072 | [gRet](configs/appendix_d/400m_gret.json) · [SWA](configs/appendix_d/400m_swa.json) |
 | 830M | 24 | 1536 | 4608 | [gRet](configs/appendix_d/830m_gret.json) · [SWA](configs/appendix_d/830m_swa.json) |
 
-本轮 160M 将 SWA 和 gRet 各训练四组，包括 baseline、raw A/B 和双查询深度注意力 C。[八份配置与训练配方](docs/160m/README.md) · [四组设计](docs/160m/fusion.md) · [八卡启动命令](scripts/README.md#160m-八组训练)
+本轮 160M 为 SWA 和 gRet 各训练四组，包括 baseline、raw A/B 和双查询深度注意力 C。[最新结果和曲线](docs/160m/results.md) · [八份配置与训练配方](docs/160m/README.md) · [四组设计](docs/160m/fusion.md) · [八卡启动命令](scripts/README.md#160m-八组训练)
 
 ## 从原始数据到训练
 
@@ -28,7 +28,7 @@ torchrun --standalone --nproc-per-node=8 -m runtime.train \
 
 ## 历史结果
 
-下列结果来自各实验当时冻结的配置。新的六份配置尚无此处可引用的完整训练结果。
+下列结果来自各历史实验当时冻结的配置。
 
 | 实验 | 状态与记录 |
 | --- | --- |

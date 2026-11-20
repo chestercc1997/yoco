@@ -1,6 +1,6 @@
 # 160M 新配方与八组训练
 
-比较 SWA 和 gated retention（gRet）两种 self-decoder。每种架构从头训练 baseline、A、B、C，使用相同的数据顺序和公共主干初始化。A/B 直接学习可正可负的跨层系数，C 为 K 和 V 分别学习深度注意力。[四组设计与公式](fusion.md) · [SWA 实现与实测](swa.md)
+比较 SWA 和 gated retention（gRet）两种 self-decoder。每种架构从头训练 baseline、A、B、C，使用相同的数据顺序和公共主干初始化。A/B 直接学习可正可负的跨层系数，C 为 K 和 V 分别学习深度注意力。[最新结果、效率和训练曲线](results.md) · [四组设计与公式](fusion.md) · [SWA 实现与实测](swa.md)
 
 ## 配置与代码版本
 
@@ -24,12 +24,8 @@
 
 此前实验使用绑定权重与连续 token 流。本轮所有组使用独立权重和新的切块格式。共用层的初始化在同架构四组间逐字节一致。[baseline 配置](../../configs/appendix_d) · [方法配置](../../configs/160m_raw_kv) · [配方与 FP16 修复依据](../analysis/YOCO_BASELINE_AUDIT.md)
 
-## 顺序与单组耗时
+## 训练顺序与日志
 
 单机八卡串行，先 SWA baseline，再 gRet baseline，随后按 A、B、C 各跑 SWA → gRet。每组完成 40,000 步并核验最终 checkpoint 后进入下一组。[队列脚本](../../scripts/run_160m_raw_kv.sh)
 
-**本轮 SWA baseline 预计约 6 小时 36 分钟。** 2026-11-18 北京时间 17:03 启动，19:56 达到第 17,519 步。按第 12,519 至 17,519 步的训练日志时间戳计算，平均 0.594 秒/步，包含区间内的验证和存盘，预计当晚 23:40 左右跑完。数据准备单独计时。
-
-同一段 5000 步内，历史 160M SWA baseline 为 0.575 秒/步，本轮步耗时增加约 3.3%。历史 SWA A、B 分别为 0.607、0.622 秒/步，历史 gRet baseline 为 0.357 秒/步。各架构、融合方式和新旧配方的耗时有差异，现有数据无法把这 3.3% 归因于某一项改动。此次测速时只有 SWA baseline 开跑，八组总耗时仍待其余组实测。
-
-本机运行目录为 `runs/appendix-d-160m-raw-v1/`。队列顺序见 `queue.log`，各组的真实进度、验证 loss 和异常事件见 `<组名>/rank0.jsonl`。完成后按同 token 比较验证曲线、末段 train loss、梯度与 AMP 事件，再从 checkpoint 检查各层系数及其符号。
+本机运行目录为 `runs/appendix-d-160m-raw-v1/`。队列顺序见 `queue.log`，各组的进度、验证 loss 和异常事件见 `<组名>/rank0.jsonl`。公开汇总给出实测用时、验证曲线、末段训练效率和 AMP 事件。[运行结果](results.md)
