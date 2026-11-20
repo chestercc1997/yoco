@@ -1,5 +1,9 @@
 # 用户执行约束（2026-10-29）
 
+## 400M Appendix D 六组训练（2026-11-20）
+
+用户授权在本机八卡从头训练 400M SWA 与 gRet 各三组。先跑 SWA baseline、gRet baseline，再按 A、B 各跑 SWA 和 gRet。A/B 使用前 12 层的 raw 系数，本轮安排 baseline、A、B。基础配置为 `configs/appendix_d/400m_{swa,gret}.json`，方法配置见 `configs/400m_raw_kv/`，运行目录为 `runs/appendix-d-400m-raw-v1`。开始或恢复前检查该目录下的冻结版本、队列和 GPU，避免重复启动。
+
 ## 160M Appendix D 八组训练（2026-11-18）
 
 用户重新授权 160M 新配方从头训练。每种 self-decoder 各四组，依次为 baseline、raw A、raw B 与独立的 Attention Residual 风格 C。两个 baseline 先行，详见 `docs/160m/README.md`。当前 cohort 为 `runs/appendix-d-160m-raw-v1`，启动器 `scripts/run_160m_raw_kv.sh`。先检查队列、日志和 GPU，实际开跑及完成以本 cohort 证据为准。此前旧配方、旧编号和已暂停的 830M 分属其他实验。

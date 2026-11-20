@@ -22,6 +22,12 @@ bash scripts/run_160m_raw_kv.sh
 
 启动器校验八份配置的数据，按顺序独占八卡训练。首次启动从当前 Git 提交导出 `runtime/`、两组配置目录和数据验证器，将提交号写入 `runs/appendix-d-160m-raw-v1/release/REVISION`。同一运行目录再次启动会使用已有快照，跳过带有 `TRAIN_COMPLETE` 的组。已有训练日志但缺少完整 checkpoint 元数据时，脚本会停下并保留现场。各组的步数和验证 loss 见 `runs/appendix-d-160m-raw-v1/<组名>/rank0.jsonl`。[启动脚本](run_160m_raw_kv.sh)
 
+## 400M 六组训练
+
+同一份 packed FineWeb-Edu 数据就绪后，在单机八张空闲 GPU 上运行 `bash scripts/run_appendix_d_raw_kv.sh 400m`。队列顺序为 SWA baseline → gRet baseline → SWA A → gRet A → SWA B → gRet B，运行目录为 `runs/appendix-d-400m-raw-v1/`。
+
+两条 baseline 使用 Appendix D 的 24 层、宽度 1024、FFN 3072 及独立输入输出权重。两种架构均按各自配置采用 FP16 混合精度、fused AdamW 和 eager 执行。A/B 沿用同架构的训练配方，各聚合前 12 层，初始权重均为 1/12。[Baseline 配置](../configs/appendix_d) · [raw A/B 配置](../configs/400m_raw_kv)
+
 ## 历史实验
 
 四卡 A/B、两卡 pilot、旧 32 卡基准和 Slurm 文件对应各自的集群与冻结配置。旧四卡 A/B 的数据准备入口为 `bash scripts/prepare_local_data.sh --historical-ab`。本文档涉及的 830M gRet 实验处于暂停状态，其恢复依据见[数值审计](../docs/analysis/YOCO_BASELINE_AUDIT.md)。
