@@ -8,7 +8,9 @@
 | 400M | 24 | 1024 | 3072 | [gRet](configs/appendix_d/400m_gret.json) · [SWA](configs/appendix_d/400m_swa.json) |
 | 830M | 24 | 1536 | 4608 | [gRet](configs/appendix_d/830m_gret.json) · [SWA](configs/appendix_d/830m_swa.json) |
 
-本轮 160M 为 SWA 和 gRet 各训练四组，包括 baseline、raw A/B 和双查询深度注意力 C。[最新结果和曲线](docs/160m/results.md) · [八份配置与训练配方](docs/160m/README.md) · [四组设计](docs/160m/fusion.md) · [八卡启动命令](scripts/README.md#160m-八组训练)
+160M 的 SWA 和 gRet 各四组均已完成，包括 baseline、raw A/B 和双查询深度注意力 C。[最终结果和曲线](docs/160m/results.md) · [八份配置与训练配方](docs/160m/README.md) · [四组设计](docs/160m/fusion.md)
+
+400M 的 SWA 和 gRet 各训练 baseline、raw A/B 三组，两条 baseline 先行。[最新进度和曲线](docs/400m/results.md) · [六组配置与八卡启动命令](scripts/README.md#400m-六组训练)
 
 ## 从原始数据到训练
 

@@ -3,6 +3,7 @@
 | 分类 | 文档 |
 | --- | --- |
 | **本轮 160M 训练** | [训练结果与曲线](160m/results.md) · [配方与顺序](160m/README.md) · [baseline、A、B、C 如何构造 K/V](160m/fusion.md) · [SWA 窗口验证与消融](160m/swa.md) |
+| **本轮 400M 训练** | [训练进度、验证 loss 和 AMP 记录](400m/results.md) · [六组配方与启动命令](../scripts/README.md#400m-六组训练) |
 | 配置与数值稳定性 | [官方架构对齐、历史配方差异与 FP16 溢出](analysis/YOCO_BASELINE_AUDIT.md) |
 | 效率分析 | [YOCO 与 VertiKV 的相对训练效率](analysis/VERTIKV_TRAINING_EFFICIENCY.md) · [历史 A100 实测加速](BASELINE_A100_ACCELERATION.md) |
 | 历史实验 | [各规模的结果、曲线和恢复记录](history/README.md) |
