@@ -1,6 +1,6 @@
 # YOCO 与 VertiKV 的末段训练效率
 
-**400M gRet 的 A/B 相对各自实验的 baseline 得分为 1.725× 和 1.780×。同档 SWA 的 A/B 分别为 0.950× 和 0.904×。** 两种 self-decoder 的结果方向不同。
+**历史 softmax 对照中，400M gRet 的 A/B 相对各自实验的 baseline 得分为 1.725× 和 1.780×。同档 SWA 的 A/B 分别为 0.950× 和 0.904×。** 新配方使用同一评分公式。 [新版 160M 结果](../160m/results.md) · [新版 400M 结果](../400m/results.md)
 
 ## 计算口径
 
@@ -26,9 +26,9 @@ final_score = mean(score(t) for t in the last 200 logged training updates)
 | SWA 830M | 2.770138 | — | — | — | — |
 | gRet 830M | — | — | — | — | — |
 
-SWA 830M 只完成了 baseline，gRet 830M 暂停在最后一次成功更新 9792，两种 830M 架构均缺少完成的 A/B。400M 数字来自历史的 FFN 2816、绑定输入输出权重的对照。现行从头训练配置的 3072 FFN 和独立输入输出权重尚无完整 A/B 数据。[830M 队列](../history/BASELINE_830M_QUEUE.md) · [配置审计](YOCO_BASELINE_AUDIT.md)
+SWA 830M 只完成了 baseline，gRet 830M 暂停在最后一次成功更新 9792，两种 830M 架构均缺少完成的 A/B。表中的 400M 数字来自历史的 FFN 2816、绑定输入输出权重的对照。现行 400M 的 FFN 为 3072，使用独立输入输出权重。 [830M 队列](../history/BASELINE_830M_QUEUE.md) · [配置审计](YOCO_BASELINE_AUDIT.md)
 
-400M gRet baseline 是目前唯一完成的同配方 baseline。全程无非有限前向和 checkpoint 回滚，有 12 次 AMP 重试，最大有限 pre-clip 梯度范数 1348.629 出现在第 22891 步。计分窗口内该范数最大为 4.719。方法 A 包含编译及数值修复前的健康训练前缀。400M gRet 的高分描述了这一套单 seed 对照的末段损失差，仍需独立复现来验证幅度。[400M 原始曲线和训练记录](../../evaluation/gret_400m_3way_20261108T194918Z/README.md)
+历史 400M gRet baseline 全程无非有限前向和 checkpoint 回滚，有 12 次 AMP 重试，最大有限 pre-clip 梯度范数 1348.629 出现在第 22891 步。计分窗口内该范数最大为 4.719。方法 A 包含编译及数值修复前的健康训练前缀。400M gRet 的高分描述了这一套单 seed 对照的末段损失差，仍需独立复现来验证幅度。 [400M 原始曲线和训练记录](../../evaluation/gret_400m_3way_20261108T194918Z/README.md)
 
 ## VertiKV
 

@@ -10,7 +10,7 @@
 
 160M 的 SWA 和 gRet 各四组均已完成，包括 baseline、raw A/B 和双查询深度注意力 C。[最终结果和曲线](docs/160m/results.md) · [八份配置与训练配方](docs/160m/README.md) · [四组设计](docs/160m/fusion.md)
 
-400M 的 SWA 和 gRet 各训练 baseline、raw A/B 三组，两条 baseline 先行。[最新进度和曲线](docs/400m/results.md) · [六组配置与八卡启动命令](scripts/README.md#400m-六组训练)
+400M 的 SWA 和 gRet 各三组均已完成训练，包括 baseline 和 raw A/B。 [最终结果和曲线](docs/400m/results.md) · [六组配置与八卡启动命令](scripts/README.md#400m-六组训练)
 
 ## 从原始数据到训练
 
