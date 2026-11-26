@@ -38,6 +38,12 @@ softmax A/B 共用上表的 gRet Baseline、seed 42、训练代码和数据清�
 
 同一配方下，raw A/B 的末段 loss 效率较高，softmax A/B 在八项下游评测中的平均分高于各自对应的 raw 方法。验证 loss 和下游准确率分别报告。 [softmax 汇总与 30,000 步对照](../../evaluation/gret_400m_softmax_20261125/summary.csv) · [逐步训练 CSV（gzip）](../../evaluation/gret_400m_softmax_20261125/training_curves.csv.gz) · [验证曲线 CSV](../../evaluation/gret_400m_softmax_20261125/validation_curves.csv) · [AMP 记录](../../evaluation/gret_400m_softmax_20261125/amp_overflows.csv) · [逐任务准确率](../../evaluation/gret_400m_softmax_20261125/downstream.csv)
 
+### 新旧验证切块诊断
+
+将新旧两轮最终 Baseline、softmax A/B checkpoint 分别在两套验证序列上评分。每套使用原训练日志对应的 2,048 条序列，每条预测 2,048 个 token。再在旧切块上仅把输入的第一位置替换成 BOS，保持目标 token 和其余输入位置固定。 [逐组评分与 checkpoint SHA-256](../../evaluation/gret_400m_softmax_20261125/validation_packing_probe.csv)
+
+在同一套新版验证序列上，旧、新 Baseline 的 loss 分别为 3.002652 和 2.916549，旧、新 softmax A/B 的变化均小于 0.008。新版 Baseline 在旧切块上的 loss 是 3.236181，仅替换起始 BOS 后降到 2.932867。这说明验证输入的样本边界会显著影响新版模型的分数。训练端的 FFN、权重绑定、样本构造与后端贡献仍需单变量对照。
+
 ## 测量口径与数据
 
 - 总训练用时从队列启动计到最终 checkpoint 写盘。达标时间取各方法首次达到同架构 Baseline 最终验证 loss 的验证点，负值表示省时。验证间隔为 250 步。
