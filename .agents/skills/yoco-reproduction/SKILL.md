@@ -11,6 +11,14 @@ description: Maintain YOCO baseline and A/B reproduction experiments, including 
 
 baseline/A/B 必须沿用同一变体的共同 backbone 初始化和训练配方。仅 A/B 各自声明的融合模块不同。切换 gRet/SWA、扩展模型规模或另定实验配置，须以用户明确提出的新实验为依据，并另建记录，不能作为故障修复。区分本仓库已批准的固定 FineWeb 复现配方与论文原始语料；发现与官方不一致时报告具体差别，禁止悄悄“对齐”正在运行的配置或宣称严格官方复刻。
 
+## 核对官方设置与本地 Baseline
+
+- 用户问「符合官方」时，从仓库根目录读取 [YOCO 官方配置与本仓库复现基准](../../../docs/analysis/YOCO_OFFICIAL_CONFIGURATION.md)。论文 §4.2 和附录 D 表 7 定义规模实验。微软 `microsoft/unilm` 的固定提交 `ca43e4cd` 用于核对模型默认值与加载器行为。README 的启动命令属于通用示例，论文档位按附录 D 取值。400M 的 16 个注意力头与 3072 FFN 都要逐项核对。
+- `configs/appendix_d/{160m,400m}_{gret,swa}.json` 是新版 Baseline 入口。比较已运行实验时，核对实际 `resolved_config.json`、冻结代码版本和数据 manifest。新版 400M gRet 的 raw 与 softmax 消融共同使用 `ea779aa` 的 Baseline。旧 400M 的 FFN 2816、权重绑定和连续 token 流切块属于历史配方。
+- 样本构造和采样顺序分别核对。新版对齐微软加载器的分行编码、BOS 和定长打包，使用本地固定 FineWeb-Edu 与确定性样本顺序。报告时写明受控复现及本地差异。相同验证样本、分词、上下文和计分协议才支持直接比较绝对 loss。
+
+## 执行、恢复与报告
+
 恢复时校验 checkpoint SHA、fingerprint、模型/optimizer 有限性及八卡 RNG、scaler、步数；保留失败现场与原始日志，回到最近健康完整 checkpoint，按同一步数和相同数据顺序重跑。正常 AMP 溢出按原策略重试；单个 noisy batch 不等于持续发散。自动恢复须有有界重试与重复故障诊断，不能无限回滚。使用仓库 `tools/watch_swa_training.py` 时核验 `guard-contract.json`，它不授予修改配置的权限。
 
 允许修正实现错误，使实际计算遵守原模型公式和既定精度接口；这不允许全局或局部擅自改精度来掩盖问题。涉及中间算术精度、内核或计算路径的修改，必须明确记录、用捕获现场和参考前后向证明必要性，并检查正常范围的 loss/梯度、checkpoint 恢复和配置完全一致。若无法满足原 setting，应停止该修复路线，在持续 Goal 内继续定位可兼容实现；不能自动放宽 setting 或把它冒称“完全不影响精度”。
